@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="km">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>ព័ត៌មានសិស្ស</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 1rem;
+			}
+
+			.table-container {
+				overflow-x: auto;
+			}
+
+			table {
+				border-collapse: collapse;
+				min-width: 100%;
+				white-space: nowrap;
+			}
+
+			th,
+			td {
+				border: 1px solid #777;
+				padding: 0.35rem;
+				text-align: center;
+			}
+
+			thead th {
+				background: #f1f1f1;
+			}
+
+			#student-search {
+				margin-bottom: 0.75rem;
+				padding: 0.4rem;
+			}
+		</style>
+	</head>
+	<body>
+		<label for="student-search">ស្វែងរកសិស្ស៖</label>
+		<input
+			id="student-search"
+			type="search"
+			placeholder="ស្វែងរកតាមព័ត៌មានក្នុងតារាង"
+		/>
+
+		<div class="table-container">
+			<table id="student-table">
+				<thead>
+					<tr id="group-header"></tr>
+					<tr id="column-header"></tr>
+				</thead>
+				<tbody id="student-rows"></tbody>
+			</table>
+		</div>
+
+		<script>
+			// Each group contains its displayed heading and column labels.
+			const groups = [
+				{
+					title: "ព័ត៌មានសិស្ស",
+					columns: [
+						"ថ្នាក់ទី",
+						"អត្តលេខ",
+						"គោត្តនាម *",
+						"នាម *",
+						"ភេទ *",
+						"ថ្ងៃខែឆ្នាំកំណើត(m-d-yyy)",
+						"អាយុ",
+						"លេខទូរស័ព្ទ",
+						"សញ្ជាតិ",
+					],
+				},
+				{
+					title: "ទីកន្លែងកំណើត",
+					columns: [
+						"ខេត្ត/ក្រុង",
+						"ស្រុក/ខណ្ឌ",
+						"ឃុំ/សង្កាត់",
+						"ភូមិ",
+					],
+				},
+				{
+					title: "អសយដ្ឋានបច្ចុប្បន្ន",
+					columns: [
+						"ខេត្ត/ក្រុង",
+						"ស្រុក/ខណ្ឌ",
+						"ឃុំ/សង្កាត់",
+						"ភូមិ",
+					],
+				},
+				{
+					title: "ព័ត៌មានសិក្សា",
+					columns: [
+						"ឆ្នាំសិក្សា",
+						"ថ្នាក់ឆ្នាំមុន",
+						"ថ្ងៃចុះឈ្មោះចូលរៀន",
+						"ប្រភេទពិការភាព",
+					],
+				},
+				{
+					title: "កញ្ចប់សម្ភារជំនួយ",
+					columns: [
+						"កញ្ចប់អំណាន",
+						"កញ្ចប់គណិត",
+						"សៀវភៅជំនួយភាសាខ្មែរ",
+						"សៀវភៅជំនួយគណិតវិទ្យា",
+					],
+				},
+				{
+					title: "សមធម៌",
+					columns: ["គ្រួសារក្រីក្រ", "បណ្ណសមធម៌"],
+				},
+				{
+					title: "ព័ត៌មានបន្ថែមសិស្ស",
+					columns: ["ជនជាតិភាគតិច", "លក្ខណៈពិសេស"],
+				},
+				{
+					title: "ទម្ងន់/កម្ពស់ ឆមាស១",
+					columns: ["ទម្ងន់", "កម្ពស់", "ស្ថានភាព BMI"],
+				},
+				{
+					title: "ទម្ងន់/កម្ពស់ ឆមាស២",
+					columns: ["ទម្ងន់", "កម្ពស់", "ស្ថានភាព BMI"],
+				},
+				{
+					title: "ភ្នែក",
+					columns: [
+						"ឆ្វេង",
+						"ស្ដាំ",
+						"ទាំងពីរ",
+						"លទ្ធផល",
+						"វេជ្ជបញ្ជា",
+						"ឧបករណ៍",
+					],
+				},
+				{
+					title: "ត្រចៀក",
+					columns: [
+						"ឆ្វេង",
+						"ស្ដាំ",
+						"ទាំងពីរ",
+						"លទ្ធផល",
+						"វេជ្ជបញ្ជា",
+						"ឧបករណ៍",
+					],
+				},
+				{
+					title: "វ៉ាក់សាំង",
+					columns: ["បញ្ជី"],
+				},
+				{
+					title: "ព័ត៌មានឪពុក",
+					columns: ["គោត្តនាម", "នាម", "ទូរស័ព្ទ", "មុខរបរ"],
+				},
+				{
+					title: "អសយដ្ឋានឪពុក",
+					columns: [
+						"ខេត្ត/ក្រុង",
+						"ស្រុក/ខណ្ឌ",
+						"ឃុំ/សង្កាត់",
+						"ភូមិ",
+					],
+				},
+				{
+					title: "ព័ត៌មានម្ដាយ",
+					columns: ["គោត្តនាម", "នាម", "ទូរស័ព្ទ", "មុខរបរ"],
+				},
+				{
+					title: "អាសយដ្ឋានម្ដាយ",
+					columns: [
+						"ខេត្ត/ក្រុង",
+						"ស្រុក/ខណ្ឌ",
+						"ឃុំ/សង្កាត់",
+						"ភូមិ",
+					],
+				},
+				{
+					title: "អាណាព្យាបាល",
+					columns: [
+						"ប្រភេទ",
+						"គោត្តនាម",
+						"នាម",
+						"ភេទ",
+						"ទូរស័ព្ទ",
+						"មុខរបរ",
+						"អសយដ្ឋាន",
+					],
+				},
+			];
+
+			// Empty strings represent the blank cells in the original table.
+			const students = [
+				[
+					"3A",
+					"27001",
+					"កើន",
+					"វីរះនិច្ច",
+					"ស្រី",
+					"3/19/2019",
+					"7",
+					"0978806018",
+					"ខ្មែរ",
+					"បន្ទាយមានជ័យ",
+					"ភ្នំស្រុក",
+					"ស្ពានស្រែង",
+					"មុខឈ្នាង",
+					"បន្ទាយមានជ័យ",
+					"ភ្នំស្រុក",
+					"ស្ពានស្រែង",
+					"មុខឈ្នាង",
+					"2025-2026",
+					"2B",
+					"2025-11-1",
+					"មិនមាន",
+					"មិនមាន",
+					"មិនមាន",
+					"មិនមាន",
+					"មិនមាន",
+					"មាន",
+					"ក្រ២",
+					"មិនមាន",
+					"មិនមាន",
+					"20.00",
+					"119.0",
+					"សុខភាពល្អ",
+					"",
+					"",
+					"",
+					"6/6",
+					"6/6",
+					"",
+					"មិនទាន់បានពិនិត្យ",
+					"មិនមាន",
+					"មិនមាន",
+					"71dB",
+					"71dB",
+					"មិនទាន់ពិនិត្យ",
+					"ត្រចៀកល្អប្រសើរ",
+					"",
+					"",
+					"COVID-19",
+					"អ៊ុន",
+					"ប៊ុនទុង",
+					"092272005",
+					"គ្រូបង្រៀន",
+					"បន្ទាយមានជ័យ",
+					"ភ្នំស្រុក",
+					"ស្ពានស្រែង",
+					"គោកចារ",
+					"រ៉ម",
+					"សុផាត់",
+					"",
+					"កសិករ",
+					"បន្ទាយមានជ័យ",
+					"ភ្នំស្រុក",
+					"ស្ពានស្រែង",
+					"មុខឈ្នាង",
+					"សាច់ញាតិ",
+					"ហួក",
+					"តាក់",
+					"ស្រី",
+					"",
+					"កសិករ",
+					"ខេត្តបន្ទាយមានជ័យ ស្រុកភ្នំស្រុក ឃុំស្ពានស្រែង ភូមិមុខឈ្នាង",
+				],
+			];
+
+			const groupHeader = document.getElementById("group-header");
+			const columnHeader = document.getElementById("column-header");
+			const studentRows = document.getElementById("student-rows");
+
+			for (const group of groups) {
+				const th = document.createElement("th");
+				th.colSpan = group.columns.length;
+				th.textContent = group.title;
+				groupHeader.appendChild(th);
+
+				for (const label of group.columns) {
+					const columnTh = document.createElement("th");
+					columnTh.textContent = label;
+					columnHeader.appendChild(columnTh);
+				}
+			}
+
+			for (const student of students) {
+				const row = document.createElement("tr");
+
+				for (const value of student) {
+					const cell = document.createElement("td");
+					cell.textContent = value;
+					row.appendChild(cell);
+				}
+
+				studentRows.appendChild(row);
+			}
+
+			// Filter rows as the user types.
+			document
+				.getElementById("student-search")
+				.addEventListener("input", (event) => {
+					const query = event.target.value.trim().toLocaleLowerCase();
+
+					for (const row of studentRows.rows) {
+						row.hidden = !row.textContent
+							.toLocaleLowerCase()
+							.includes(query);
+					}
+				});
+		</script>
+	</body>
+</html>

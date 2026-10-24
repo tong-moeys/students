@@ -1,0 +1,8 @@
+{
+  "name": "newStudents2027",
+  "description": "Student Information Management System (ព័ត៌មានសិស្ស) for managing and viewing student records.",
+  "prompt": "This app was imported from GitHub repository user1100007/newStudents2027.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

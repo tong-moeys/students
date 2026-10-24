@@ -1,0 +1,100 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Student record containing school, personal, and demographic information",
+      "type": "object",
+      "properties": {
+        "studentCode": {
+          "type": "string",
+          "description": "Unique student code / identification number",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Student's Khmer family name",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "firstName": {
+          "type": "string",
+          "description": "Student's Khmer given name",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "gender": {
+          "type": "string",
+          "description": "Student gender (ប្រុស / ស្រី)",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "grade": {
+          "type": "string",
+          "description": "Student class grade (e.g. 3A)",
+          "maxLength": 60
+        },
+        "values": {
+          "type": "array",
+          "description": "Complete row array of values across all 67 student profile columns"
+        },
+        "photoUrl": {
+          "type": "string",
+          "description": "Student profile photo URL or compressed image data URL",
+          "maxLength": 65536
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Name or email of user who created the record",
+          "maxLength": 150
+        },
+        "lastModifiedBy": {
+          "type": "string",
+          "description": "Name or email of user who last modified the record",
+          "maxLength": 150
+        },
+        "lastModifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the record was last modified"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the record was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the record was last updated"
+        }
+      },
+      "required": ["studentCode", "lastName", "firstName", "gender", "values", "createdAt"]
+    },
+    "TestConnection": {
+      "title": "TestConnection",
+      "description": "Document used to verify connectivity to Firestore",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Connection status indicator"
+        }
+      }
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": {
+        "$ref": "#/entities/Student"
+      },
+      "description": "All enrolled student records"
+    },
+    "/test/{testId}": {
+      "schema": {
+        "$ref": "#/entities/TestConnection"
+      },
+      "description": "Health check document for connection verification"
+    }
+  }
+}
