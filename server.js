@@ -178,6 +178,19 @@ DO NOT wrap in markdown, no backticks, only pure SVG code starting with <svg and
 });
 
 // Default entry point
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime(), time: new Date().toISOString() });
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Server uncaughtException:', err);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('Server unhandledRejection:', reason);
+});
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });

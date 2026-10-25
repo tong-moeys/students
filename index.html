@@ -9,7 +9,15 @@
 		<meta property="og:description" content="ប្រព័ន្ធគ្រប់គ្រងព័ត៌មានសិស្ស កែទិន្នន័យក្នុងតារាងផ្ទាល់ ផ្លាស់ប្ដូរថ្នាក់ បង្កើតរបាយការណ៍ គណនាអាយុ BMI និងផ្ញើ Telegram" />
 		
 		<!-- SheetJS (XLSX) CDN -->
-		<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+		<!-- SheetJS (XLSX) Local with CDN fallback -->
+		<script src="/xlsx.full.min.js"></script>
+		<script>
+			if (typeof XLSX === "undefined") {
+				const cdnScript = document.createElement("script");
+				cdnScript.src = "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js";
+				document.head.appendChild(cdnScript);
+			}
+		</script>
 
 		<style>
 			:root {
@@ -1085,6 +1093,10 @@
 
 			/* Print Stylesheet for Reports & Cards */
 			@media print {
+				@page {
+					size: A4 landscape;
+					margin: 0.8cm;
+				}
 				body * { visibility: hidden !important; }
 				#printable-report-area, #printable-report-area *,
 				#printable-student-card, #printable-student-card * {
@@ -1096,8 +1108,12 @@
 					top: 0 !important;
 					width: 100% !important;
 					margin: 0 !important;
-					padding: 0.5cm !important;
+					padding: 0 !important;
 					background: white !important;
+				}
+				.official-signature-hierarchy {
+					page-break-inside: avoid !important;
+					break-inside: avoid !important;
 				}
 			}
 		</style>
@@ -1160,6 +1176,9 @@
 				
 				<div class="divider"></div>
 
+				<button type="button" id="open-official-roster-btn" class="btn-text" style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.6rem; font-size: 0.775rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.15s; background: #fef3c7; color: #92400e; border: 1px solid #fde68a;" title="បើកបញ្ជីរាយនាមសិស្សផ្លូវការប្រចាំថ្នាក់ (MoEYS Official Class Roster)">
+					📋 បញ្ជីរាយនាមសិស្ស
+				</button>
 				<button id="report-modal-btn" class="btn-icon warning" title="📈 បង្កើតរបាយការណ៍ផ្សេងៗ (Reports)">📈</button>
 				<button id="export-xlsx-btn" class="btn-icon success" title="📊 នាំចេញ Excel (Export XLSX)">📊</button>
 				<label class="btn-icon" style="cursor: pointer;" title="📥 នាំចូល Excel (Import XLSX)">
@@ -1222,6 +1241,26 @@
 				</table>
 			</div>
 		</main>
+
+		<!-- Official Class Summary Box under Main Table (ក្រោមតារាងមានរៀបរាប់) -->
+		<section id="table-official-summary-card" style="margin-top: 0.5rem; background: #ffffff; border-radius: 8px; border: 1.5px solid #0284c7; padding: 0.75rem 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; padding-bottom: 0.35rem; border-bottom: 1.5px dashed #bae6fd; flex-wrap: wrap; gap: 0.4rem;">
+				<div style="font-weight: 700; font-size: 0.925rem; color: #1e3a8a; display: flex; align-items: center; gap: 0.4rem;">
+					<span>📋 ស្ថិតិ និងសង្ខេបបញ្ជីរាយនាមសិស្សផ្លូវការ (<span id="main-summary-grade-label">គ្រប់ថ្នាក់</span>)</span>
+				</div>
+				<div style="display: flex; gap: 0.4rem;">
+					<button type="button" id="main-summary-print-btn" class="btn-text" style="background: #0284c7; color: white; padding: 0.2rem 0.65rem; font-size: 0.75rem;">
+						🖨️ បោះពុម្ពបញ្ជីនេះ
+					</button>
+					<button type="button" id="main-summary-view-btn" class="btn-text" style="background: #e0f2fe; color: #0369a1; padding: 0.2rem 0.65rem; font-size: 0.75rem;">
+						🔍 មើលបញ្ជីពេញលេញ (MoEYS)
+					</button>
+				</div>
+			</div>
+			<div id="main-table-official-summary-content" style="font-size: 0.8rem; line-height: 1.6;">
+				<!-- Dynamically calculated -->
+			</div>
+		</section>
 
 		<!-- Column Visibility Modal (លាក់/បង្ហាញ ជួរឈរ) -->
 		<div id="column-visibility-modal" class="modal-overlay hidden">
@@ -1550,7 +1589,7 @@
 						<!-- Section E: Academic & Support -->
 						<div class="form-section">
 							<div class="section-title">
-								<span>ច. ព័ត៌មានសិក្សា និងជំនួយ</span>
+								<span>ច. ព័ត៌មានសិក្សា ស្ថានភាពពិសេស និងជំនួយ</span>
 							</div>
 							<div class="grid-4">
 								<div class="form-field">
@@ -1572,6 +1611,38 @@
 								<div class="form-field">
 									<label for="f-vaccine">វ៉ាក់សាំង</label>
 									<input type="text" id="f-vaccine" value="COVID-19" />
+								</div>
+							</div>
+
+							<div class="grid-3" style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed var(--border-subtle);">
+								<div class="form-field">
+									<label for="f-orphan-status">🕊️ ស្ថានភាពកំព្រា</label>
+									<select id="f-orphan-status">
+										<option value="មិនកំព្រា">មិនកំព្រា (ធម្មតា)</option>
+										<option value="កំព្រាម្ដាយ">កំព្រាម្ដាយ (ម្ដាយទទួលមរណភាព)</option>
+										<option value="កំព្រាឪពុក">កំព្រាឪពុក (ឪពុកទទួលមរណភាព)</option>
+										<option value="កំព្រាទាំងពីរ">កំព្រាទាំងពីរ (ឪពុកម្ដាយទទួលមរណភាព)</option>
+									</select>
+								</div>
+								<div class="form-field">
+									<label for="f-disability">♿ ប្រភេទពិការភាព (MoEYS Standard)</label>
+									<select id="f-disability">
+										<option value="មិនមាន">មិនមានពិការភាព</option>
+										<option value="ពិបាកមើល">ពិបាកមើល (គំហើញ / ភ្នែក)</option>
+										<option value="ពិបាកស្តាប់">ពិបាកស្តាប់ (ការស្តាប់ / ត្រចៀក)</option>
+										<option value="ពិបាកនិយាយ">ពិបាកនិយាយ (ការនិយាយ / ទំនាក់ទំនង)</option>
+										<option value="ពិបាកធ្វើចលនា">ពិបាកធ្វើចលនា (រាងកាយ / ដៃជើង)</option>
+										<option value="ពិបាកចងចាំ ឬផ្ចង់អារម្មណ៍">ពិបាកចងចាំ ឬផ្ចង់អារម្មណ៍ (បញ្ញាស្មារតី)</option>
+										<option value="ពិបាកថែទាំខ្លួនឯង">ពិបាកថែទាំខ្លួនឯង</option>
+										<option value="ពិការភាពផ្សេងៗ">ពិការភាពផ្សេងៗ</option>
+									</select>
+								</div>
+								<div class="form-field">
+									<label for="f-chronic-illness">🩺 ស្ថានភាពសុខភាព / ជម្ងឺរ៉ាំរ៉ៃ</label>
+									<select id="f-chronic-illness">
+										<option value="គ្មានជម្ងឺរ៉ាំរ៉ៃ">ធម្មតា / គ្មានជម្ងឺរ៉ាំរ៉ៃ</option>
+										<option value="មានជម្ងឺរ៉ាំរ៉ៃ">មានជម្ងឺរ៉ាំរ៉ៃ</option>
+									</select>
 								</div>
 							</div>
 						</div>
@@ -1685,7 +1756,9 @@
 				<div class="modal-body" style="padding: 0.85rem;">
 					<!-- Navigation Tabs -->
 					<div class="report-nav">
-						<button class="report-tab-btn active" data-tab="class-summary">📊 ស្ថិតិតាមថ្នាក់</button>
+						<button class="report-tab-btn active" data-tab="official-roster">📋 បញ្ជីរាយនាមសិស្ស (MoEYS)</button>
+						<button class="report-tab-btn" data-tab="class-summary">📊 ស្ថិតិតាមថ្នាក់</button>
+						<button class="report-tab-btn" data-tab="vulnerable-summary">🛡️ ពិការភាព & កំព្រា</button>
 						<button class="report-tab-btn" data-tab="bmi-summary">🩺 សុខភាព & BMI</button>
 						<button class="report-tab-btn" data-tab="eye-ear-summary">👁️ ភ្នែក & ត្រចៀក</button>
 						<button class="report-tab-btn" data-tab="equity-summary">📜 បណ្ណសមធម៌</button>
@@ -3376,6 +3449,7 @@
 				}
 				filterTable();
 				updateBatchBar();
+				updateMainTableOfficialSummary();
 			}
 
 			function startInlineEdit(cell, docId, colIndex, currentValue) {
@@ -3431,14 +3505,198 @@
 				}
 			}
 
+			// Trigger official summary recalculation on search or grade filter
+			const originalFilterTable = filterTable;
+			filterTable = function() {
+				originalFilterTable();
+				updateMainTableOfficialSummary();
+			};
+
 			document.getElementById("table-search").addEventListener("input", filterTable);
-			document.getElementById("grade-filter").addEventListener("change", filterTable);
+			document.getElementById("grade-filter").addEventListener("change", () => {
+				filterTable();
+				updateMainTableOfficialSummary();
+			});
 			const sortSelectEl = document.getElementById("table-sort-select");
 			if (sortSelectEl) {
 				sortSelectEl.addEventListener("change", (e) => {
 					currentSortMode = e.target.value;
 					renderTable(studentDocs);
 				});
+			}
+
+			// Helper: Detailed Orphan classification (MoEYS Standard)
+			function getStudentOrphanInfo(v) {
+				if (!v) return { isOrphan: false, type: "", label: "", tag: "" };
+				const specVal = String(v[28] || "").trim();
+				const guardVal = String(v[64] || "").trim();
+				const fatherLast = String(v[48] || "").trim();
+				const fatherFirst = String(v[49] || "").trim();
+				const motherLast = String(v[56] || "").trim();
+				const motherFirst = String(v[57] || "").trim();
+				const hasFather = Boolean(fatherLast || fatherFirst);
+				const hasMother = Boolean(motherLast || motherFirst);
+
+				const text = (specVal + " " + guardVal).toLowerCase();
+
+				// 1. Double orphan: កំព្រាឪពុកម្ដាយ / កំព្រាទាំងពីរ
+				if (
+					text.includes("ទាំងពីរ") ||
+					text.includes("ឪពុកម្តាយ") ||
+					text.includes("ឪពុកម្ដាយ") ||
+					(text.includes("ឪពុក") && text.includes("ម្ដាយ") && text.includes("កំព្រា")) ||
+					(text.includes("ឪពុក") && text.includes("ម្តាយ") && text.includes("កំព្រា")) ||
+					(!hasFather && !hasMother && (text.includes("កំព្រា") || guardVal.includes("ជីដូន") || guardVal.includes("ជីតា") || guardVal.includes("សាច់ញាតិ") || guardVal.includes("មណ្ឌល")))
+				) {
+					if (text.includes("កំព្រា") || (!hasFather && !hasMother && (guardVal.includes("ជីដូន") || guardVal.includes("ជីតា") || guardVal.includes("សាច់ញាតិ") || guardVal.includes("មណ្ឌល")))) {
+						return { isOrphan: true, type: "both", label: "កំព្រាទាំងពីរ (ឪពុកម្ដាយ)", tag: "ទាំងពីរ" };
+					}
+				}
+
+				// 2. Orphan Mother: កំព្រាម្ដាយ / កំព្រាម្តាយ
+				if (text.includes("កំព្រាម្ដាយ") || text.includes("កំព្រាម្តាយ") || (text.includes("កំព្រា") && (text.includes("ម្ដាយ") || text.includes("ម្តាយ")))) {
+					return { isOrphan: true, type: "mother", label: "កំព្រាម្ដាយ", tag: "ម្ដាយ" };
+				}
+
+				// 3. Orphan Father: កំព្រាឪពុក
+				if (text.includes("កំព្រាឪពុក") || (text.includes("កំព្រា") && text.includes("ឪពុក"))) {
+					return { isOrphan: true, type: "father", label: "កំព្រាឪពុក", tag: "ឪពុក" };
+				}
+
+				// 4. Orphan specified in text without explicit parent: infer from parent presence
+				if (text.includes("កំព្រា")) {
+					if (!hasFather && hasMother) {
+						return { isOrphan: true, type: "father", label: "កំព្រាឪពុក", tag: "ឪពុក" };
+					}
+					if (!hasMother && hasFather) {
+						return { isOrphan: true, type: "mother", label: "កំព្រាម្ដាយ", tag: "ម្ដាយ" };
+					}
+					if (!hasFather && !hasMother) {
+						return { isOrphan: true, type: "both", label: "កំព្រាទាំងពីរ (ឪពុកម្ដាយ)", tag: "ទាំងពីរ" };
+					}
+					return { isOrphan: true, type: "unspecified", label: "កំព្រា (ផ្សេងៗ)", tag: "កំព្រា" };
+				}
+
+				return { isOrphan: false, type: "", label: "", tag: "" };
+			}
+
+			// Helper: Detailed Disability classification (Washington Group / MoEYS Standard)
+			function getStudentDisabilityInfo(v) {
+				if (!v) return { hasDisability: false, type: "", label: "", tag: "" };
+				const disVal = String(v[20] || "").trim();
+				const eyeRes = String(v[38] || "").trim();
+				const earRes = String(v[44] || "").trim();
+				const specVal = String(v[28] || "").trim();
+
+				let text = `${disVal} ${specVal}`.trim();
+				if (eyeRes === "ពិការភ្នែក" || eyeRes === "គំហើញចុះខ្សោយ") text += " ពិបាកមើល";
+				if (earRes === "ថ្លង់" || earRes === "ការស្តាប់ចុះខ្សោយ") text += " ពិបាកស្តាប់";
+
+				if (!text || text === "មិនមាន" || text === "-") {
+					return { hasDisability: false, type: "", label: "", tag: "" };
+				}
+
+				// 1. Vision: ពិបាកមើល
+				if (text.includes("មើល") || text.includes("ភ្នែក") || text.includes("គំហើញ")) {
+					return { hasDisability: true, type: "see", label: "ពិបាកមើល", tag: "មើល" };
+				}
+
+				// 2. Hearing: ពិបាកស្តាប់
+				if (text.includes("ស្តាប់") || text.includes("ស្ដាប់") || text.includes("ត្រចៀក") || text.includes("ថ្លង់")) {
+					return { hasDisability: true, type: "hear", label: "ពិបាកស្តាប់", tag: "ស្តាប់" };
+				}
+
+				// 3. Speech / Communication: ពិបាកនិយាយ
+				if (text.includes("និយាយ") || text.includes("គ") || text.includes("សំឡេង") || text.includes("សម្លេង") || text.includes("ទំនាក់ទំនង")) {
+					return { hasDisability: true, type: "speak", label: "ពិបាកនិយាយ", tag: "និយាយ" };
+				}
+
+				// 4. Physical / Mobility: ពិបាកធ្វើចលនា
+				if (text.includes("ចលនា") || text.includes("ដៃ") || text.includes("ជើង") || text.includes("ដើរ") || text.includes("ខ្វិន") || text.includes("រាងកាយ")) {
+					return { hasDisability: true, type: "move", label: "ពិបាកធ្វើចលនា", tag: "ចលនា" };
+				}
+
+				// 5. Cognitive / Memory / Attention: ពិបាកចងចាំ ឬផ្ចង់អារម្មណ៍
+				if (text.includes("ចងចាំ") || text.includes("ផ្ចង់") || text.includes("អារម្មណ៍") || text.includes("បញ្ញា") || text.includes("ស្មារតី") || text.includes("អូទីស្សឹម")) {
+					return { hasDisability: true, type: "mind", label: "ពិបាកចងចាំ/ផ្ចង់អារម្មណ៍", tag: "ចងចាំ" };
+				}
+
+				// 6. Self-care: ពិបាកថែទាំខ្លួនឯង
+				if (text.includes("ថែទាំ") || text.includes("ខ្លួនឯង")) {
+					return { hasDisability: true, type: "care", label: "ពិបាកថែទាំខ្លួនឯង", tag: "ថែទាំ" };
+				}
+
+				// Other types
+				if (disVal && disVal !== "មិនមាន" && disVal !== "-") {
+					return { hasDisability: true, type: "other", label: disVal, tag: "ផ្សេងៗ" };
+				}
+
+				if (text.includes("ពិការ")) {
+					return { hasDisability: true, type: "other", label: "ពិការភាពផ្សេងៗ", tag: "ផ្សេងៗ" };
+				}
+
+				return { hasDisability: false, type: "", label: "", tag: "" };
+			}
+
+			// Backwards compatibility wrappers
+			function checkStudentDisability(v) {
+				return getStudentDisabilityInfo(v).hasDisability;
+			}
+
+			function checkStudentOrphan(v) {
+				return getStudentOrphanInfo(v).isOrphan;
+			}
+
+			// Helper to check repeat status (ត្រួតថ្នាក់ vs ថ្មី)
+			function checkStudentRepeat(v, grade) {
+				const curGrade = String(grade || v?.[0] || "").trim();
+				const prevGrade = String(v?.[18] || "").trim();
+				if (!prevGrade) return false;
+				if (prevGrade.includes("ត្រួត") || String(v?.[19] || "").includes("ត្រួត")) return true;
+				if (curGrade && prevGrade === curGrade) return true;
+				return false;
+			}
+
+			// Helper to check chronic illness
+			function checkStudentIllness(v) {
+				const spec = String(v?.[28] || "").trim();
+				return spec.includes("ជម្ងឺ") || spec.includes("ជំងឺ") || spec.includes("ឈឺ") || spec.includes("រ៉ាំរ៉ៃ");
+			}
+
+			// Helper to check equity card / poor
+			function checkStudentEquity(v) {
+				const card = String(v?.[26] || "").trim();
+				const poor = String(v?.[25] || "").trim();
+				if (card.includes("ក្រ១")) return "ក្រ១";
+				if (card.includes("ក្រ២")) return "ក្រ២";
+				if (poor === "មាន" || card.includes("ងាយរងគ្រោះ") || card.includes("បណ្ណ")) return "ផ្សេងៗ";
+				return "";
+			}
+
+			// Helper to calculate age breakdown
+			function computeAgeBreakdown(docs) {
+				const ageMap = {};
+				docs.forEach(d => {
+					const v = d.values || [];
+					let age = parseInt(v[6], 10);
+					if (isNaN(age) || age <= 0) {
+						const dob = String(v[5] || "").trim();
+						if (dob) {
+							const computed = calculateAge(dob);
+							if (computed !== "") age = parseInt(computed, 10);
+						}
+					}
+					if (isNaN(age) || age <= 0) age = 0; // unknown
+
+					const gender = String(d.gender || v[4] || "ស្រី").trim();
+					const isGirl = gender.includes("ស្រី") || gender.toLowerCase().includes("female");
+
+					if (!ageMap[age]) ageMap[age] = { total: 0, girls: 0, boys: 0 };
+					ageMap[age].total++;
+					if (isGirl) ageMap[age].girls++;
+					else ageMap[age].boys++;
+				});
+				return ageMap;
 			}
 
 			// 4. Student Modal Operations (Add / Edit)
@@ -3456,6 +3714,9 @@
 				document.getElementById("f-s1-bmi-display").textContent = "-";
 				document.getElementById("f-s2-bmi-display").textContent = "-";
 				document.getElementById("f-photo-url").value = "";
+				document.getElementById("f-orphan-status").value = "មិនកំព្រា";
+				document.getElementById("f-disability").value = "មិនមាន";
+				document.getElementById("f-chronic-illness").value = "គ្មានជម្ងឺរ៉ាំរ៉ៃ";
 				document.getElementById("form-student-photo-img").src = getDefaultSvgAvatar("ស្រី", "", "");
 				studentModal.classList.remove("hidden");
 			});
@@ -3574,6 +3835,35 @@
 				document.getElementById("f-guardian-firstname").value = v[66] || "";
 				document.getElementById("f-guardian-phone").value = v[68] || "";
 
+				// Populate Orphan, Disability, and Chronic Illness status
+				const orphanInfo = getStudentOrphanInfo(v);
+				const orphanSelect = document.getElementById("f-orphan-status");
+				if (orphanInfo.isOrphan) {
+					if (orphanInfo.type === "mother") orphanSelect.value = "កំព្រាម្ដាយ";
+					else if (orphanInfo.type === "father") orphanSelect.value = "កំព្រាឪពុក";
+					else if (orphanInfo.type === "both") orphanSelect.value = "កំព្រាទាំងពីរ";
+					else orphanSelect.value = "កំព្រាទាំងពីរ";
+				} else {
+					orphanSelect.value = "មិនកំព្រា";
+				}
+
+				const disInfo = getStudentDisabilityInfo(v);
+				const disSelect = document.getElementById("f-disability");
+				if (disInfo.hasDisability) {
+					if (disInfo.type === "see") disSelect.value = "ពិបាកមើល";
+					else if (disInfo.type === "hear") disSelect.value = "ពិបាកស្តាប់";
+					else if (disInfo.type === "speak") disSelect.value = "ពិបាកនិយាយ";
+					else if (disInfo.type === "move") disSelect.value = "ពិបាកធ្វើចលនា";
+					else if (disInfo.type === "mind") disSelect.value = "ពិបាកចងចាំ ឬផ្ចង់អារម្មណ៍";
+					else if (disInfo.type === "care") disSelect.value = "ពិបាកថែទាំខ្លួនឯង";
+					else disSelect.value = "ពិការភាពផ្សេងៗ";
+				} else {
+					disSelect.value = "មិនមាន";
+				}
+
+				const illnessSelect = document.getElementById("f-chronic-illness");
+				illnessSelect.value = checkStudentIllness(v) ? "មានជម្ងឺរ៉ាំរ៉ៃ" : "គ្មានជម្ងឺរ៉ាំរ៉ៃ";
+
 				studentModal.classList.remove("hidden");
 			}
 
@@ -3605,6 +3895,9 @@
 				const year = document.getElementById("f-year").value.trim();
 				const prevGrade = document.getElementById("f-prev-grade").value.trim();
 				const equityCard = document.getElementById("f-equity-card").value;
+				const orphanStatus = document.getElementById("f-orphan-status").value;
+				const disability = document.getElementById("f-disability").value;
+				const illnessStatus = document.getElementById("f-chronic-illness").value;
 
 				const s1w = document.getElementById("f-s1-weight").value.trim();
 				const s1h = document.getElementById("f-s1-height").value.trim();
@@ -3663,7 +3956,7 @@
 				rowValues[17] = year;
 				rowValues[18] = prevGrade;
 				rowValues[19] = "2025-11-1";
-				rowValues[20] = "មិនមាន";
+				rowValues[20] = disability !== "មិនមាន" ? disability : "មិនមាន";
 				rowValues[21] = "មិនមាន";
 				rowValues[22] = "មិនមាន";
 				rowValues[23] = "មិនមាន";
@@ -3671,7 +3964,15 @@
 				rowValues[25] = equityCard !== "មិនមាន" ? "មាន" : "មិនមាន";
 				rowValues[26] = equityCard;
 				rowValues[27] = "មិនមាន";
-				rowValues[28] = "មិនមាន";
+
+				const specialParts = [];
+				if (orphanStatus && orphanStatus !== "មិនកំព្រា") {
+					specialParts.push(orphanStatus);
+				}
+				if (illnessStatus && illnessStatus !== "គ្មានជម្ងឺរ៉ាំរ៉ៃ") {
+					specialParts.push("មានជម្ងឺរ៉ាំរ៉ៃ");
+				}
+				rowValues[28] = specialParts.length > 0 ? specialParts.join(", ") : "មិនមាន";
 				rowValues[29] = s1w;
 				rowValues[30] = s1h;
 				rowValues[31] = s1bmi;
@@ -4162,12 +4463,28 @@
 			// 5. Reports Generator Logic
 			const reportsModal = document.getElementById("reports-modal");
 			const reportContainer = document.getElementById("report-view-container");
-			let currentReportTab = "class-summary";
+			let currentReportTab = "official-roster";
 
 			document.getElementById("report-modal-btn").addEventListener("click", () => {
 				document.getElementById("report-date-text").textContent = new Date().toLocaleDateString('km-KH');
 				generateReport();
 				reportsModal.classList.remove("hidden");
+			});
+
+			document.getElementById("open-official-roster-btn")?.addEventListener("click", () => {
+				const curGrade = document.getElementById("grade-filter")?.value || "";
+				openOfficialRosterModal(curGrade);
+			});
+
+			document.getElementById("main-summary-view-btn")?.addEventListener("click", () => {
+				const curGrade = document.getElementById("grade-filter")?.value || "";
+				openOfficialRosterModal(curGrade);
+			});
+
+			document.getElementById("main-summary-print-btn")?.addEventListener("click", () => {
+				const curGrade = document.getElementById("grade-filter")?.value || "";
+				openOfficialRosterModal(curGrade);
+				setTimeout(() => window.print(), 300);
 			});
 
 			document.getElementById("reports-modal-close").addEventListener("click", () => reportsModal.classList.add("hidden"));
@@ -4192,8 +4509,12 @@
 			function generateReport() {
 				const docs = getFilteredReportDocs();
 
-				if (currentReportTab === "class-summary") {
+				if (currentReportTab === "official-roster") {
+					renderOfficialRosterReport(docs);
+				} else if (currentReportTab === "class-summary") {
 					renderClassSummaryReport(docs);
+				} else if (currentReportTab === "vulnerable-summary") {
+					renderVulnerableReport(docs);
 				} else if (currentReportTab === "bmi-summary") {
 					renderBmiReport(docs);
 				} else if (currentReportTab === "eye-ear-summary") {
@@ -4203,6 +4524,746 @@
 				} else if (currentReportTab === "contact-sheet") {
 					renderContactSheetReport(docs);
 				}
+			}
+
+			// Render Official Ministry of Education Class Roster (បញ្ជីរាយនាមសិស្សផ្លូវការ)
+			function renderOfficialRosterReport(rawDocs) {
+				const sortedDocs = sortStudentDocs(rawDocs);
+				const selectedGrade = document.getElementById("report-grade-select")?.value.trim() || "";
+				const total = sortedDocs.length;
+
+				let femaleCount = 0;
+				let repeatCount = 0;
+				let repeatFemale = 0;
+				let newCount = 0;
+				let newFemale = 0;
+
+				// Equity / Poor
+				let k1Total = 0;
+				let k1Female = 0;
+				let k2Total = 0;
+				let k2Female = 0;
+				let otherPoorTotal = 0;
+				let otherPoorFemale = 0;
+
+				// Chronic illness
+				let sickTotal = 0;
+				let sickFemale = 0;
+
+				// Orphan Breakdown (MoEYS Standard)
+				let orphanTotal = 0;
+				let orphanFemale = 0;
+				let orphanMotherTotal = 0;
+				let orphanMotherFemale = 0;
+				let orphanFatherTotal = 0;
+				let orphanFatherFemale = 0;
+				let orphanBothTotal = 0;
+				let orphanBothFemale = 0;
+				let orphanUnspecifiedTotal = 0;
+				let orphanUnspecifiedFemale = 0;
+
+				// Disability Breakdown (Washington Group / MoEYS Standard)
+				let disabledTotal = 0;
+				let disabledFemale = 0;
+				let disSeeTotal = 0;
+				let disSeeFemale = 0;
+				let disHearTotal = 0;
+				let disHearFemale = 0;
+				let disSpeakTotal = 0;
+				let disSpeakFemale = 0;
+				let disMoveTotal = 0;
+				let disMoveFemale = 0;
+				let disMindTotal = 0;
+				let disMindFemale = 0;
+				let disCareTotal = 0;
+				let disCareFemale = 0;
+				let disOtherTotal = 0;
+				let disOtherFemale = 0;
+
+				let tableRowsHtml = "";
+				sortedDocs.forEach((d, idx) => {
+					const v = d.values || [];
+					const rowNum = idx + 1;
+					const code = d.studentCode || v[1] || "-";
+					const lastName = d.lastName || v[2] || "";
+					const firstName = d.firstName || v[3] || "";
+					const gender = (d.gender || v[4] || "ស្រី").trim();
+					const isGirl = gender.includes("ស្រី") || gender.toLowerCase().includes("female");
+					const dob = v[5] || "-";
+
+					if (isGirl) femaleCount++;
+
+					// Status checks
+					const isRepeat = checkStudentRepeat(v, d.grade || v[0]);
+					if (isRepeat) {
+						repeatCount++;
+						if (isGirl) repeatFemale++;
+					} else {
+						newCount++;
+						if (isGirl) newFemale++;
+					}
+
+					// Disability checks
+					const disInfo = getStudentDisabilityInfo(v);
+					if (disInfo.hasDisability) {
+						disabledTotal++;
+						if (isGirl) disabledFemale++;
+
+						if (disInfo.type === "see") {
+							disSeeTotal++;
+							if (isGirl) disSeeFemale++;
+						} else if (disInfo.type === "hear") {
+							disHearTotal++;
+							if (isGirl) disHearFemale++;
+						} else if (disInfo.type === "speak") {
+							disSpeakTotal++;
+							if (isGirl) disSpeakFemale++;
+						} else if (disInfo.type === "move") {
+							disMoveTotal++;
+							if (isGirl) disMoveFemale++;
+						} else if (disInfo.type === "mind") {
+							disMindTotal++;
+							if (isGirl) disMindFemale++;
+						} else if (disInfo.type === "care") {
+							disCareTotal++;
+							if (isGirl) disCareFemale++;
+						} else {
+							disOtherTotal++;
+							if (isGirl) disOtherFemale++;
+						}
+					}
+
+					// Orphan checks
+					const orphanInfo = getStudentOrphanInfo(v);
+					if (orphanInfo.isOrphan) {
+						orphanTotal++;
+						if (isGirl) orphanFemale++;
+
+						if (orphanInfo.type === "mother") {
+							orphanMotherTotal++;
+							if (isGirl) orphanMotherFemale++;
+						} else if (orphanInfo.type === "father") {
+							orphanFatherTotal++;
+							if (isGirl) orphanFatherFemale++;
+						} else if (orphanInfo.type === "both") {
+							orphanBothTotal++;
+							if (isGirl) orphanBothFemale++;
+						} else {
+							orphanUnspecifiedTotal++;
+							if (isGirl) orphanUnspecifiedFemale++;
+						}
+					}
+
+					// Equity checks
+					const eq = checkStudentEquity(v);
+					if (eq === "ក្រ១") {
+						k1Total++;
+						if (isGirl) k1Female++;
+					} else if (eq === "ក្រ២") {
+						k2Total++;
+						if (isGirl) k2Female++;
+					} else if (eq === "ផ្សេងៗ") {
+						otherPoorTotal++;
+						if (isGirl) otherPoorFemale++;
+					}
+
+					// Illness checks
+					const isSick = checkStudentIllness(v);
+					if (isSick) {
+						sickTotal++;
+						if (isGirl) sickFemale++;
+					}
+
+					tableRowsHtml += `<tr>
+						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; background: #fafafa;">${rowNum}</td>
+						<td style="border: 1px solid #475569; padding: 4px; font-family: monospace; font-weight: 600;">${code}</td>
+						<td style="border: 1px solid #475569; padding: 4px; text-align: left; font-weight: 600;">${lastName}</td>
+						<td style="border: 1px solid #475569; padding: 4px; text-align: left; font-weight: 600;">${firstName}</td>
+						<td style="border: 1px solid #475569; padding: 4px; color: ${isGirl ? '#ec4899' : '#2563eb'}; font-weight: 600;">${gender}</td>
+						<td style="border: 1px solid #475569; padding: 4px;">${dob}</td>
+						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; color: #dc2626;">${isRepeat ? '✓' : ''}</td>
+						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; color: #16a34a;">${!isRepeat ? '✓' : ''}</td>
+						<td style="border: 1px solid #475569; padding: 4px; font-weight: 600; color: #b45309;" title="${disInfo.label || ''}">${disInfo.hasDisability ? (disInfo.tag || '✓') : ''}</td>
+						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; color: #7c3aed;" title="${orphanInfo.label || ''}">${orphanInfo.isOrphan ? (orphanInfo.tag || '✓') : ''}</td>
+						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; color: #c2410c;">${eq || ''}</td>
+						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; color: #e11d48;">${isSick ? '✓' : ''}</td>
+					</tr>`;
+				});
+
+				// Age breakdown
+				const ageMap = computeAgeBreakdown(sortedDocs);
+				const sortedAges = Object.keys(ageMap).map(n => parseInt(n, 10)).filter(n => n > 0).sort((a, b) => a - b);
+				let ageLinesHtml = "";
+				sortedAges.forEach(ag => {
+					const item = ageMap[ag];
+					ageLinesHtml += `<div style="display: inline-block; margin-right: 1.25rem;">- អាយុ <strong style="color: #0369a1;">${ag}</strong> ឆ្នាំ ចំនួន : <strong>${item.total}</strong> នាក់ (ស្រី ${item.girls} នាក់)</div>`;
+				});
+				if (!ageLinesHtml) ageLinesHtml = "<div>- មិនទាន់មានទិន្នន័យអាយុ</div>";
+
+				const poorTotal = k1Total + k2Total + otherPoorTotal;
+				const poorFemale = k1Female + k2Female + otherPoorFemale;
+
+				const lastStudent = sortedDocs.length > 0 ? sortedDocs[sortedDocs.length - 1] : null;
+				const lastIndex = sortedDocs.length;
+				const lastStudentName = lastStudent ? `${lastStudent.lastName || ""} ${lastStudent.firstName || ""}`.trim() : "-";
+				const lastStudentGender = lastStudent ? (lastStudent.gender || "ស្រី") : "-";
+
+				reportContainer.innerHTML = `
+					<!-- Printable Official Ministry Header (MoEYS Administrative Standard) -->
+					<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.85rem; font-family: inherit;">
+						<!-- Left: Institutional Hierarchy -->
+						<div style="text-align: left; font-size: 0.85rem; line-height: 1.5; color: #1e293b;">
+							<div style="font-weight: 700; color: #1e3a8a;">មន្ទីរអប់រំ យុវជន និងកីឡាខេត្តបន្ទាយមានជ័យ</div>
+							<div style="font-weight: 600; color: #334155;">ការិយាល័យអប់រំ យុវជន និងកីឡាស្រុកភ្នំស្រុក</div>
+							<div style="font-weight: 700; color: #0f172a;">សាលាបឋមសិក្សា រោគ</div>
+						</div>
+
+						<!-- Right / Top-Center: Royal National Motto -->
+						<div style="text-align: center; min-width: 230px;">
+							<div style="font-weight: 800; font-size: 1.05rem; color: #1e3a8a; letter-spacing: 0.5px;">ព្រះរាជាណាចក្រកម្ពុជា</div>
+							<div style="font-weight: 700; font-size: 0.9rem; color: #b45309; margin-top: 2px;">ជាតិ សាសនា ព្រះមហាក្សត្រ</div>
+							<div style="width: 85px; height: 1.5px; background: #b45309; margin: 4px auto 0 auto;"></div>
+						</div>
+					</div>
+
+					<!-- Center Title & Academic Year -->
+					<div style="text-align: center; margin-bottom: 1rem;">
+						<h3 style="margin: 0.25rem 0 0.2rem 0; font-size: 1.25rem; color: #1e40af; font-weight: 800;">
+							បញ្ជីរាយនាមសិស្ស ថ្នាក់${selectedGrade ? ' ' + selectedGrade : 'គ្រប់ថ្នាក់'}
+						</h3>
+						<div style="font-size: 0.9rem; font-weight: 600; color: #475569;">ឆ្នាំសិក្សា២០២៦-២០២៧</div>
+					</div>
+
+					<!-- Official 12-Column Table matching MoEYS template -->
+					<div style="overflow-x: auto; margin-bottom: 1rem;">
+						<table border="1" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; font-size: 0.775rem; text-align: center; border: 1.5px solid #334155;">
+							<thead>
+								<tr style="background: #f1f5f9; color: #0f172a;">
+									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 36px;">ល.រ</th>
+									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 75px;">អត្តលេខ</th>
+									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 105px;">គោត្តនាម</th>
+									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 85px;">នាម</th>
+									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 48px;">ភេទ</th>
+									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 95px;">ថ្ងៃខែឆ្នាំកំណើត</th>
+									<th colspan="2" style="border: 1px solid #475569; padding: 4px;">ប្រភេទសិស្ស</th>
+									<th colspan="4" style="border: 1px solid #475569; padding: 4px;">ផ្សេងៗ</th>
+								</tr>
+								<tr style="background: #f8fafc; color: #334155;">
+									<th style="border: 1px solid #475569; padding: 3px; width: 44px;">ត្រួត</th>
+									<th style="border: 1px solid #475569; padding: 3px; width: 44px;">ថ្មី</th>
+									<th style="border: 1px solid #475569; padding: 3px; width: 50px;">ពិការ</th>
+									<th style="border: 1px solid #475569; padding: 3px; width: 50px;">កំព្រា</th>
+									<th style="border: 1px solid #475569; padding: 3px; width: 55px;">ក្រីក្រ</th>
+									<th style="border: 1px solid #475569; padding: 3px; width: 55px;">មានជម្ងឺ</th>
+								</tr>
+							</thead>
+							<tbody>
+								${tableRowsHtml || '<tr><td colspan="12" style="padding: 2rem; color: #64748b;">មិនមានទិន្នន័យសិស្សក្នុងថ្នាក់នេះទេ</td></tr>'}
+							</tbody>
+						</table>
+					</div>
+
+					<!-- Official Closing Paragraph & Detailed Breakdown requested by user -->
+					<div class="roster-official-footer" style="background: #ffffff; border: 1.5px solid #0284c7; border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.825rem; line-height: 1.65; color: #0f172a;">
+						<div style="font-weight: 700; font-size: 0.925rem; color: #1e3a8a; margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1.5px dashed #bae6fd;">
+							📌 បញ្ឈប់បញ្ជីត្រឹមលេខរៀងទី <strong style="color: #dc2626; font-size: 1.05rem;">${lastIndex}</strong> ត្រង់ឈ្មោះ <strong style="color: #1e40af; font-size: 1.05rem;">${lastStudentName}</strong> (ភេទ ${lastStudentGender})
+						</div>
+
+						<div style="display: flex; flex-direction: column; gap: 0.5rem;">
+							<!-- General Enrollment Summary -->
+							<div style="display: flex; flex-wrap: wrap; gap: 1.5rem; background: #f0fdf4; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #bbf7d0;">
+								<div>- <strong>សិស្សសរុប ចំនួន :</strong> <strong style="color: #1e40af; font-size: 0.95rem;">${total}</strong> នាក់ (ស្រី <strong style="color: #ec4899;">${femaleCount}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${total - femaleCount}</strong> នាក់)</div>
+								<div>- <strong>សិស្សថ្មី ចំនួន :</strong> ${newCount} នាក់ (ស្រី ${newFemale} នាក់)</div>
+								<div>- <strong>សិស្សត្រួតថ្នាក់ ចំនួន :</strong> ${repeatCount} នាក់ (ស្រី ${repeatFemale} នាក់)</div>
+							</div>
+
+							<!-- Age Breakdown -->
+							<div style="background: #f8fafc; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+								<div style="font-weight: 700; color: #0369a1; margin-bottom: 0.2rem;">🎂 បែងចែកតាមអាយុសិស្សក្នុងថ្នាក់៖</div>
+								<div style="display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem;">
+									${ageLinesHtml}
+								</div>
+							</div>
+
+							<!-- Poor & Equity Card Breakdown -->
+							<div style="display: flex; flex-wrap: wrap; gap: 1rem; background: #fffbeb; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #fef08a;">
+								<div>- <strong>សិស្សមកពីគ្រួសារក្រីក្រ សរុបចំនួន :</strong> <strong style="color: #dc2626;">${poorTotal}</strong> នាក់ (ស្រី ${poorFemale} នាក់)</div>
+								<div>• <strong>ក្រ១ សរុប :</strong> ${k1Total} នាក់ (ស្រី ${k1Female} នាក់)</div>
+								<div>• <strong>ក្រ២ សរុប :</strong> ${k2Total} នាក់ (ស្រី ${k2Female} នាក់)</div>
+								<div>• <strong>ផ្សេងៗ សរុប :</strong> ${otherPoorTotal} នាក់ (ស្រី ${otherPoorFemale} នាក់)</div>
+							</div>
+
+							<!-- Orphan Breakdown Box (Requested by User) -->
+							<div style="background: #fdf2f8; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #fbcfe8;">
+								<div style="font-weight: 700; color: #9d174d; margin-bottom: 0.25rem;">
+									🕊️ <strong>សិស្សកំព្រា សរុប ចំនួន :</strong> <strong style="color: #be185d; font-size: 0.95rem;">${orphanTotal}</strong> នាក់ (ស្រី <strong style="color: #db2777;">${orphanFemale}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${orphanTotal - orphanFemale}</strong> នាក់)
+								</div>
+								<div style="display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; font-size: 0.825rem; color: #831843;">
+									<div>• <strong>កំព្រាម្ដាយ :</strong> <strong>${orphanMotherTotal}</strong> នាក់ (ស្រី ${orphanMotherFemale} នាក់)</div>
+									<div>• <strong>កំព្រាឪពុក :</strong> <strong>${orphanFatherTotal}</strong> នាក់ (ស្រី ${orphanFatherFemale} នាក់)</div>
+									<div>• <strong>កំព្រាឪពុកម្ដាយ (ទាំងពីរ) :</strong> <strong>${orphanBothTotal}</strong> នាក់ (ស្រី ${orphanBothFemale} នាក់)</div>
+									${orphanUnspecifiedTotal > 0 ? `<div>• <strong>កំព្រាផ្សេងៗ :</strong> <strong>${orphanUnspecifiedTotal}</strong> នាក់ (ស្រី ${orphanUnspecifiedFemale} នាក់)</div>` : ''}
+								</div>
+							</div>
+
+							<!-- Disability Breakdown Box (Requested by User) -->
+							<div style="background: #faf5ff; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #e9d5ff;">
+								<div style="font-weight: 700; color: #6b21a8; margin-bottom: 0.25rem;">
+									♿ <strong>សិស្សមានពិការភាព សរុប ចំនួន :</strong> <strong style="color: #7e22ce; font-size: 0.95rem;">${disabledTotal}</strong> នាក់ (ស្រី <strong style="color: #9333ea;">${disabledFemale}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${disabledTotal - disabledFemale}</strong> នាក់)
+								</div>
+								<div style="display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; font-size: 0.825rem; color: #581c87;">
+									<div>• <strong>ពិបាកមើល (ភ្នែក/គំហើញ) :</strong> <strong>${disSeeTotal}</strong> នាក់ (ស្រី ${disSeeFemale} នាក់)</div>
+									<div>• <strong>ពិបាកស្តាប់ (ត្រចៀក/ការស្តាប់) :</strong> <strong>${disHearTotal}</strong> នាក់ (ស្រី ${disHearFemale} នាក់)</div>
+									<div>• <strong>ពិបាកនិយាយ (សំឡេង/ទំនាក់ទំនង) :</strong> <strong>${disSpeakTotal}</strong> នាក់ (ស្រី ${disSpeakFemale} នាក់)</div>
+									<div>• <strong>ពិបាកធ្វើចលនា (រាងកាយ/ដៃជើង) :</strong> <strong>${disMoveTotal}</strong> នាក់ (ស្រី ${disMoveFemale} នាក់)</div>
+									<div>• <strong>ពិបាកចងចាំ ឬផ្ចង់អារម្មណ៍ (បញ្ញា) :</strong> <strong>${disMindTotal}</strong> នាក់ (ស្រី ${disMindFemale} នាក់)</div>
+									${disCareTotal > 0 ? `<div>• <strong>ពិបាកថែទាំខ្លួនឯង :</strong> <strong>${disCareTotal}</strong> នាក់ (ស្រី ${disCareFemale} នាក់)</div>` : ''}
+									${disOtherTotal > 0 ? `<div>• <strong>ពិការភាពផ្សេងៗ :</strong> <strong>${disOtherTotal}</strong> នាក់ (ស្រី ${disOtherFemale} នាក់)</div>` : ''}
+								</div>
+							</div>
+
+							<!-- Chronic Illness Box -->
+							<div style="background: #fff1f2; padding: 0.4rem 0.65rem; border-radius: 6px; border: 1px solid #fecdd3; font-size: 0.825rem; color: #9f1239;">
+								<div>- 🩺 <strong>សិស្សមានជម្ងឺរ៉ាំរ៉ៃ សរុប :</strong> <strong>${sickTotal}</strong> នាក់ (ស្រី ${sickFemale} នាក់, ប្រុស ${sickTotal - sickFemale} នាក់)</div>
+							</div>
+						</div>
+
+						<!-- Official 3-Signatory Block & Dual Dates (សុរិយគតិ និង ច័ន្ទគតិ) -->
+						<div class="official-signature-hierarchy" style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 2rem; padding-top: 1rem; border-top: 1.5px dashed #cbd5e1; text-align: center; page-break-inside: avoid;">
+							<!-- Signatory 1: នាយកសាលា -->
+							<div style="flex: 1; min-width: 170px; padding: 0 0.5rem;">
+								<div style="font-size: 0.8rem; color: #475569; font-weight: 600;">បានឃើញ និងឯកភាព</div>
+								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.95rem; margin-top: 3px;">នាយកសាលា</div>
+								<div style="font-size: 0.725rem; color: #94a3b8; margin-top: 2px;">(ហត្ថលេខា និងត្រា)</div>
+								<div style="height: 60px;"></div>
+								<div style="border-top: 1px dotted #94a3b8; width: 140px; margin: 0 auto;"></div>
+							</div>
+
+							<!-- Signatory 2: នាយកសាលានុក្រម -->
+							<div style="flex: 1; min-width: 170px; padding: 0 0.5rem;">
+								<div style="font-size: 0.8rem; color: #475569; font-weight: 600;">បានពិនិត្យត្រឹមត្រូវ</div>
+								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.95rem; margin-top: 3px;">នាយកសាលានុក្រម</div>
+								<div style="font-size: 0.725rem; color: #94a3b8; margin-top: 2px;">(ហត្ថលេខា)</div>
+								<div style="height: 60px;"></div>
+								<div style="border-top: 1px dotted #94a3b8; width: 140px; margin: 0 auto;"></div>
+							</div>
+
+							<!-- Signatory 3: គ្រូបន្ទុកថ្នាក់ (With Dual Dates: ច័ន្ទគតិ & សុរិយគតិ) -->
+							<div style="flex: 1.25; min-width: 240px; padding: 0 0.5rem;">
+								<div style="font-size: 0.775rem; color: #334155; line-height: 1.5; margin-bottom: 4px;">
+									<div style="font-weight: 500;">
+										<span style="font-weight: 700; color: #b45309;">ច័ន្ទគតិ ៖</span> ថ្ងៃ...................... .........កើត/រោច ខែ........... ឆ្នាំ........... ព.ស. ២៥៦...
+									</div>
+									<div style="font-weight: 600; color: #0f172a;">
+										<span style="font-weight: 700; color: #0284c7;">សុរិយគតិ ៖</span> រោគ, ថ្ងៃទី......... ខែ.................. ឆ្នាំ២០២...
+									</div>
+								</div>
+								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.95rem; margin-top: 3px;">គ្រូបន្ទុកថ្នាក់</div>
+								<div style="font-size: 0.725rem; color: #94a3b8; margin-top: 2px;">(ហត្ថលេខា)</div>
+								<div style="height: 48px;"></div>
+								<div style="border-top: 1px dotted #94a3b8; width: 140px; margin: 0 auto;"></div>
+							</div>
+						</div>
+					</div>
+				`;
+			}
+
+			// Update the official summary card on the main page (ក្រោមតារាងផ្ទាល់)
+			function updateMainTableOfficialSummary() {
+				const contentEl = document.getElementById("main-table-official-summary-content");
+				const labelEl = document.getElementById("main-summary-grade-label");
+				if (!contentEl) return;
+
+				// Collect visible students currently shown in table
+				const visibleDocs = [];
+				for (const row of studentTbody.rows) {
+					if (row.dataset.id && !row.hidden) {
+						const doc = studentDocs.find(d => d.id === row.dataset.id);
+						if (doc) visibleDocs.push(doc);
+					}
+				}
+
+				const selectedGrade = document.getElementById("grade-filter")?.value.trim() || "";
+				if (labelEl) {
+					labelEl.textContent = selectedGrade ? ("ថ្នាក់ " + selectedGrade) : "គ្រប់ថ្នាក់ទាំងអស់";
+				}
+
+				const sortedDocs = sortStudentDocs(visibleDocs);
+				const total = sortedDocs.length;
+				if (total === 0) {
+					contentEl.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 1rem;">មិនមានទិន្នន័យសិស្សត្រូវបង្ហាញក្នុងសេចក្ដីសង្ខេបទេ</div>';
+					return;
+				}
+
+				let femaleCount = 0;
+				let repeatCount = 0;
+				let repeatFemale = 0;
+				let newCount = 0;
+				let newFemale = 0;
+
+				let k1Total = 0;
+				let k1Female = 0;
+				let k2Total = 0;
+				let k2Female = 0;
+				let otherPoorTotal = 0;
+				let otherPoorFemale = 0;
+
+				let sickTotal = 0;
+				let sickFemale = 0;
+
+				// Orphan Breakdown
+				let orphanTotal = 0;
+				let orphanFemale = 0;
+				let orphanMotherTotal = 0;
+				let orphanMotherFemale = 0;
+				let orphanFatherTotal = 0;
+				let orphanFatherFemale = 0;
+				let orphanBothTotal = 0;
+				let orphanBothFemale = 0;
+				let orphanUnspecifiedTotal = 0;
+				let orphanUnspecifiedFemale = 0;
+
+				// Disability Breakdown
+				let disabledTotal = 0;
+				let disabledFemale = 0;
+				let disSeeTotal = 0;
+				let disSeeFemale = 0;
+				let disHearTotal = 0;
+				let disHearFemale = 0;
+				let disSpeakTotal = 0;
+				let disSpeakFemale = 0;
+				let disMoveTotal = 0;
+				let disMoveFemale = 0;
+				let disMindTotal = 0;
+				let disMindFemale = 0;
+				let disCareTotal = 0;
+				let disCareFemale = 0;
+				let disOtherTotal = 0;
+				let disOtherFemale = 0;
+
+				sortedDocs.forEach((d) => {
+					const v = d.values || [];
+					const gender = (d.gender || v[4] || "ស្រី").trim();
+					const isGirl = gender.includes("ស្រី") || gender.toLowerCase().includes("female");
+					if (isGirl) femaleCount++;
+
+					if (checkStudentRepeat(v, d.grade || v[0])) {
+						repeatCount++;
+						if (isGirl) repeatFemale++;
+					} else {
+						newCount++;
+						if (isGirl) newFemale++;
+					}
+
+					// Disability checks
+					const disInfo = getStudentDisabilityInfo(v);
+					if (disInfo.hasDisability) {
+						disabledTotal++;
+						if (isGirl) disabledFemale++;
+
+						if (disInfo.type === "see") {
+							disSeeTotal++;
+							if (isGirl) disSeeFemale++;
+						} else if (disInfo.type === "hear") {
+							disHearTotal++;
+							if (isGirl) disHearFemale++;
+						} else if (disInfo.type === "speak") {
+							disSpeakTotal++;
+							if (isGirl) disSpeakFemale++;
+						} else if (disInfo.type === "move") {
+							disMoveTotal++;
+							if (isGirl) disMoveFemale++;
+						} else if (disInfo.type === "mind") {
+							disMindTotal++;
+							if (isGirl) disMindFemale++;
+						} else if (disInfo.type === "care") {
+							disCareTotal++;
+							if (isGirl) disCareFemale++;
+						} else {
+							disOtherTotal++;
+							if (isGirl) disOtherFemale++;
+						}
+					}
+
+					// Orphan checks
+					const orphanInfo = getStudentOrphanInfo(v);
+					if (orphanInfo.isOrphan) {
+						orphanTotal++;
+						if (isGirl) orphanFemale++;
+
+						if (orphanInfo.type === "mother") {
+							orphanMotherTotal++;
+							if (isGirl) orphanMotherFemale++;
+						} else if (orphanInfo.type === "father") {
+							orphanFatherTotal++;
+							if (isGirl) orphanFatherFemale++;
+						} else if (orphanInfo.type === "both") {
+							orphanBothTotal++;
+							if (isGirl) orphanBothFemale++;
+						} else {
+							orphanUnspecifiedTotal++;
+							if (isGirl) orphanUnspecifiedFemale++;
+						}
+					}
+
+					const eq = checkStudentEquity(v);
+					if (eq === "ក្រ១") {
+						k1Total++;
+						if (isGirl) k1Female++;
+					} else if (eq === "ក្រ២") {
+						k2Total++;
+						if (isGirl) k2Female++;
+					} else if (eq === "ផ្សេងៗ") {
+						otherPoorTotal++;
+						if (isGirl) otherPoorFemale++;
+					}
+
+					if (checkStudentIllness(v)) {
+						sickTotal++;
+						if (isGirl) sickFemale++;
+					}
+				});
+
+				const ageMap = computeAgeBreakdown(sortedDocs);
+				const sortedAges = Object.keys(ageMap).map(n => parseInt(n, 10)).filter(n => n > 0).sort((a, b) => a - b);
+				let ageLinesHtml = "";
+				sortedAges.forEach(ag => {
+					const item = ageMap[ag];
+					ageLinesHtml += `<div style="display: inline-block; margin-right: 1.25rem;">- អាយុ <strong style="color: #0369a1;">${ag}</strong> ឆ្នាំ ចំនួន : <strong>${item.total}</strong> នាក់ (ស្រី ${item.girls} នាក់)</div>`;
+				});
+				if (!ageLinesHtml) ageLinesHtml = "<div>- មិនទាន់មានទិន្នន័យអាយុ</div>";
+
+				const poorTotal = k1Total + k2Total + otherPoorTotal;
+				const poorFemale = k1Female + k2Female + otherPoorFemale;
+
+				const lastStudent = sortedDocs[sortedDocs.length - 1];
+				const lastIndex = sortedDocs.length;
+				const lastStudentName = lastStudent ? `${lastStudent.lastName || ""} ${lastStudent.firstName || ""}`.trim() : "-";
+				const lastStudentGender = lastStudent ? (lastStudent.gender || "ស្រី") : "-";
+
+				contentEl.innerHTML = `
+					<div style="font-weight: 700; font-size: 0.9rem; color: #1e3a8a; margin-bottom: 0.5rem; padding-bottom: 0.35rem; border-bottom: 1.5px dashed #bae6fd;">
+						📌 បញ្ឈប់បញ្ជីត្រឹមលេខរៀងទី <strong style="color: #dc2626; font-size: 1rem;">${lastIndex}</strong> ត្រង់ឈ្មោះ <strong style="color: #1e40af; font-size: 1rem;">${lastStudentName}</strong> (ភេទ ${lastStudentGender})
+					</div>
+					<div style="display: flex; flex-direction: column; gap: 0.45rem;">
+						<!-- Summary line 1: General numbers -->
+						<div style="display: flex; flex-wrap: wrap; gap: 1.5rem; background: #f0fdf4; padding: 0.35rem 0.6rem; border-radius: 6px; border: 1px solid #bbf7d0;">
+							<div>- <strong>សិស្សសរុប ចំនួន :</strong> <strong style="color: #1e40af;">${total}</strong> នាក់ (ស្រី <strong style="color: #ec4899;">${femaleCount}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${total - femaleCount}</strong> នាក់)</div>
+							<div>- <strong>សិស្សថ្មី ចំនួន :</strong> ${newCount} នាក់ (ស្រី ${newFemale} នាក់)</div>
+							<div>- <strong>សិស្សត្រួតថ្នាក់ ចំនួន :</strong> ${repeatCount} នាក់ (ស្រី ${repeatFemale} នាក់)</div>
+						</div>
+
+						<!-- Age Breakdown -->
+						<div style="background: #f8fafc; padding: 0.35rem 0.6rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+							<div style="font-weight: 700; color: #0369a1; margin-bottom: 0.15rem;">🎂 បែងចែកតាមអាយុ៖</div>
+							<div style="display: flex; flex-wrap: wrap; gap: 0.3rem 1.25rem;">
+								${ageLinesHtml}
+							</div>
+						</div>
+
+						<!-- Poor Breakdown -->
+						<div style="display: flex; flex-wrap: wrap; gap: 1rem; background: #fffbeb; padding: 0.35rem 0.6rem; border-radius: 6px; border: 1px solid #fef08a;">
+							<div>- <strong>សិស្សមកពីគ្រួសារក្រីក្រ សរុបចំនួន :</strong> <strong style="color: #dc2626;">${poorTotal}</strong> នាក់ (ស្រី ${poorFemale} នាក់)</div>
+							<div>• <strong>ក្រ១ សរុប :</strong> ${k1Total} នាក់ (ស្រី ${k1Female} នាក់)</div>
+							<div>• <strong>ក្រ២ សរុប :</strong> ${k2Total} នាក់ (ស្រី ${k2Female} នាក់)</div>
+							<div>• <strong>ផ្សេងៗ សរុប :</strong> ${otherPoorTotal} នាក់ (ស្រី ${otherPoorFemale} នាក់)</div>
+						</div>
+
+						<!-- Orphan Breakdown (Requested by User) -->
+						<div style="background: #fdf2f8; padding: 0.4rem 0.65rem; border-radius: 6px; border: 1px solid #fbcfe8;">
+							<div style="font-weight: 700; color: #9d174d; margin-bottom: 0.2rem;">
+								🕊️ <strong>សិស្សកំព្រា សរុប ចំនួន :</strong> <strong style="color: #be185d;">${orphanTotal}</strong> នាក់ (ស្រី <strong style="color: #db2777;">${orphanFemale}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${orphanTotal - orphanFemale}</strong> នាក់)
+							</div>
+							<div style="display: flex; flex-wrap: wrap; gap: 0.35rem 1.5rem; font-size: 0.8rem; color: #831843;">
+								<div>• <strong>កំព្រាម្ដាយ :</strong> <strong>${orphanMotherTotal}</strong> នាក់ (ស្រី ${orphanMotherFemale} នាក់)</div>
+								<div>• <strong>កំព្រាឪពុក :</strong> <strong>${orphanFatherTotal}</strong> នាក់ (ស្រី ${orphanFatherFemale} នាក់)</div>
+								<div>• <strong>កំព្រាឪពុកម្ដាយ (ទាំងពីរ) :</strong> <strong>${orphanBothTotal}</strong> នាក់ (ស្រី ${orphanBothFemale} នាក់)</div>
+								${orphanUnspecifiedTotal > 0 ? `<div>• <strong>កំព្រាផ្សេងៗ :</strong> <strong>${orphanUnspecifiedTotal}</strong> នាក់ (ស្រី ${orphanUnspecifiedFemale} នាក់)</div>` : ''}
+							</div>
+						</div>
+
+						<!-- Disability Breakdown (Requested by User) -->
+						<div style="background: #faf5ff; padding: 0.4rem 0.65rem; border-radius: 6px; border: 1px solid #e9d5ff;">
+							<div style="font-weight: 700; color: #6b21a8; margin-bottom: 0.2rem;">
+								♿ <strong>សិស្សមានពិការភាព សរុប ចំនួន :</strong> <strong style="color: #7e22ce;">${disabledTotal}</strong> នាក់ (ស្រី <strong style="color: #9333ea;">${disabledFemale}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${disabledTotal - disabledFemale}</strong> នាក់)
+							</div>
+							<div style="display: flex; flex-wrap: wrap; gap: 0.3rem 1.25rem; font-size: 0.8rem; color: #581c87;">
+								<div>• <strong>ពិបាកមើល (ភ្នែក/គំហើញ) :</strong> <strong>${disSeeTotal}</strong> នាក់ (ស្រី ${disSeeFemale} នាក់)</div>
+								<div>• <strong>ពិបាកស្តាប់ (ត្រចៀក/ការស្តាប់) :</strong> <strong>${disHearTotal}</strong> នាក់ (ស្រី ${disHearFemale} នាក់)</div>
+								<div>• <strong>ពិបាកនិយាយ (សំឡេង/ទំនាក់ទំនង) :</strong> <strong>${disSpeakTotal}</strong> នាក់ (ស្រី ${disSpeakFemale} នាក់)</div>
+								<div>• <strong>ពិបាកធ្វើចលនា (រាងកាយ/ដៃជើង) :</strong> <strong>${disMoveTotal}</strong> នាក់ (ស្រី ${disMoveFemale} នាក់)</div>
+								<div>• <strong>ពិបាកចងចាំ ឬផ្ចង់អារម្មណ៍ :</strong> <strong>${disMindTotal}</strong> នាក់ (ស្រី ${disMindFemale} នាក់)</div>
+								${disCareTotal > 0 ? `<div>• <strong>ពិបាកថែទាំខ្លួនឯង :</strong> <strong>${disCareTotal}</strong> នាក់ (ស្រី ${disCareFemale} នាក់)</div>` : ''}
+								${disOtherTotal > 0 ? `<div>• <strong>ពិការភាពផ្សេងៗ :</strong> <strong>${disOtherTotal}</strong> នាក់ (ស្រី ${disOtherFemale} នាក់)</div>` : ''}
+							</div>
+						</div>
+
+						<!-- Chronic Illness Box -->
+						<div style="background: #fff1f2; padding: 0.35rem 0.6rem; border-radius: 6px; border: 1px solid #fecdd3; font-size: 0.8rem; color: #9f1239;">
+							<div>- 🩺 <strong>សិស្សមានជម្ងឺរ៉ាំរ៉ៃ សរុប :</strong> <strong>${sickTotal}</strong> នាក់ (ស្រី ${sickFemale} នាក់, ប្រុស ${sickTotal - sickFemale} នាក់)</div>
+						</div>
+
+						<!-- Official 3-Signatory Block & Dual Dates (សុរិយគតិ និង ច័ន្ទគតិ) -->
+						<div class="official-signature-hierarchy" style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 1.25rem; padding-top: 0.75rem; border-top: 1.5px dashed #cbd5e1; text-align: center;">
+							<!-- Signatory 1: នាយកសាលា -->
+							<div style="flex: 1; min-width: 150px; padding: 0 0.5rem;">
+								<div style="font-size: 0.775rem; color: #475569; font-weight: 600;">បានឃើញ និងឯកភាព</div>
+								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.875rem; margin-top: 2px;">នាយកសាលា</div>
+								<div style="font-size: 0.7rem; color: #94a3b8;">(ហត្ថលេខា និងត្រា)</div>
+								<div style="height: 48px;"></div>
+								<div style="border-top: 1px dotted #94a3b8; width: 120px; margin: 0 auto;"></div>
+							</div>
+
+							<!-- Signatory 2: នាយកសាលានុក្រម -->
+							<div style="flex: 1; min-width: 150px; padding: 0 0.5rem;">
+								<div style="font-size: 0.775rem; color: #475569; font-weight: 600;">បានពិនិត្យត្រឹមត្រូវ</div>
+								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.875rem; margin-top: 2px;">នាយកសាលានុក្រម</div>
+								<div style="font-size: 0.7rem; color: #94a3b8;">(ហត្ថលេខា)</div>
+								<div style="height: 48px;"></div>
+								<div style="border-top: 1px dotted #94a3b8; width: 120px; margin: 0 auto;"></div>
+							</div>
+
+							<!-- Signatory 3: គ្រូបន្ទុកថ្នាក់ (With Dual Dates: ច័ន្ទគតិ & សុរិយគតិ) -->
+							<div style="flex: 1.2; min-width: 220px; padding: 0 0.5rem;">
+								<div style="font-size: 0.75rem; color: #334155; line-height: 1.45; margin-bottom: 3px;">
+									<div style="font-weight: 500;">
+										<span style="font-weight: 700; color: #b45309;">ច័ន្ទគតិ ៖</span> ថ្ងៃ...................... .........កើត/រោច ខែ........... ឆ្នាំ........... ព.ស. ២៥៦...
+									</div>
+									<div style="font-weight: 600; color: #0f172a;">
+										<span style="font-weight: 700; color: #0284c7;">សុរិយគតិ ៖</span> រោគ, ថ្ងៃទី......... ខែ.................. ឆ្នាំ២០២...
+									</div>
+								</div>
+								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.875rem; margin-top: 2px;">គ្រូបន្ទុកថ្នាក់</div>
+								<div style="font-size: 0.7rem; color: #94a3b8;">(ហត្ថលេខា)</div>
+								<div style="height: 42px;"></div>
+								<div style="border-top: 1px dotted #94a3b8; width: 120px; margin: 0 auto;"></div>
+							</div>
+						</div>
+					</div>
+				`;
+			}
+
+			// Render Dedicated Vulnerable Students Report (សិស្សពិការភាព និងកំព្រា)
+			function renderVulnerableReport(docs) {
+				let orphanMother = 0, orphanMotherF = 0;
+				let orphanFather = 0, orphanFatherF = 0;
+				let orphanBoth = 0, orphanBothF = 0;
+				let orphanOther = 0, orphanOtherF = 0;
+
+				let disSee = 0, disSeeF = 0;
+				let disHear = 0, disHearF = 0;
+				let disSpeak = 0, disSpeakF = 0;
+				let disMove = 0, disMoveF = 0;
+				let disMind = 0, disMindF = 0;
+				let disOther = 0, disOtherF = 0;
+
+				const vulnerableStudents = [];
+
+				docs.forEach((d) => {
+					const v = d.values || [];
+					const isGirl = (d.gender || v[4] || "ស្រី").includes("ស្រី");
+					const orphanInfo = getStudentOrphanInfo(v);
+					const disInfo = getStudentDisabilityInfo(v);
+
+					if (orphanInfo.isOrphan) {
+						if (orphanInfo.type === "mother") { orphanMother++; if (isGirl) orphanMotherF++; }
+						else if (orphanInfo.type === "father") { orphanFather++; if (isGirl) orphanFatherF++; }
+						else if (orphanInfo.type === "both") { orphanBoth++; if (isGirl) orphanBothF++; }
+						else { orphanOther++; if (isGirl) orphanOtherF++; }
+					}
+
+					if (disInfo.hasDisability) {
+						if (disInfo.type === "see") { disSee++; if (isGirl) disSeeF++; }
+						else if (disInfo.type === "hear") { disHear++; if (isGirl) disHearF++; }
+						else if (disInfo.type === "speak") { disSpeak++; if (isGirl) disSpeakF++; }
+						else if (disInfo.type === "move") { disMove++; if (isGirl) disMoveF++; }
+						else if (disInfo.type === "mind") { disMind++; if (isGirl) disMindF++; }
+						else { disOther++; if (isGirl) disOtherF++; }
+					}
+
+					if (orphanInfo.isOrphan || disInfo.hasDisability) {
+						vulnerableStudents.push({
+							doc: d,
+							orphanInfo,
+							disInfo,
+							isGirl
+						});
+					}
+				});
+
+				const totalOrphan = orphanMother + orphanFather + orphanBoth + orphanOther;
+				const totalOrphanF = orphanMotherF + orphanFatherF + orphanBothF + orphanOtherF;
+				const totalDis = disSee + disHear + disSpeak + disMove + disMind + disOther;
+				const totalDisF = disSeeF + disHearF + disSpeakF + disMoveF + disMindF + disOtherF;
+
+				let rowsHtml = "";
+				vulnerableStudents.forEach((item, idx) => {
+					const d = item.doc;
+					const v = d.values || [];
+					rowsHtml += `<tr>
+						<td>${idx + 1}</td>
+						<td style="font-family: monospace; font-weight: 600;">${d.studentCode || v[1] || "-"}</td>
+						<td style="font-weight: 600; text-align: left;">${d.lastName || v[2]} ${d.firstName || v[3]}</td>
+						<td style="color: ${item.isGirl ? '#ec4899' : '#2563eb'}; font-weight: 600;">${d.gender || v[4]}</td>
+						<td>${d.grade || v[0]}</td>
+						<td><span style="font-weight: 700; color: #be185d;">${item.orphanInfo.isOrphan ? item.orphanInfo.label : '-'}</span></td>
+						<td><span style="font-weight: 700; color: #7e22ce;">${item.disInfo.hasDisability ? item.disInfo.label : '-'}</span></td>
+						<td>${v[64] || "អាណាព្យាបាល"}៖ ${v[65] || ""} ${v[66] || ""}</td>
+						<td style="font-weight: 700; color: #1e40af;">${v[68] || v[50] || v[58] || "-"}</td>
+					</tr>`;
+				});
+
+				reportContainer.innerHTML = `
+					<!-- Top Summary Cards -->
+					<div class="report-summary-cards" style="margin-bottom: 0.85rem;">
+						<div class="summary-card" style="border-left: 4px solid #be185d;">
+							<div class="summary-num" style="color: #be185d;">${totalOrphan}</div>
+							<div class="summary-label">សិស្សកំព្រាសរុប (ស្រី ${totalOrphanF})</div>
+							<div style="font-size: 0.725rem; color: #64748b; margin-top: 0.2rem;">
+								ម្ដាយ: ${orphanMother} | ឪពុក: ${orphanFather} | ទាំងពីរ: ${orphanBoth}
+							</div>
+						</div>
+						<div class="summary-card" style="border-left: 4px solid #7e22ce;">
+							<div class="summary-num" style="color: #7e22ce;">${totalDis}</div>
+							<div class="summary-label">សិស្សពិការភាពសរុប (ស្រី ${totalDisF})</div>
+							<div style="font-size: 0.725rem; color: #64748b; margin-top: 0.2rem;">
+								មើល: ${disSee} | ស្ដាប់: ${disHear} | និយាយ: ${disSpeak} | ចលនា: ${disMove} | ចងចាំ: ${disMind}
+							</div>
+						</div>
+					</div>
+
+					<h4 style="margin: 0.5rem 0 0.35rem 0; color: #1e3a8a;">📋 បញ្ជីរាយនាមសិស្សកំព្រា និងសិស្សមានពិការភាព</h4>
+					<table style="width: 100%;">
+						<thead>
+							<tr>
+								<th>ល.រ</th>
+								<th>អត្តលេខ</th>
+								<th>ឈ្មោះសិស្ស</th>
+								<th>ភេទ</th>
+								<th>ថ្នាក់</th>
+								<th>ស្ថានភាពកំព្រា</th>
+								<th>ប្រភេទពិការភាព</th>
+								<th>អាណាព្យាបាល</th>
+								<th>លេខទូរស័ព្ទ</th>
+							</tr>
+						</thead>
+						<tbody>${rowsHtml || '<tr><td colspan="9" style="padding: 1.5rem; color: #64748b;">មិនមានសិស្សកំព្រា ឬពិការភាពក្នុងបញ្ជីនេះទេ</td></tr>'}</tbody>
+					</table>
+				`;
+			}
+
+			function openOfficialRosterModal(gradeValue) {
+				const repGradeSelect = document.getElementById("report-grade-select");
+				if (repGradeSelect && gradeValue !== undefined) {
+					repGradeSelect.value = gradeValue;
+				}
+				currentReportTab = "official-roster";
+				document.querySelectorAll(".report-tab-btn").forEach(b => {
+					b.classList.toggle("active", b.dataset.tab === "official-roster");
+				});
+				document.getElementById("report-date-text").textContent = new Date().toLocaleDateString('km-KH');
+				generateReport();
+				reportsModal.classList.remove("hidden");
 			}
 
 			function renderClassSummaryReport(docs) {
@@ -5253,28 +6314,41 @@
 			updateNameFirstBtnState();
 
 			// 9. Firebase Init & Real-time Snapshot
+			const EMBEDDED_FIREBASE_CONFIG = {
+				projectId: "modular-kit-zdw77",
+				appId: "1:258947141699:web:a276a71025f6b11eca04f6",
+				apiKey: "AIzaSyD8d0tRiehmR-6n2SjlDKGY8zMZRxtaRNY",
+				authDomain: "modular-kit-zdw77.firebaseapp.com",
+				firestoreDatabaseId: "ai-studio-newstudents2027-7be81cdc-180b-4f44-970f-1ec05cdd5273",
+				storageBucket: "modular-kit-zdw77.firebasestorage.app",
+				messagingSenderId: "258947141699",
+				measurementId: "",
+				oAuthClientId: "258947141699-q83mq7pkjb1ikm1bd35cb87tc1hlk8ff.apps.googleusercontent.com",
+				recaptchaSiteKey: ""
+			};
+
 			async function initApp() {
 				const badge = document.getElementById("firebase-badge");
 				const statusText = document.getElementById("firebase-status");
 
-				await loadGeography();
+				// Load geography in background without blocking Firebase init
+				loadGeography().catch(e => console.warn("Geography load warning:", e));
 
 				try {
-					const cfgRes = await fetch("/firebase-applet-config.json");
-					if (!cfgRes.ok) throw new Error("Could not load config");
-					const firebaseConfig = await cfgRes.json();
+					let firebaseConfig = EMBEDDED_FIREBASE_CONFIG;
+					try {
+						const cfgRes = await fetch("/firebase-applet-config.json");
+						if (cfgRes.ok) {
+							const fetched = await cfgRes.json();
+							if (fetched && fetched.projectId) firebaseConfig = fetched;
+						}
+					} catch (cfgErr) {
+						console.warn("Using embedded config fallback:", cfgErr.message);
+					}
 
 					const app = initializeApp(firebaseConfig);
 					db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 					auth = getAuth(app);
-
-					try {
-						await getDocFromServer(doc(db, "test", "connection"));
-					} catch (connErr) {
-						if (connErr instanceof Error && connErr.message.includes("offline")) {
-							console.warn("Client offline");
-						}
-					}
 
 					badge.className = "badge badge-online";
 					statusText.textContent = "Firebase";
@@ -5367,7 +6441,13 @@
 							renderTable(studentDocs);
 						},
 						(error) => {
-							handleFirestoreError(error, OperationType.GET, "students");
+							console.warn("Firestore onSnapshot state:", error?.message || error);
+							const badge = document.getElementById("firebase-badge");
+							const statusText = document.getElementById("firebase-status");
+							if (badge && statusText) {
+								badge.className = "badge badge-offline";
+								statusText.textContent = "Offline";
+							}
 						}
 					);
 
