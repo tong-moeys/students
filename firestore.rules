@@ -40,8 +40,8 @@ service cloud.firestore {
         && data.gender is string && data.gender.size() > 0 && data.gender.size() <= 30
         && (!('grade' in data) || (data.grade is string && data.grade.size() <= 60))
         && (!('photoUrl' in data) || (data.photoUrl is string && data.photoUrl.size() <= 65536))
-        && (!('createdBy' in data) || (data.createdBy is string && data.createdBy.size() <= 160))
-        && (!('lastModifiedBy' in data) || (data.lastModifiedBy is string && data.lastModifiedBy.size() <= 160))
+        && (!('createdBy' in data) || (data.createdBy is string && data.createdBy.size() <= 150))
+        && (!('lastModifiedBy' in data) || (data.lastModifiedBy is string && data.lastModifiedBy.size() <= 150))
         && (!('lastModifiedAt' in data) || data.lastModifiedAt is timestamp)
         && data.values is list && data.values.size() > 0 && data.values.size() <= 95
         && (!('createdAt' in data) || data.createdAt is timestamp)
@@ -49,7 +49,7 @@ service cloud.firestore {
     }
 
     match /students/{studentId} {
-      allow get, list: if true;
+      allow get, list: if isVerifiedUser();
       allow create: if isVerifiedUser()
         && isValidId(studentId)
         && isValidStudent(incoming())
@@ -58,7 +58,8 @@ service cloud.firestore {
         && isValidId(studentId)
         && isValidStudent(incoming())
         && (!('createdAt' in existing()) || !('createdAt' in incoming()) || incoming().createdAt == existing().createdAt)
-        && incoming().diff(existing()).affectedKeys().hasOnly(['studentCode', 'lastName', 'firstName', 'gender', 'grade', 'photoUrl', 'values', 'updatedAt', 'lastModifiedBy', 'lastModifiedAt', 'createdBy'])
+        && (!('createdBy' in existing()) || !('createdBy' in incoming()) || incoming().createdBy == existing().createdBy)
+        && incoming().diff(existing()).affectedKeys().hasOnly(['studentCode', 'lastName', 'firstName', 'gender', 'grade', 'photoUrl', 'values', 'updatedAt', 'lastModifiedBy', 'lastModifiedAt'])
         && (
           (('updatedAt' in incoming()) && (incoming().updatedAt == request.time || incoming().updatedAt is timestamp)) ||
           (('lastModifiedAt' in incoming()) && (incoming().lastModifiedAt == request.time || incoming().lastModifiedAt is timestamp))

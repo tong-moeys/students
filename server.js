@@ -7,21 +7,25 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const HOST = '0.0.0.0';
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname));
 
-// Initialize Gemini Client
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
+// Helper to lazily initialize Gemini Client when API key is configured
+function getAiClient() {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return null;
+  return new GoogleGenAI({
+    apiKey,
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build',
+      },
     },
-  },
-});
+  });
+}
 
 // Endpoint to generate student photo with AI
 app.post('/api/generate-student-photo', async (req, res) => {
@@ -46,61 +50,65 @@ app.post('/api/generate-student-photo', async (req, res) => {
       stylePrompt += ` Additional details: ${customPrompt}.`;
     }
 
-    // Attempt direct image generation using gemini-3.1-flash-lite-image
-    try {
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.1-flash-lite-image',
-        contents: {
-          parts: [{ text: stylePrompt }],
-        },
-        config: {
-          imageConfig: {
-            aspectRatio: '3:4',
+    const ai = getAiClient();
+
+    if (ai) {
+      // Attempt direct image generation using gemini-3.1-flash-lite-image
+      try {
+        const response = await ai.models.generateContent({
+          model: 'gemini-3.1-flash-lite-image',
+          contents: {
+            parts: [{ text: stylePrompt }],
           },
-        },
-      });
+          config: {
+            imageConfig: {
+              aspectRatio: '3:4',
+            },
+          },
+        });
 
-      for (const part of response.candidates?.[0]?.content?.parts || []) {
-        if (part.inlineData?.data) {
-          const mime = part.inlineData.mimeType || 'image/png';
-          return res.json({
-            success: true,
-            photoUrl: `data:${mime};base64,${part.inlineData.data}`,
-            source: 'gemini-3.1-flash-lite-image',
-          });
+        for (const part of response.candidates?.[0]?.content?.parts || []) {
+          if (part.inlineData?.data) {
+            const mime = part.inlineData.mimeType || 'image/png';
+            return res.json({
+              success: true,
+              photoUrl: `data:${mime};base64,${part.inlineData.data}`,
+              source: 'gemini-3.1-flash-lite-image',
+            });
+          }
         }
+      } catch (imgErr) {
+        console.warn('Direct image model unavailable or error, falling back to gemini-4-hydrogen SVG:', imgErr.message);
       }
-    } catch (imgErr) {
-      console.warn('Direct image model unavailable or error, falling back to gemini-3.8-flash SVG:', imgErr.message);
-    }
 
-    // High quality SVG Vector Portrait fallback with gemini-3.8-flash
-    const svgPrompt = `Create a clean, charming standalone SVG portrait illustration of a young Cambodian ${genderEn} student aged ${ageNum} wearing a white Cambodian school uniform with blue collar.
+      // High quality SVG Vector Portrait fallback with gemini-4-hydrogen
+      const svgPrompt = `Create a clean, charming standalone SVG portrait illustration of a young Cambodian ${genderEn} student aged ${ageNum} wearing a white Cambodian school uniform with blue collar.
 Style: ${style}. Return ONLY valid, complete SVG code with viewBox="0 0 300 360", width="100%", height="100%".
 Include a soft pastel blue studio gradient background, face, hair, eyes, friendly smile, white uniform collar, and tie/badge.
 DO NOT wrap in markdown, no backticks, only pure SVG code starting with <svg and ending with </svg>.`;
 
-    try {
-      const textResponse = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: svgPrompt,
-      });
-
-      let rawSvg = textResponse.text || '';
-      rawSvg = rawSvg.replace(/```xml/gi, '').replace(/```svg/gi, '').replace(/```/g, '').trim();
-      const svgStart = rawSvg.indexOf('<svg');
-      const svgEnd = rawSvg.lastIndexOf('</svg>');
-      if (svgStart !== -1 && svgEnd !== -1) {
-        rawSvg = rawSvg.slice(svgStart, svgEnd + 6);
-        const svgDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(rawSvg)}`;
-        return res.json({
-          success: true,
-          photoUrl: svgDataUrl,
-          source: 'gemini-3.8-flash-svg',
+      try {
+        const textResponse = await ai.models.generateContent({
+          model: 'gemini-4-hydrogen',
+          contents: svgPrompt,
         });
+
+        let rawSvg = textResponse.text || '';
+        rawSvg = rawSvg.replace(/```xml/gi, '').replace(/```svg/gi, '').replace(/```/g, '').trim();
+        const svgStart = rawSvg.indexOf('<svg');
+        const svgEnd = rawSvg.lastIndexOf('</svg>');
+        if (svgStart !== -1 && svgEnd !== -1) {
+          rawSvg = rawSvg.slice(svgStart, svgEnd + 6);
+          const svgDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(rawSvg)}`;
+          return res.json({
+            success: true,
+            photoUrl: svgDataUrl,
+            source: 'gemini-4-hydrogen-svg',
+          });
+        }
+      } catch (txtErr) {
+        console.warn('Text SVG model failed, falling back to smart avatar:', txtErr.message);
       }
-    } catch (txtErr) {
-      console.warn('Text SVG model failed, falling back to smart avatar:', txtErr.message);
     }
 
     // Fallback: If cloud generation throws, create an intelligent tailored Cambodian Student ID avatar

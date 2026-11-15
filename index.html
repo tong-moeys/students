@@ -1092,31 +1092,657 @@
 			}
 
 			/* Print Stylesheet for Reports & Cards */
+			.roster-two-col-scroll {
+				width: 100%;
+				overflow-x: auto;
+				margin-bottom: 0.5rem;
+			}
+			.roster-two-col-grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 6px;
+				align-items: start;
+				width: 100%;
+				min-width: 680px;
+			}
+			.roster-half-table {
+				width: 100%;
+				border-collapse: collapse;
+				table-layout: fixed;
+				text-align: center;
+				border: 1.25px solid #334155;
+				font-size: 0.62rem;
+				line-height: 1.2;
+			}
+			.roster-half-table th,
+			.roster-half-table td {
+				border: 1px solid #475569;
+				padding: 2px 2px;
+				word-break: normal;
+				overflow-wrap: break-word;
+			}
+			.roster-half-table th {
+				font-size: 0.58rem;
+				line-height: 1.15;
+			}
+			.roster-half-table td.name-cell {
+				text-align: left;
+				padding-left: 3px;
+				padding-right: 2px;
+			}
+			.roster-half-table tbody tr,
+			.roster-half-table tbody td {
+				height: var(--roster-screen-row-h, auto);
+				vertical-align: middle;
+			}
+			.roster-mode-portrait-2col {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				gap: 0.55rem;
+			}
+			.roster-mode-portrait-2col .roster-top-tables-zone {
+				display: flex;
+				flex-direction: column;
+			}
+			.roster-mode-portrait-2col .roster-official-header {
+				margin-bottom: 0.35rem !important;
+			}
+			.roster-mode-portrait-2col .roster-official-title {
+				margin-bottom: 0.4rem !important;
+			}
+			.roster-mode-portrait-2col .roster-official-title h3 {
+				font-size: 1.05rem !important;
+				margin: 0 !important;
+			}
+			.roster-mode-portrait-2col .roster-official-footer {
+				padding: 0.5rem 0.65rem !important;
+				font-size: 0.72rem !important;
+				line-height: 1.4 !important;
+				border-radius: 6px !important;
+			}
+			.roster-mode-portrait-2col .roster-footer-stop {
+				font-size: 0.78rem !important;
+				margin-bottom: 0.35rem !important;
+				padding-bottom: 0.28rem !important;
+			}
+			.roster-mode-portrait-2col .roster-footer-boxes {
+				gap: 0.3rem !important;
+			}
+			.roster-mode-portrait-2col .roster-footer-boxes > div {
+				padding: 0.28rem 0.5rem !important;
+				font-size: 0.7rem !important;
+			}
+			.roster-mode-portrait-2col .official-signature-hierarchy {
+				margin-top: 0.75rem !important;
+				padding-top: 0.5rem !important;
+			}
+			.roster-mode-portrait-2col .roster-sig-spacer {
+				height: 36px !important;
+			}
 			@media print {
-				@page {
-					size: A4 landscape;
-					margin: 0.8cm;
+				body.printing-report > *:not(#reports-modal),
+				body.printing-card > *:not(#student-id-card-modal) {
+					display: none !important;
+				}
+				body {
+					background: #ffffff !important;
+					-webkit-print-color-adjust: exact !important;
+					print-color-adjust: exact !important;
 				}
 				body * { visibility: hidden !important; }
+				#reports-modal:not(.hidden),
+				#student-id-card-modal:not(.hidden) {
+					position: static !important;
+					inset: auto !important;
+					padding: 0 !important;
+					margin: 0 !important;
+					background: #ffffff !important;
+					display: block !important;
+					overflow: visible !important;
+					width: 100% !important;
+					height: auto !important;
+				}
+				#reports-modal .modal-card,
+				#reports-modal .modal-body,
+				#student-id-card-modal .modal-card,
+				#student-id-card-modal .modal-body {
+					position: static !important;
+					width: 100% !important;
+					max-width: none !important;
+					height: auto !important;
+					max-height: none !important;
+					overflow: visible !important;
+					padding: 0 !important;
+					margin: 0 !important;
+					border: none !important;
+					box-shadow: none !important;
+					background: #ffffff !important;
+				}
+				#reports-modal .modal-header,
+				#reports-modal .report-nav,
+				#reports-modal .report-controls-bar,
+				#student-id-card-modal .modal-header,
+				#student-id-card-modal .modal-footer {
+					display: none !important;
+				}
 				#printable-report-area, #printable-report-area *,
 				#printable-student-card, #printable-student-card * {
 					visibility: visible !important;
 				}
 				#printable-report-area, #printable-student-card {
-					position: absolute !important;
-					left: 0 !important;
-					top: 0 !important;
+					position: static !important;
 					width: 100% !important;
 					margin: 0 !important;
 					padding: 0 !important;
 					background: white !important;
 				}
+				.roster-two-col-scroll {
+					overflow: visible !important;
+					margin-bottom: 4px !important;
+				}
+				.roster-two-col-grid {
+					display: grid !important;
+					grid-template-columns: 1fr 1fr !important;
+					gap: 5px !important;
+					min-width: 0 !important;
+					width: 100% !important;
+				}
+				.roster-half-table {
+					font-size: var(--roster-print-cell-font, 8.6px) !important;
+					line-height: 1.18 !important;
+				}
+				.roster-half-table th {
+					font-size: 7.5px !important;
+					line-height: 1.12 !important;
+					padding: 2.5px 1.5px !important;
+				}
+				.roster-half-table td {
+					padding: 1.5px 2px !important;
+				}
+				.roster-half-table tbody tr,
+				.roster-half-table tbody td {
+					height: var(--roster-print-row-h, 24px) !important;
+					vertical-align: middle !important;
+				}
+				.roster-mode-portrait-2col {
+					min-height: 274mm !important;
+					display: flex !important;
+					flex-direction: column !important;
+					justify-content: space-between !important;
+					gap: 3mm !important;
+					box-sizing: border-box !important;
+				}
+				.roster-mode-portrait-2col .roster-top-tables-zone {
+					min-height: 176mm !important;
+					display: flex !important;
+					flex-direction: column !important;
+					justify-content: flex-start !important;
+				}
+				.roster-mode-portrait-2col .roster-royal-motto {
+					margin-bottom: 3px !important;
+				}
+				.roster-mode-portrait-2col .roster-ministry-left {
+					font-size: 9.8px !important;
+					line-height: 1.3 !important;
+					margin-bottom: 3px !important;
+				}
+				.roster-mode-portrait-2col .roster-official-title {
+					margin-bottom: 5px !important;
+				}
+				.roster-mode-portrait-2col .roster-official-title h3 {
+					font-size: 14px !important;
+					margin: 0 !important;
+				}
+				.roster-mode-portrait-2col .roster-official-footer {
+					padding: 6px 8px !important;
+					font-size: 8.8px !important;
+					line-height: 1.32 !important;
+				}
+				.roster-mode-portrait-2col .roster-footer-stop {
+					font-size: 9.6px !important;
+					margin-bottom: 4px !important;
+					padding-bottom: 3px !important;
+				}
+				.roster-mode-portrait-2col .roster-footer-boxes {
+					gap: 3px !important;
+				}
+				.roster-mode-portrait-2col .roster-footer-boxes > div {
+					padding: 3px 6px !important;
+					font-size: 8.5px !important;
+					line-height: 1.28 !important;
+				}
+				.roster-mode-portrait-2col .official-signature-hierarchy {
+					margin-top: 8px !important;
+					padding-top: 6px !important;
+				}
+				.roster-mode-portrait-2col .roster-sig-spacer {
+					height: 34px !important;
+				}
+				.roster-official-footer,
 				.official-signature-hierarchy {
 					page-break-inside: avoid !important;
 					break-inside: avoid !important;
 				}
 			}
+
+			/* View Mode Switcher & Dark Student Status Cards Panel */
+			.view-mode-switcher {
+				display: inline-flex;
+				align-items: center;
+				background: #e2e8f0;
+				padding: 2px;
+				border-radius: 7px;
+				gap: 2px;
+			}
+			.view-mode-btn {
+				border: none;
+				background: transparent;
+				color: #475569;
+				font-size: 0.75rem;
+				font-weight: 700;
+				padding: 0.22rem 0.55rem;
+				border-radius: 5px;
+				cursor: pointer;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.25rem;
+				font-family: inherit;
+				transition: all 0.15s ease;
+			}
+			.view-mode-btn.active {
+				background: #1e293b;
+				color: #ffffff;
+				box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+			}
+
+			.student-cards-panel {
+				background: #141518;
+				border-radius: 12px;
+				padding: 1rem;
+				border: 1px solid #262830;
+				color: #f3f4f6;
+				box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+			}
+			.student-cards-panel.hidden { display: none; }
+			.table-wrapper.hidden { display: none; }
+			.auth-required-banner { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+			.auth-required-banner.hidden { display: none !important; }
+
+			.cards-toolbar {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				flex-wrap: wrap;
+				gap: 0.65rem;
+				margin-bottom: 1rem;
+				padding-bottom: 0.75rem;
+				border-bottom: 1px solid #2a2c34;
+			}
+			.cards-summary-stats {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+				flex-wrap: wrap;
+				font-size: 0.825rem;
+				color: #cbd5e1;
+			}
+			.cards-filter-group {
+				display: flex;
+				align-items: center;
+				gap: 0.35rem;
+				flex-wrap: wrap;
+			}
+			.cards-filter-btn {
+				background: #1f2026;
+				color: #9ca3af;
+				border: 1px solid #2e3038;
+				border-radius: 6px;
+				padding: 0.3rem 0.65rem;
+				font-size: 0.75rem;
+				font-weight: 600;
+				cursor: pointer;
+				font-family: inherit;
+				transition: all 0.15s ease;
+			}
+			.cards-filter-btn:hover {
+				color: #f3f4f6;
+				border-color: #4f46e5;
+			}
+			.cards-filter-btn.active {
+				background: #312e81;
+				color: #e0e7ff;
+				border-color: #6366f1;
+			}
+
+			.student-cards-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+				gap: 1rem;
+			}
+			@media (max-width: 420px) {
+				.student-cards-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			.scard-item {
+				background: #1f2026;
+				border: 1px solid #2e3038;
+				border-radius: 12px;
+				padding: 1rem;
+				display: flex;
+				flex-direction: column;
+				gap: 0.7rem;
+				position: relative;
+				transition: border-color 0.15s ease;
+			}
+			.scard-item:hover {
+				border-color: #4b4f5e;
+			}
+			.scard-item.selected {
+				border-color: #6366f1;
+				box-shadow: 0 0 0 1px #6366f1;
+			}
+
+			.scard-top {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.75rem;
+			}
+			.scard-identity {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				min-width: 0;
+			}
+			.scard-avatar-btn {
+				width: 52px;
+				height: 52px;
+				border-radius: 9999px;
+				padding: 0;
+				border: 2px solid #5b5bd6;
+				background: #272936;
+				overflow: hidden;
+				cursor: pointer;
+				flex-shrink: 0;
+			}
+			.scard-avatar-btn img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				display: block;
+			}
+			.scard-name-wrap {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 0.3rem;
+				min-width: 0;
+			}
+			.scard-name {
+				font-size: 0.98rem;
+				font-weight: 700;
+				color: #f3f4f6;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				max-width: 190px;
+			}
+			.scard-code-tag {
+				font-size: 0.72rem;
+				color: #cbd5e1;
+				border: 1px solid #3f424d;
+				background: #17181c;
+				border-radius: 9999px;
+				padding: 1px 8px;
+				font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+			}
+			.scard-top-actions {
+				display: flex;
+				align-items: center;
+				gap: 0.45rem;
+				flex-shrink: 0;
+			}
+			.scard-checkbox {
+				width: 18px;
+				height: 18px;
+				accent-color: #6366f1;
+				cursor: pointer;
+			}
+			.scard-menu-wrap {
+				position: relative;
+			}
+			.scard-menu-btn {
+				width: 30px;
+				height: 30px;
+				border-radius: 6px;
+				border: 1px solid transparent;
+				background: transparent;
+				color: #9ca3af;
+				font-size: 1.1rem;
+				line-height: 1;
+				cursor: pointer;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.scard-menu-btn:hover {
+				background: #2b2d36;
+				color: #f3f4f6;
+			}
+			.scard-dropdown {
+				position: absolute;
+				right: 0;
+				top: 34px;
+				z-index: 30;
+				min-width: 185px;
+				background: #18191e;
+				border: 1px solid #383b47;
+				border-radius: 8px;
+				padding: 0.3rem;
+				box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+				display: none;
+				flex-direction: column;
+				gap: 2px;
+			}
+			.scard-dropdown.open {
+				display: flex;
+			}
+			.scard-dropdown button {
+				background: transparent;
+				border: none;
+				color: #e5e7eb;
+				font-size: 0.775rem;
+				font-family: inherit;
+				text-align: left;
+				padding: 0.42rem 0.6rem;
+				border-radius: 5px;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				gap: 0.45rem;
+			}
+			.scard-dropdown button:hover {
+				background: #2a2c36;
+			}
+			.scard-dropdown button.danger {
+				color: #f87171;
+			}
+
+			.scard-info-grid-2 {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 0.55rem;
+			}
+			.scard-box {
+				background: #16171b;
+				border: 1px solid #2a2c34;
+				border-radius: 8px;
+				padding: 0.5rem 0.75rem;
+				display: flex;
+				flex-direction: column;
+				gap: 0.2rem;
+				min-width: 0;
+			}
+			.scard-box-label {
+				font-size: 0.7rem;
+				color: #9ca3af;
+			}
+			.scard-box-value {
+				font-size: 0.85rem;
+				font-weight: 600;
+				color: #f3f4f6;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.scard-box-row {
+				background: #16171b;
+				border: 1px solid #2a2c34;
+				border-radius: 8px;
+				padding: 0.5rem 0.75rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.5rem;
+			}
+			.scard-study-status {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-end;
+				gap: 0.2rem;
+			}
+			.scard-study-badge {
+				font-size: 0.725rem;
+				font-weight: 600;
+				color: #c7d2fe;
+				border: 1px solid #4c4f9b;
+				background: rgba(79, 70, 229, 0.14);
+				border-radius: 6px;
+				padding: 1px 8px;
+			}
+			.scard-year-sub {
+				font-size: 0.725rem;
+				color: #cbd5e1;
+				font-variant-numeric: tabular-nums;
+			}
+
+			.scard-tabs-strip {
+				display: grid;
+				grid-template-columns: repeat(5, 1fr);
+				border-top: 1px solid #2a2c34;
+				border-bottom: 1px solid #2a2c34;
+				margin: 0.1rem -1rem 0 -1rem;
+			}
+			.scard-tab-btn {
+				background: transparent;
+				border: none;
+				border-bottom: 2px solid transparent;
+				padding: 0.55rem 0.25rem;
+				cursor: pointer;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.3rem;
+				color: #cbd5e1;
+				transition: background 0.15s ease, border-color 0.15s ease;
+			}
+			.scard-tab-btn:hover {
+				background: rgba(255,255,255,0.04);
+			}
+			.scard-tab-btn.active {
+				border-bottom-color: #6366f1;
+				background: rgba(99, 102, 241, 0.08);
+				color: #ffffff;
+			}
+			.scard-status-mark {
+				width: 15px;
+				height: 15px;
+				border-radius: 9999px;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.62rem;
+				font-weight: 800;
+				line-height: 1;
+			}
+			.scard-status-mark.ok {
+				border: 1.5px solid #22c55e;
+				color: #22c55e;
+			}
+			.scard-status-mark.miss {
+				border: 1.5px solid #ef4444;
+				color: #ef4444;
+			}
+
+			.scard-tab-detail {
+				background: #16171b;
+				border: 1px solid #2a2c34;
+				border-radius: 8px;
+				padding: 0.5rem 0.7rem;
+				font-size: 0.74rem;
+				color: #d1d5db;
+				display: flex;
+				flex-direction: column;
+				gap: 0.3rem;
+			}
+			.scard-tab-detail-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.5rem;
+				font-weight: 700;
+				color: #e0e7ff;
+			}
+			.scard-inline-edit-btn {
+				background: #312e81;
+				color: #e0e7ff;
+				border: 1px solid #4f46e5;
+				border-radius: 5px;
+				padding: 2px 8px;
+				font-size: 0.7rem;
+				font-weight: 600;
+				cursor: pointer;
+				font-family: inherit;
+			}
+			.scard-inline-edit-btn:hover {
+				background: #4338ca;
+			}
+
+			.scard-progress-footer {
+				display: flex;
+				flex-direction: column;
+				gap: 0.4rem;
+			}
+			.scard-progress-row {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.8rem;
+			}
+			.scard-progress-label {
+				color: #cbd5e1;
+			}
+			.scard-progress-pct {
+				font-weight: 700;
+				font-variant-numeric: tabular-nums;
+			}
+			.scard-progress-track {
+				width: 100%;
+				height: 6px;
+				background: #2c2e36;
+				border-radius: 9999px;
+				overflow: hidden;
+			}
+			.scard-progress-fill {
+				height: 100%;
+				border-radius: 9999px;
+				transition: width 0.25s ease;
+			}
 		</style>
+		<style id="dynamic-print-page-style">@media print { @page { size: A4 portrait; margin: 0.45cm 0.5cm; } }</style>
 	</head>
 	<body>
 		<!-- Ultra-Compact Header -->
@@ -1137,9 +1763,15 @@
 					<img id="user-avatar" class="user-avatar" src="" alt="Avatar" />
 					<button id="sign-out-btn" class="btn-icon" title="ចាកចេញពីគណនី (Sign out)">🚪</button>
 				</div>
-				<button id="sign-in-btn" class="btn-icon primary" title="ចូលគណនី (Google Sign-In)">🔑</button>
+				<button id="sign-in-btn" class="btn-text" style="background: #1e40af; color: white; font-size: 0.78rem; padding: 0.3rem 0.7rem; border-radius: 6px; font-weight: 600;" title="ចូលគណនី (Google Sign-In)">🔑 ចូលគណនី Google</button>
 			</div>
 		</header>
+
+		<!-- Auth Required Notice Banner -->
+		<div id="auth-required-banner" class="auth-required-banner hidden" style="background: #fffbeb; border-bottom: 1px solid #fde68a; padding: 0.5rem 1rem; font-size: 0.82rem; color: #92400e;">
+			<span>🔒 <strong>តម្រូវឱ្យចូលគណនី៖</strong> សូមចូលគណនី Google ជាមុនសិន ដើម្បីទាញយក កែប្រែ ឬរក្សាទុកទិន្នន័យសិស្សក្នុង Firebase Firestore។</span>
+			<button type="button" id="banner-sign-in-btn" class="btn-text" style="background: #1e40af; color: white; padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600;">🔑 ចូលគណនី Google ឥឡូវនេះ</button>
+		</div>
 
 		<!-- Action & Filter Bar (Icons Only) -->
 		<section class="action-bar">
@@ -1164,6 +1796,15 @@
 			</div>
 
 			<div class="toolbar-btns">
+				<div class="view-mode-switcher" role="tablist" aria-label="ទម្រង់បង្ហាញសិស្ស">
+					<button type="button" id="view-mode-table-btn" class="view-mode-btn active" title="បង្ហាញជាតារាងទិន្នន័យ">
+						📋 តារាង
+					</button>
+					<button type="button" id="view-mode-cards-btn" class="view-mode-btn" title="បង្ហាញផ្ទាំងស្ថានភាពព័ត៌មានសិស្ស">
+						🪪 ស្ថានភាពសិស្ស
+					</button>
+				</div>
+				<div class="divider"></div>
 				<button id="add-student-btn" class="btn-icon primary" title="➕ បន្ថែមសិស្សថ្មី (Add Student)">➕</button>
 				<button id="inline-edit-toggle-btn" class="btn-icon" title="⚡ របៀបកែក្នុងតារាងផ្ទាល់ (Toggle Inline Edit)">⚡</button>
 				<button id="col-visibility-btn" class="btn-icon" style="position: relative;" title="👁️ លាក់/បង្ហាញ ជួរឈរ (Show/Hide Columns)">
@@ -1178,6 +1819,12 @@
 
 				<button type="button" id="open-official-roster-btn" class="btn-text" style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.6rem; font-size: 0.775rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.15s; background: #fef3c7; color: #92400e; border: 1px solid #fde68a;" title="បើកបញ្ជីរាយនាមសិស្សផ្លូវការប្រចាំថ្នាក់ (MoEYS Official Class Roster)">
 					📋 បញ្ជីរាយនាមសិស្ស
+				</button>
+				<button type="button" id="recalc-bmi-toolbar-btn" class="btn-text" style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.6rem; font-size: 0.775rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.15s; background: #dcfce7; color: #166534; border: 1px solid #86efac;" title="គណនាស្ថានភាព BMI ដោយផ្អែកលើ អាយុ ភេទ ទម្ងន់ និងកម្ពស់ រួចរក្សាទុកទាំងអស់">
+					🩺 គណនា BMI
+				</button>
+				<button type="button" id="open-support-packages-btn" class="btn-text" style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.6rem; font-size: 0.775rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.15s; background: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd;" title="បើកបញ្ជីកញ្ចប់សម្ភារជំនួយ (អំណាន គណិត និងសៀវភៅជំនួយ)">
+					📚 កញ្ចប់សម្ភារជំនួយ
 				</button>
 				<button id="report-modal-btn" class="btn-icon warning" title="📈 បង្កើតរបាយការណ៍ផ្សេងៗ (Reports)">📈</button>
 				<button id="export-xlsx-btn" class="btn-icon success" title="📊 នាំចេញ Excel (Export XLSX)">📊</button>
@@ -1214,6 +1861,9 @@
 				<button id="batch-renumber-btn" class="btn-text" style="background: #0284c7; color: white;" title="រៀបចំអត្តលេខរៀងឡើងវិញជាលំដាប់ (27001, 27002, 27003...)">
 					🔢 រៀបអត្តលេខរៀង
 				</button>
+				<button id="batch-bmi-btn" class="btn-text" style="background: #16a34a; color: white;" title="គណនា និងរក្សាទុកស្ថានភាព BMI សម្រាប់សិស្សដែលបានជ្រើសរើស">
+					🩺 គណនា BMI
+				</button>
 				<button id="batch-delete-btn" class="btn-text" style="background: #ef4444; color: white;" title="លុបសិស្សដែលបានជ្រើសរើស">
 					🗑️ លុប
 				</button>
@@ -1224,7 +1874,7 @@
 		</section>
 
 		<!-- Main Table Section -->
-		<main class="table-wrapper">
+		<main id="main-table-wrapper" class="table-wrapper">
 			<div class="table-scroll">
 				<table id="main-student-table">
 					<thead>
@@ -1241,6 +1891,27 @@
 				</table>
 			</div>
 		</main>
+
+		<!-- Student Data Completion Status Cards Panel (ផ្ទាំងស្ថានភាពព័ត៌មានដែលបានបញ្ចូល) -->
+		<section id="student-cards-panel" class="student-cards-panel hidden">
+			<div class="cards-toolbar">
+				<div class="cards-summary-stats">
+					<label style="display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+						<input type="checkbox" id="cards-select-all" class="scard-checkbox" />
+						<span>ជ្រើសរើសទាំងអស់</span>
+					</label>
+					<span>បង្ហាញ៖ <strong id="cards-visible-count" style="color: #ffffff;">0</strong> នាក់</span>
+					<span>អត្រាពេញលេញជាមធ្យម៖ <strong id="cards-avg-completion" style="color: #eab308;">0%</strong></span>
+				</div>
+				<div class="cards-filter-group">
+					<button type="button" class="cards-filter-btn active" data-completion-filter="all">ទាំងអស់</button>
+					<button type="button" class="cards-filter-btn" data-completion-filter="complete">ពេញលេញ (≥85%)</button>
+					<button type="button" class="cards-filter-btn" data-completion-filter="partial">មធ្យម (50–84%)</button>
+					<button type="button" class="cards-filter-btn" data-completion-filter="incomplete">ខ្វះព័ត៌មាន (&lt;50%)</button>
+				</div>
+			</div>
+			<div id="student-cards-grid" class="student-cards-grid"></div>
+		</section>
 
 		<!-- Official Class Summary Box under Main Table (ក្រោមតារាងមានរៀបរាប់) -->
 		<section id="table-official-summary-card" style="margin-top: 0.5rem; background: #ffffff; border-radius: 8px; border: 1.5px solid #0284c7; padding: 0.75rem 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
@@ -1287,6 +1958,9 @@
 							</button>
 							<button type="button" class="btn-text col-preset-btn" data-preset="health" style="background: #ffffff; border: 1px solid #16a34a; color: #15803d;">
 								🏥 ទិដ្ឋភាពសុខភាព (Health & BMI)
+							</button>
+							<button type="button" class="btn-text col-preset-btn" data-preset="support-packages" style="background: #ffffff; border: 1px solid #7c3aed; color: #5b21b6;">
+								📚 កញ្ចប់សម្ភារជំនួយ
 							</button>
 							<button type="button" class="btn-text col-preset-btn" data-preset="parents" style="background: #ffffff; border: 1px solid #7c3aed; color: #7c3aed;">
 								👨‍👩‍👧 ទិដ្ឋភាពអាណាព្យាបាល (Parents)
@@ -1645,6 +2319,40 @@
 									</select>
 								</div>
 							</div>
+
+							<div style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed var(--border-subtle);">
+								<div style="font-size: 0.78rem; font-weight: 700; color: #5b21b6; margin-bottom: 0.4rem;">📚 កញ្ចប់សម្ភារជំនួយ</div>
+								<div class="grid-4">
+									<div class="form-field">
+										<label for="f-pkg-reading">កញ្ចប់អំណាន</label>
+										<select id="f-pkg-reading">
+											<option value="មិនមាន">មិនមាន</option>
+											<option value="មាន">មាន</option>
+										</select>
+									</div>
+									<div class="form-field">
+										<label for="f-pkg-math">កញ្ចប់គណិត</label>
+										<select id="f-pkg-math">
+											<option value="មិនមាន">មិនមាន</option>
+											<option value="មាន">មាន</option>
+										</select>
+									</div>
+									<div class="form-field">
+										<label for="f-pkg-khmer-book">សៀវភៅជំនួយភាសាខ្មែរ</label>
+										<select id="f-pkg-khmer-book">
+											<option value="មិនមាន">មិនមាន</option>
+											<option value="មាន">មាន</option>
+										</select>
+									</div>
+									<div class="form-field">
+										<label for="f-pkg-math-book">សៀវភៅជំនួយគណិតវិទ្យា</label>
+										<select id="f-pkg-math-book">
+											<option value="មិនមាន">មិនមាន</option>
+											<option value="មាន">មាន</option>
+										</select>
+									</div>
+								</div>
+							</div>
 						</div>
 
 						<!-- Section F: Parents & Guardians -->
@@ -1744,11 +2452,11 @@
 
 		<!-- Reports Generator Modal -->
 		<div id="reports-modal" class="modal-overlay hidden">
-			<div class="modal-card" style="max-width: 900px;">
+			<div class="modal-card" style="max-width: 1060px;">
 				<div class="modal-header">
 					<h3>📈 របាយការណ៍ស្ថិតិ និងទិន្នន័យសិស្ស</h3>
 					<div style="display: flex; gap: 0.4rem; align-items: center;">
-						<button id="print-report-btn" class="btn-icon" title="🖨️ បោះពុម្ពរបាយការណ៍ (Print)">🖨️</button>
+						<button id="print-report-btn" class="btn-text" style="background: #1e40af; color: white; font-size: 0.78rem; padding: 0.3rem 0.7rem; border-radius: 6px; font-weight: 600;" title="🖨️ បោះពុម្ពរបាយការណ៍ (Print)">🖨️ ព្រីន A4</button>
 						<button id="export-report-btn" class="btn-icon success" title="📊 នាំចេញជារបាយការណ៍ Excel">📊</button>
 						<button id="reports-modal-close" class="close-btn">&times;</button>
 					</div>
@@ -1762,16 +2470,31 @@
 						<button class="report-tab-btn" data-tab="bmi-summary">🩺 សុខភាព & BMI</button>
 						<button class="report-tab-btn" data-tab="eye-ear-summary">👁️ ភ្នែក & ត្រចៀក</button>
 						<button class="report-tab-btn" data-tab="equity-summary">📜 បណ្ណសមធម៌</button>
+						<button class="report-tab-btn" data-tab="support-packages">📚 កញ្ចប់សម្ភារជំនួយ</button>
 						<button class="report-tab-btn" data-tab="contact-sheet">📞 ទំនាក់ទំនងអាណាព្យាបាល</button>
 					</div>
 
-					<!-- Filter for report -->
-					<div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem; gap: 0.5rem; flex-wrap: wrap;">
-						<div style="display: flex; align-items: center; gap: 0.5rem;">
-							<label for="report-grade-select" style="font-weight: 600; font-size: 0.8rem;">ចម្រាញ់ថ្នាក់៖</label>
-							<select id="report-grade-select" class="select-compact">
-								<option value="">គ្រប់ថ្នាក់ទាំងអស់</option>
-							</select>
+					<!-- Filter & Print Layout Controls for report -->
+					<div class="report-controls-bar" style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem; gap: 0.5rem; flex-wrap: wrap;">
+						<div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+							<div style="display: flex; align-items: center; gap: 0.4rem;">
+								<label for="report-grade-select" style="font-weight: 600; font-size: 0.8rem;">ចម្រាញ់ថ្នាក់៖</label>
+								<select id="report-grade-select" class="select-compact">
+									<option value="">គ្រប់ថ្នាក់ទាំងអស់</option>
+								</select>
+							</div>
+							<div id="report-layout-control-wrap" style="display: flex; align-items: center; gap: 0.4rem;">
+								<label for="report-print-layout-select" style="font-weight: 600; font-size: 0.8rem;">ទម្រង់ព្រីន៖</label>
+								<select id="report-print-layout-select" class="select-compact" title="ជ្រើសរើសទម្រង់ទំព័រ A4 សម្រាប់ព្រីន">
+									<option value="portrait-2col">📄 A4 Portrait — ២តារាង (១ទំព័រ ២ជួរ)</option>
+									<option value="portrait-1col">📄 A4 Portrait — ១តារាងពេញ</option>
+									<option value="landscape-1col">📄 A4 Landscape — ១តារាងពេញ</option>
+								</select>
+							</div>
+							<div style="display: flex; align-items: center; gap: 0.4rem;">
+								<label for="report-sign-date-input" style="font-weight: 600; font-size: 0.8rem;">ថ្ងៃចុះហត្ថលេខា៖</label>
+								<input type="date" id="report-sign-date-input" class="select-compact" title="កាលបរិច្ឆេទច័ន្ទគតិ និងសុរិយគតិលើហត្ថលេខា" />
+							</div>
 						</div>
 						<div style="font-size: 0.75rem; color: var(--text-muted);">
 							កាលបរិច្ឆេទបង្កើត៖ <span id="report-date-text"></span>
@@ -1853,24 +2576,33 @@
 
 		<!-- Import Preview Modal -->
 		<div id="import-preview-modal" class="modal-overlay hidden">
-			<div class="modal-card" style="max-width: 750px; height: auto; max-height: 85vh;">
+			<div class="modal-card" style="max-width: 860px; height: auto; max-height: 88vh;">
 				<div class="modal-header">
-					<h3>📥 ពិនិត្យទិន្នន័យ Excel មុននឹងនាំចូល (Import Preview)</h3>
+					<h3>📥 ពិនិត្យ និងផ្ទៀងផ្ទាត់ទិន្នន័យ Excel មុននឹងនាំចូល (Import Preview)</h3>
 					<button id="import-preview-close" class="close-btn">&times;</button>
 				</div>
 				<div class="modal-body" style="gap: 0.6rem;">
-					<div id="import-file-summary" style="background: #e0f2fe; padding: 0.6rem 0.85rem; border-radius: 6px; font-size: 0.825rem; color: #0369a1; font-weight: 600;">
+					<div id="import-file-summary" style="background: #e0f2fe; padding: 0.65rem 0.85rem; border-radius: 6px; font-size: 0.825rem; color: #0369a1; font-weight: 600; line-height: 1.5;">
 					</div>
 
-					<p style="margin: 0; font-size: 0.775rem; color: var(--text-muted);">
-						គំរូទិន្នន័យ ៥ ជួរដំបូងដែលបានស្រង់ចេញពីឯកសារ Excel៖
+					<div id="import-duplicate-controls" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; background: #fffbeb; border: 1px solid #fde68a; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.775rem;">
+						<span style="font-weight: 700; color: #92400e;">🔍 ផ្ទៀងផ្ទាត់កុំឱ្យស្ទួន (គោត្តនាម + នាម + ថ្ងៃខែឆ្នាំកំណើត)៖</span>
+						<select id="import-duplicate-mode" class="select-compact" style="font-size: 0.775rem; max-width: 100%;">
+							<option value="skip">🛡️ រំលងទិន្នន័យស្ទួន (នាំចូលតែសិស្សថ្មី)</option>
+							<option value="update">🔄 ធ្វើបច្ចុប្បន្នភាពទិន្នន័យចាស់ដែលស្ទួន (Update)</option>
+						</select>
+					</div>
+
+					<p id="import-preview-caption" style="margin: 0; font-size: 0.775rem; color: var(--text-muted);">
+						ទិន្នន័យដែលបានផ្ទៀងផ្ទាត់មុននាំចូល៖
 					</p>
 
-					<div style="overflow-x: auto; max-height: 240px; border: 1px solid var(--border-subtle); border-radius: 6px;">
+					<div style="overflow-x: auto; max-height: 280px; border: 1px solid var(--border-subtle); border-radius: 6px;">
 						<table style="width: 100%; font-size: 0.75rem;">
 							<thead>
 								<tr>
 									<th>ល.រ</th>
+									<th>ស្ថានភាព</th>
 									<th>អត្តលេខ</th>
 									<th>គោត្តនាម</th>
 									<th>នាម</th>
@@ -1898,10 +2630,11 @@
 				<div class="modal-footer">
 					<button type="button" id="import-preview-cancel" class="btn-text" style="background: #e2e8f0; color: #0f172a;">បោះបង់</button>
 					<button type="button" id="import-preview-confirm" class="btn-text" style="background: #15803d; color: white;">
-						🚀 នាំចូលទាំងអស់ (<span id="import-btn-count">0</span> នាក់)
+						<span id="import-confirm-label">🚀 នាំចូលសិស្សថ្មី</span> (<span id="import-btn-count">0</span> នាក់)
 					</button>
 				</div>
 			</div>
+		</div>
 		<!-- Student ID Card Modal -->
 		<div id="student-id-card-modal" class="modal-overlay hidden">
 			<div class="modal-card" style="max-width: 520px; height: auto; max-height: 94vh;">
@@ -2218,6 +2951,19 @@
 				setTimeout(() => { toast.style.display = "none"; }, 3500);
 			}
 
+			function requireSignedInForWrite(actionLabel = "រក្សាទុកទិន្នន័យ") {
+				if (auth?.currentUser) return true;
+				const banner = document.getElementById("auth-required-banner");
+				if (banner) {
+					banner.classList.remove("hidden");
+					banner.style.background = "#fef2f2";
+					banner.style.borderColor = "#fecaca";
+					banner.style.color = "#991b1b";
+				}
+				showToast(`🔒 សូមចុច «🔑 ចូលគណនី Google» ជាមុនសិន ដើម្បី${actionLabel}!`, true);
+				return false;
+			}
+
 			// Generate high-fidelity Cambodian student avatar SVGs
 			function getDefaultSvgAvatar(gender = "ស្រី", grade = "", age = "", variantIndex = 0) {
 				const isGirl = gender === "ស្រី" || gender === "female" || gender === "F";
@@ -2351,10 +3097,16 @@
 
 			async function saveStudentPhoto(docId, photoUrl) {
 				if (!docId) return;
+				if (!requireSignedInForWrite("រក្សាទុករូបថតសិស្ស")) return;
+				const cleanPhotoUrl = String(photoUrl || "").trim();
+				if (cleanPhotoUrl.length > 65536) {
+					showToast("⚠️ ទំហំរូបថតធំពេក (លើស 64KB) សូមបង្រួមទំហំម្ដងទៀត", true);
+					return;
+				}
 				try {
-					const actor = currentUser?.displayName || currentUser?.email || "អ្នកប្រើប្រាស់";
+					const actor = String(currentUser?.displayName || currentUser?.email || "អ្នកប្រើប្រាស់").slice(0, 140);
 					await updateDoc(doc(db, "students", docId), {
-						photoUrl: photoUrl,
+						photoUrl: cleanPhotoUrl,
 						lastModifiedBy: actor,
 						lastModifiedAt: serverTimestamp(),
 						updatedAt: serverTimestamp(),
@@ -2472,26 +3224,49 @@
 				}
 			});
 
-			// 2. Age & BMI Calculations
-			function calculateAge(dobString) {
-				if (!dobString) return "";
+			// 2. Age & WHO BMI-for-Age Calculations
+			function parseNumericInput(val) {
+				const ascii = khmerDigitsToAscii(String(val ?? ""))
+					.replace(/,/g, ".")
+					.replace(/[^\d.\-]/g, "");
+				const num = parseFloat(ascii);
+				return isNaN(num) ? NaN : num;
+			}
+
+			function parseStudentBirthDate(dobString) {
+				if (!dobString) return null;
+				const raw = khmerDigitsToAscii(String(dobString ?? ""))
+					.replace(/[\u200B-\u200D\uFEFF]/g, "")
+					.trim();
+				if (!raw) return null;
+
 				let birthDate = null;
-				if (dobString.includes("-")) {
-					const parts = dobString.split("-");
-					if (parts.length === 3) {
-						if (parts[0].length === 4) {
-							birthDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-						} else {
-							birthDate = new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]));
+				const ymd = raw.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:\b|T|\s)/);
+				if (ymd) {
+					birthDate = new Date(parseInt(ymd[1], 10), parseInt(ymd[2], 10) - 1, parseInt(ymd[3], 10));
+				} else {
+					const mdy = raw.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{2,4})$/);
+					if (mdy) {
+						let p1 = parseInt(mdy[1], 10);
+						let p2 = parseInt(mdy[2], 10);
+						let year = parseInt(mdy[3], 10);
+						if (year < 100) year += year < 50 ? 2000 : 1900;
+						let month = p1;
+						let day = p2;
+						if (p1 > 12 && p2 >= 1 && p2 <= 12) {
+							day = p1;
+							month = p2;
 						}
-					}
-				} else if (dobString.includes("/")) {
-					const parts = dobString.split("/");
-					if (parts.length === 3) {
-						birthDate = new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]));
+						birthDate = new Date(year, month - 1, day);
 					}
 				}
-				if (!birthDate || isNaN(birthDate.getTime())) return "";
+				if (!birthDate || isNaN(birthDate.getTime())) return null;
+				return birthDate;
+			}
+
+			function calculateAge(dobString) {
+				const birthDate = parseStudentBirthDate(dobString);
+				if (!birthDate) return "";
 
 				const today = new Date();
 				let age = today.getFullYear() - birthDate.getFullYear();
@@ -2500,9 +3275,100 @@
 				return age >= 0 ? age : 0;
 			}
 
+			function getStudentEffectiveAge(docOrValues, explicitAge, explicitDob) {
+				const v = Array.isArray(docOrValues) ? docOrValues : (docOrValues?.values || []);
+				const ageCandidate = explicitAge !== undefined && explicitAge !== "" ? explicitAge : v[6];
+				const parsedAge = parseNumericInput(ageCandidate);
+				if (!isNaN(parsedAge) && parsedAge > 0 && parsedAge <= 100) {
+					return parsedAge;
+				}
+				const dobCandidate = explicitDob !== undefined && explicitDob !== "" ? explicitDob : v[5];
+				const computed = calculateAge(dobCandidate);
+				if (computed !== "" && !isNaN(Number(computed)) && Number(computed) > 0) {
+					return Number(computed);
+				}
+				return null;
+			}
+
+			// WHO 2007 BMI-for-Age cutoffs [Thinness (-2SD), Overweight (+1SD), Obese (+2SD)]
+			const WHO_BMI_THRESHOLDS = {
+				boys: {
+					2: [13.8, 17.3, 18.9],
+					3: [13.4, 16.9, 18.4],
+					4: [13.1, 16.7, 18.2],
+					5: [13.0, 16.6, 18.3],
+					6: [13.0, 16.8, 18.5],
+					7: [13.1, 17.0, 19.0],
+					8: [13.3, 17.4, 19.7],
+					9: [13.5, 17.9, 20.5],
+					10: [13.7, 18.5, 21.4],
+					11: [14.1, 19.2, 22.5],
+					12: [14.5, 19.9, 23.6],
+					13: [14.9, 20.8, 24.8],
+					14: [15.5, 21.8, 25.9],
+					15: [16.0, 22.7, 27.0],
+					16: [16.5, 23.5, 27.9],
+					17: [16.9, 24.3, 28.6],
+					18: [17.3, 24.9, 29.2],
+				},
+				girls: {
+					2: [13.5, 17.1, 18.7],
+					3: [13.1, 16.8, 18.4],
+					4: [12.8, 16.8, 18.5],
+					5: [12.7, 16.9, 18.9],
+					6: [12.7, 17.0, 19.2],
+					7: [12.7, 17.3, 19.8],
+					8: [12.9, 17.7, 20.6],
+					9: [13.1, 18.3, 21.5],
+					10: [13.5, 19.0, 22.6],
+					11: [13.9, 19.9, 23.7],
+					12: [14.4, 20.8, 25.0],
+					13: [14.9, 21.8, 26.2],
+					14: [15.4, 22.7, 27.3],
+					15: [15.9, 23.5, 28.2],
+					16: [16.2, 24.1, 28.9],
+					17: [16.4, 24.5, 29.3],
+					18: [16.4, 24.8, 29.5],
+				},
+			};
+
+			function getBmiThresholds(ageYears, genderStr) {
+				const ageNum = parseNumericInput(ageYears);
+				if (isNaN(ageNum) || ageNum <= 0 || ageNum >= 19) {
+					return [18.5, 25.0, 30.0]; // Adult WHO cutoffs
+				}
+
+				const clamped = Math.max(2, Math.min(18, ageNum));
+				const lowAge = Math.floor(clamped);
+				const highAge = Math.ceil(clamped);
+				const ratio = clamped - lowAge;
+
+				const gText = String(genderStr || "").trim().toLowerCase();
+				const isBoy = gText.includes("ប្រុស") || gText === "m" || gText.includes("male") || gText.includes("boy");
+				const isGirl = gText.includes("ស្រី") || gText === "f" || gText.includes("female") || gText.includes("girl");
+
+				const pickTable = (age) => {
+					if (isBoy) return WHO_BMI_THRESHOLDS.boys[age];
+					if (isGirl) return WHO_BMI_THRESHOLDS.girls[age];
+					const b = WHO_BMI_THRESHOLDS.boys[age];
+					const g = WHO_BMI_THRESHOLDS.girls[age];
+					return [(b[0] + g[0]) / 2, (b[1] + g[1]) / 2, (b[2] + g[2]) / 2];
+				};
+
+				const tLow = pickTable(lowAge);
+				if (lowAge === highAge) return tLow;
+				const tHigh = pickTable(highAge);
+				return [
+					tLow[0] + (tHigh[0] - tLow[0]) * ratio,
+					tLow[1] + (tHigh[1] - tLow[1]) * ratio,
+					tLow[2] + (tHigh[2] - tLow[2]) * ratio,
+				];
+			}
+
 			const dobInput = document.getElementById("f-dob");
 			const ageDisplay = document.getElementById("f-age-display");
 			const ageHidden = document.getElementById("f-age");
+			const modalBmiUpdaters = [];
 
 			dobInput.addEventListener("input", () => {
 				const age = calculateAge(dobInput.value.trim());
@@ -2513,39 +3379,72 @@
 					ageDisplay.textContent = "-";
 					ageHidden.value = "";
 				}
+				modalBmiUpdaters.forEach(fn => fn());
 			});
 
-			function computeBmi(weightKg, heightCm) {
-				const w = parseFloat(weightKg);
-				const h = parseFloat(heightCm);
-				if (!w || !h || h <= 0) return { bmi: "", status: "", label: "-" };
+			document.getElementById("f-gender")?.addEventListener("change", () => {
+				modalBmiUpdaters.forEach(fn => fn());
+			});
 
-				const heightM = h / 100;
-				const bmiVal = (w / (heightM * heightM)).toFixed(2);
+			function computeBmi(weightKg, heightCm, ageYears, genderStr) {
+				const w = parseNumericInput(weightKg);
+				const h = parseNumericInput(heightCm);
+				if (!w || w <= 0 || !h || h <= 0) {
+					return { bmi: "", status: "", label: "-", className: "" };
+				}
+
+				const heightM = h < 3 ? h : (h / 100);
+				if (!heightM || heightM <= 0) {
+					return { bmi: "", status: "", label: "-", className: "" };
+				}
+
+				const rawBmi = w / (heightM * heightM);
+				const bmiVal = rawBmi.toFixed(2);
 				const bmiNum = parseFloat(bmiVal);
+				const [thinLimit, overLimit, obeseLimit] = getBmiThresholds(ageYears, genderStr);
 
 				let status = "សុខភាពល្អ";
-				let label = `${bmiVal} (សុខភាពល្អ)`;
 				let className = "health-normal";
 
-				if (bmiNum < 18.5) {
+				if (bmiNum < thinLimit) {
 					status = "ស្គម";
-					label = `${bmiVal} (ស្គម)`;
 					className = "health-under";
-				} else if (bmiNum >= 18.5 && bmiNum < 25) {
+				} else if (bmiNum < overLimit) {
 					status = "សុខភាពល្អ";
-					label = `${bmiVal} (សុខភាពល្អ)`;
 					className = "health-normal";
-				} else if (bmiNum >= 25 && bmiNum < 30) {
+				} else if (bmiNum < obeseLimit) {
 					status = "លើសទម្ងន់";
-					label = `${bmiVal} (លើសទម្ងន់)`;
 					className = "health-over";
 				} else {
 					status = "ធាត់";
-					label = `${bmiVal} (ធាត់)`;
 					className = "health-obese";
 				}
-				return { bmi: bmiVal, status, label, className };
+
+				return {
+					bmi: bmiVal,
+					status,
+					label: `${bmiVal} (${status})`,
+					className,
+					thresholds: [thinLimit, overLimit, obeseLimit],
+				};
+			}
+
+			function computeStudentBmiForSemester(docOrValues, semester = 1) {
+				const v = Array.isArray(docOrValues) ? docOrValues : (docOrValues?.values || []);
+				const wIdx = semester === 2 ? 32 : 29;
+				const hIdx = semester === 2 ? 33 : 30;
+				const bmiIdx = semester === 2 ? 34 : 31;
+				const age = getStudentEffectiveAge(docOrValues);
+				const gender = (!Array.isArray(docOrValues) && docOrValues?.gender) || v[4] || "ស្រី";
+				const res = computeBmi(v[wIdx], v[hIdx], age, gender);
+				return {
+					...res,
+					age,
+					gender,
+					weight: v[wIdx] || "",
+					height: v[hIdx] || "",
+					savedStatus: String(v[bmiIdx] || "").trim(),
+				};
 			}
 
 			function bindBmiAutoCalculate(weightId, heightId, displayId, hiddenId) {
@@ -2555,7 +3454,9 @@
 				const hidden = document.getElementById(hiddenId);
 
 				const update = () => {
-					const res = computeBmi(wInput.value, hInput.value);
+					const ageVal = document.getElementById("f-age")?.value.trim() || calculateAge(document.getElementById("f-dob")?.value.trim() || "");
+					const genderVal = document.getElementById("f-gender")?.value || "ស្រី";
+					const res = computeBmi(wInput.value, hInput.value, ageVal, genderVal);
 					disp.textContent = res.label;
 					disp.className = "computed-box " + (res.className || "");
 					hidden.value = res.status;
@@ -2563,6 +3464,7 @@
 
 				wInput.addEventListener("input", update);
 				hInput.addEventListener("input", update);
+				modalBmiUpdaters.push(update);
 			}
 
 			bindBmiAutoCalculate("f-s1-weight", "f-s1-height", "f-s1-bmi-display", "f-s1-bmi");
@@ -3019,6 +3921,12 @@
 						row.classList.toggle("selected", isSel);
 					}
 				}
+				document.querySelectorAll(".scard-item[data-id]").forEach(card => {
+					const isSel = selectedStudentIds.has(card.dataset.id);
+					const box = card.querySelector(".scard-checkbox");
+					if (box) box.checked = isSel;
+					card.classList.toggle("selected", isSel);
+				});
 			}
 
 			// Clear selection button
@@ -3081,6 +3989,7 @@
 			// Batch Delete
 			document.getElementById("batch-delete-btn").addEventListener("click", async () => {
 				if (selectedStudentIds.size === 0) return;
+				if (!requireSignedInForWrite("លុបទិន្នន័យសិស្ស")) return;
 				if (!confirm(`តើអ្នកពិតជាចង់លុបទិន្នន័យសិស្សទាំង ${selectedStudentIds.size} នាក់នេះមែនទេ?`)) return;
 
 				try {
@@ -3106,6 +4015,10 @@
 
 			// In-line Cell Save Handler
 			async function saveInlineCell(docId, colIndex, newValue) {
+				if (!requireSignedInForWrite("កែប្រែទិន្នន័យក្នុងតារាង")) {
+					renderTable(studentDocs);
+					return;
+				}
 				const docItem = studentDocs.find(d => d.id === docId);
 				if (!docItem) return;
 
@@ -3147,16 +4060,21 @@
 					if (newAge !== "") vals[6] = String(newAge);
 				}
 
-				// If weight/height S1 edited (col 29 or 30) -> auto compute BMI S1 (col 31)
-				if (colIndex === 29 || colIndex === 30) {
-					const bmi = computeBmi(vals[29], vals[30]);
+				// Effective age & gender for WHO BMI-for-Age calculation
+				const effectiveAge = getStudentEffectiveAge(vals, colIndex === 6 ? newValue : vals[6], colIndex === 5 ? newValue : vals[5]);
+
+				// If gender, DOB, age, or weight/height S1 edited -> auto compute BMI S1 (col 31)
+				if (colIndex === 4 || colIndex === 5 || colIndex === 6 || colIndex === 29 || colIndex === 30) {
+					const bmi = computeBmi(vals[29], vals[30], effectiveAge, gender);
 					if (bmi.status) vals[31] = bmi.status;
+					else if ((colIndex === 29 || colIndex === 30) && (!vals[29] || !vals[30])) vals[31] = "";
 				}
 
-				// If weight/height S2 edited (col 32 or 33) -> auto compute BMI S2 (col 34)
-				if (colIndex === 32 || colIndex === 33) {
-					const bmi = computeBmi(vals[32], vals[33]);
+				// If gender, DOB, age, or weight/height S2 edited -> auto compute BMI S2 (col 34)
+				if (colIndex === 4 || colIndex === 5 || colIndex === 6 || colIndex === 32 || colIndex === 33) {
+					const bmi = computeBmi(vals[32], vals[33], effectiveAge, gender);
 					if (bmi.status) vals[34] = bmi.status;
+					else if ((colIndex === 32 || colIndex === 33) && (!vals[32] || !vals[33])) vals[34] = "";
 				}
 
 				// Optimistically update memory so other views stay in sync immediately
@@ -3189,12 +4107,22 @@
 
 				try {
 					await updateDoc(doc(db, "students", docId), updateFields);
-					// Flash saved indicator
-					const targetRow = document.querySelector(`tr[data-id="${docId}"]`);
-					if (targetRow) {
-						const cells = targetRow.querySelectorAll("td");
-						const targetCell = cells[colIndex + 1]; // offset 1 for checkbox (action column is on far right)
-						if (targetCell) targetCell.classList.add("cell-saved");
+					if ([4, 5, 6, 29, 30, 32, 33].includes(colIndex)) {
+						const scroller = document.querySelector(".table-scroll");
+						const prevTop = scroller ? scroller.scrollTop : 0;
+						const prevLeft = scroller ? scroller.scrollLeft : 0;
+						renderTable(studentDocs);
+						if (scroller) {
+							scroller.scrollTop = prevTop;
+							scroller.scrollLeft = prevLeft;
+						}
+					} else {
+						const targetRow = document.querySelector(`tr[data-id="${docId}"]`);
+						if (targetRow) {
+							const cells = targetRow.querySelectorAll("td");
+							const targetCell = cells[colIndex + 1];
+							if (targetCell) targetCell.classList.add("cell-saved");
+						}
 					}
 					showToast("💾 បានរក្សាទុកការកែប្រែដោយស្វ័យប្រវត្តិ");
 				} catch (err) {
@@ -3259,9 +4187,13 @@
 					td.style.padding = "2.5rem";
 					td.style.textAlign = "center";
 					td.style.color = "var(--text-muted)";
-					td.textContent = "មិនមានទិន្នន័យសិស្សនៅឡើយទេ។ ចុច «➕» ដើម្បីបន្ថែម ឬ «📥» នាំចូល XLSX។";
+					td.textContent = !auth?.currentUser
+						? "🔑 សូមចុច «ចូលគណនី Google» នៅខាងស្ដាំផ្នែកខាងលើ ដើម្បីទាញយក និងកែប្រែទិន្នន័យសិស្ស។"
+						: "មិនមានទិន្នន័យសិស្សនៅឡើយទេ។ ចុច «➕» ដើម្បីបន្ថែម ឬ «📥» នាំចូល XLSX។";
 					tr.appendChild(td);
 					studentTbody.appendChild(tr);
+					updateMainTableOfficialSummary();
+					if (mainViewMode === "cards") renderStudentCardsPanel();
 					return;
 				}
 
@@ -3375,12 +4307,22 @@
 							wrap.appendChild(thumb);
 							wrap.appendChild(textSpan);
 							cell.appendChild(wrap);
-						} else if ((i === 31 || i === 34) && textVal) {
-							if (textVal.includes("សុខភាពល្អ")) cell.innerHTML = `<span class="health-tag health-normal">${textVal}</span>`;
-							else if (textVal.includes("ស្គម")) cell.innerHTML = `<span class="health-tag health-under">${textVal}</span>`;
-							else if (textVal.includes("លើសទម្ងន់")) cell.innerHTML = `<span class="health-tag health-over">${textVal}</span>`;
-							else if (textVal.includes("ធាត់")) cell.innerHTML = `<span class="health-tag health-obese">${textVal}</span>`;
-							else cell.textContent = textVal;
+						} else if (i === 31 || i === 34) {
+							const bmiInfo = computeStudentBmiForSemester(docItem, i === 31 ? 1 : 2);
+							const displayBmiStatus = bmiInfo.status || textVal;
+							if (bmiInfo.bmi) {
+								cell.title = `BMI: ${bmiInfo.bmi}${bmiInfo.age ? ` (អាយុ ${bmiInfo.age} ឆ្នាំ)` : ""} — ${displayBmiStatus}`;
+							}
+							if (displayBmiStatus.includes("សុខភាពល្អ")) cell.innerHTML = `<span class="health-tag health-normal">${displayBmiStatus}</span>`;
+							else if (displayBmiStatus.includes("ស្គម")) cell.innerHTML = `<span class="health-tag health-under">${displayBmiStatus}</span>`;
+							else if (displayBmiStatus.includes("លើសទម្ងន់")) cell.innerHTML = `<span class="health-tag health-over">${displayBmiStatus}</span>`;
+							else if (displayBmiStatus.includes("ធាត់")) cell.innerHTML = `<span class="health-tag health-obese">${displayBmiStatus}</span>`;
+							else cell.textContent = displayBmiStatus;
+						} else if (i >= 21 && i <= 24 && hasSupportPackageValue(textVal)) {
+							const pkgBadge = document.createElement("span");
+							pkgBadge.className = "health-tag health-normal";
+							pkgBadge.textContent = textVal;
+							cell.appendChild(pkgBadge);
 						} else {
 							cell.textContent = textVal;
 						}
@@ -3450,6 +4392,7 @@
 				filterTable();
 				updateBatchBar();
 				updateMainTableOfficialSummary();
+				if (mainViewMode === "cards") renderStudentCardsPanel();
 			}
 
 			function startInlineEdit(cell, docId, colIndex, currentValue) {
@@ -3505,11 +4448,455 @@
 				}
 			}
 
+			// Student Status Cards Panel State & Helpers
+			let mainViewMode = localStorage.getItem("newstudents_view_mode") || "table";
+			let cardsCompletionFilter = "all";
+			const cardActiveTabMap = new Map();
+
+			function formatCardDate(val) {
+				if (!val) return "-";
+				try {
+					let d = null;
+					if (typeof val === "object" && typeof val.toDate === "function") {
+						d = val.toDate();
+					} else if (typeof val === "object" && typeof val.seconds === "number") {
+						d = new Date(val.seconds * 1000);
+					} else if (typeof val === "string") {
+						const s = val.trim();
+						if (!s) return "-";
+						const ymd = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+						if (ymd) {
+							return `${ymd[3].padStart(2, "0")}/${ymd[2].padStart(2, "0")}/${ymd[1]}`;
+						}
+						const mdy = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+						if (mdy) {
+							const p1 = parseInt(mdy[1], 10);
+							const p2 = parseInt(mdy[2], 10);
+							if (p1 > 12) return `${String(p1).padStart(2, "0")}/${String(p2).padStart(2, "0")}/${mdy[3]}`;
+							return `${String(p2).padStart(2, "0")}/${String(p1).padStart(2, "0")}/${mdy[3]}`;
+						}
+						const parsed = new Date(s);
+						if (!isNaN(parsed.getTime())) d = parsed;
+					}
+					if (!d || isNaN(d.getTime())) return "-";
+					const dd = String(d.getDate()).padStart(2, "0");
+					const mm = String(d.getMonth() + 1).padStart(2, "0");
+					const yyyy = d.getFullYear();
+					return `${dd}/${mm}/${yyyy}`;
+				} catch {
+					return "-";
+				}
+			}
+
+			function isMeaningfulFieldFilled(val) {
+				const s = String(val ?? "").trim();
+				return s !== "" && s !== "-" && s !== "null" && s !== "undefined";
+			}
+
+			function computeStudentCompletionStatus(docItem) {
+				const v = Array.isArray(docItem?.values) ? docItem.values : [];
+				const checkFields = (specList) => {
+					let filled = 0;
+					const missingLabels = [];
+					specList.forEach(([idx, label, fallback]) => {
+						const val = isMeaningfulFieldFilled(v[idx]) ? v[idx] : fallback;
+						if (isMeaningfulFieldFilled(val)) filled++;
+						else missingLabels.push(label);
+					});
+					return { filled, total: specList.length, missingLabels };
+				};
+
+				// 1. ព័ត៌មានផ្ទាល់ខ្លួន និងទីលំនៅ
+				const secProfile = checkFields([
+					[0, "ថ្នាក់ទី", docItem?.grade],
+					[1, "អត្តលេខ", docItem?.studentCode],
+					[2, "គោត្តនាម", docItem?.lastName],
+					[3, "នាម", docItem?.firstName],
+					[4, "ភេទ", docItem?.gender],
+					[5, "ថ្ងៃខែឆ្នាំកំណើត"],
+					[7, "លេខទូរស័ព្ទ"],
+					[8, "សញ្ជាតិ"],
+					[9, "ខេត្តកំណើត"],
+					[13, "ខេត្តបច្ចុប្បន្ន"],
+					[15, "ឃុំបច្ចុប្បន្ន"],
+					[16, "ភូមិបច្ចុប្បន្ន"],
+				]);
+
+				// 2. ព័ត៌មានសិក្សា និងសម្ភារ/សមធម៌
+				const secStudy = checkFields([
+					[17, "ឆ្នាំសិក្សា"],
+					[18, "ថ្នាក់ឆ្នាំមុន"],
+					[19, "ថ្ងៃចុះឈ្មោះ"],
+					[20, "ពិការភាព"],
+					[21, "កញ្ចប់អំណាន"],
+					[22, "កញ្ចប់គណិត"],
+					[23, "សៀវភៅជំនួយភាសាខ្មែរ"],
+					[24, "សៀវភៅជំនួយគណិតវិទ្យា"],
+					[25, "គ្រួសារក្រីក្រ"],
+				]);
+
+				// 3. សុខភាព ទម្ងន់ កម្ពស់ និងវ៉ាក់សាំង
+				const s1BmiLiveStatus = computeStudentBmiForSemester(docItem, 1).status;
+				const secHealth = checkFields([
+					[29, "ទម្ងន់ (ឆ១)"],
+					[30, "កម្ពស់ (ឆ១)"],
+					[31, "BMI (ឆ១)", s1BmiLiveStatus],
+					[47, "វ៉ាក់សាំង"],
+				]);
+
+				// 4. ពិនិត្យភ្នែក និងត្រចៀក
+				const secEyeEar = checkFields([
+					[35, "ភ្នែកឆ្វេង"],
+					[36, "ភ្នែកស្ដាំ"],
+					[38, "លទ្ធផលភ្នែក"],
+					[41, "ត្រចៀកឆ្វេង"],
+					[42, "ត្រចៀកស្ដាំ"],
+					[44, "លទ្ធផលត្រចៀក"],
+				]);
+
+				// 5. ព័ត៌មានឪពុក ម្ដាយ និងអាណាព្យាបាល
+				const secFamily = checkFields([
+					[48, "គោត្តនាមឪពុក"],
+					[49, "នាមឪពុក"],
+					[50, "ទូរស័ព្ទឪពុក"],
+					[56, "គោត្តនាមម្ដាយ"],
+					[57, "នាមម្ដាយ"],
+					[64, "អាណាព្យាបាល"],
+					[68, "ទូរស័ព្ទអាណាព្យាបាល"],
+				]);
+
+				const sections = [
+					{
+						key: "profile",
+						title: "ព័ត៌មានផ្ទាល់ខ្លួន និងទីលំនៅ",
+						...secProfile,
+						complete: secProfile.filled >= 9,
+						iconSvg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
+					},
+					{
+						key: "study",
+						title: "ការសិក្សា និងសម្ភារ/សមធម៌",
+						...secStudy,
+						complete: secStudy.filled >= 7,
+						iconSvg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/></svg>`,
+					},
+					{
+						key: "health",
+						title: "សុខភាព (BMI) និងវ៉ាក់សាំង",
+						...secHealth,
+						complete: secHealth.filled >= 3,
+						iconSvg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.572 12 20l-7.5-7.428A5 5 0 1 1 12 6.006a5 5 0 1 1 7.5 6.572"/><path d="M7 12h2l2-3 2 6 2-3h2"/></svg>`,
+					},
+					{
+						key: "eyeEar",
+						title: "ពិនិត្យភ្នែក និងត្រចៀក",
+						...secEyeEar,
+						complete: secEyeEar.filled >= 4,
+						iconSvg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`,
+					},
+					{
+						key: "family",
+						title: "គ្រួសារ (ឪពុក ម្ដាយ អាណាព្យាបាល)",
+						...secFamily,
+						complete: secFamily.filled >= 5,
+						iconSvg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="4" rx="1"/><rect x="2" y="17" width="6" height="4" rx="1"/><rect x="16" y="17" width="6" height="4" rx="1"/><path d="M12 7v5"/><path d="M5 17v-3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/></svg>`,
+					},
+				];
+
+				const totalFields = sections.reduce((acc, s) => acc + s.total, 0);
+				const filledFields = sections.reduce((acc, s) => acc + s.filled, 0);
+				const pct = totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
+
+				return { pct, filledFields, totalFields, sections };
+			}
+
+			function getFilteredSortedStudents() {
+				const query = document.getElementById("table-search")?.value.trim().toLocaleLowerCase() || "";
+				const selectedGrade = document.getElementById("grade-filter")?.value.trim() || "";
+				const sorted = sortStudentDocs(studentDocs);
+				return sorted.filter(docItem => {
+					const vals = docItem.values || [];
+					const itemGrade = docItem.grade || vals[0] || "";
+					if (selectedGrade && itemGrade !== selectedGrade) return false;
+					if (query) {
+						const searchText = [
+							docItem.studentCode,
+							docItem.lastName,
+							docItem.firstName,
+							docItem.gender,
+							itemGrade,
+							...vals,
+						].join(" ").toLocaleLowerCase();
+						if (!searchText.includes(query)) return false;
+					}
+					return true;
+				});
+			}
+
+			function escapeCardHtml(str) {
+				return String(str ?? "")
+					.replace(/&/g, "&amp;")
+					.replace(/</g, "&lt;")
+					.replace(/>/g, "&gt;")
+					.replace(/"/g, "&quot;");
+			}
+
+			function renderStudentCardsPanel() {
+				const gridEl = document.getElementById("student-cards-grid");
+				const countEl = document.getElementById("cards-visible-count");
+				const avgEl = document.getElementById("cards-avg-completion");
+				const selectAllEl = document.getElementById("cards-select-all");
+				if (!gridEl) return;
+
+				const baseDocs = getFilteredSortedStudents();
+				const enriched = baseDocs.map(d => ({ docItem: d, status: computeStudentCompletionStatus(d) }));
+
+				const filtered = enriched.filter(({ status }) => {
+					if (cardsCompletionFilter === "complete") return status.pct >= 85;
+					if (cardsCompletionFilter === "partial") return status.pct >= 50 && status.pct < 85;
+					if (cardsCompletionFilter === "incomplete") return status.pct < 50;
+					return true;
+				});
+
+				if (countEl) countEl.textContent = filtered.length;
+				const avgPct = filtered.length > 0
+					? Math.round(filtered.reduce((sum, item) => sum + item.status.pct, 0) / filtered.length)
+					: 0;
+				if (avgEl) {
+					avgEl.textContent = `${avgPct}%`;
+					avgEl.style.color = avgPct >= 85 ? "#22c55e" : (avgPct >= 50 ? "#eab308" : "#f87171");
+				}
+
+				if (selectAllEl) {
+					selectAllEl.checked = filtered.length > 0 && filtered.every(({ docItem }) => selectedStudentIds.has(docItem.id));
+				}
+
+				gridEl.innerHTML = "";
+				if (filtered.length === 0) {
+					const emptyMsg = !auth?.currentUser
+						? "🔑 សូមចូលគណនី Google ជាមុនសិន ដើម្បីទាញយក និងកែប្រែទិន្នន័យសិស្ស។"
+						: "មិនមានសិស្សត្រូវនឹងការចម្រាញ់នេះទេ";
+					gridEl.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: #9ca3af;">${emptyMsg}</div>`;
+					return;
+				}
+
+				for (const { docItem, status } of filtered) {
+					const v = docItem.values || [];
+					const fullName = `${docItem.lastName || v[2] || ""} ${docItem.firstName || v[3] || ""}`.trim() || "សិស្ស";
+					const code = docItem.studentCode || v[1] || "-";
+					const grade = docItem.grade || v[0] || "-";
+					const gender = docItem.gender || v[4] || "-";
+					const academicYear = v[17] || "2026-2027";
+					const createdDate = formatCardDate(docItem.createdAt) !== "-" ? formatCardDate(docItem.createdAt) : formatCardDate(v[19]);
+					const updatedDate = formatCardDate(docItem.lastModifiedAt || docItem.updatedAt);
+					const avatarUrl = getStudentAvatarUrl(docItem);
+
+					const activeTabIdx = cardActiveTabMap.has(docItem.id) ? cardActiveTabMap.get(docItem.id) : 0;
+					const activeSection = status.sections[activeTabIdx] || status.sections[0];
+					const pctColor = status.pct >= 85 ? "#22c55e" : (status.pct >= 50 ? "#eab308" : "#ef4444");
+
+					const card = document.createElement("article");
+					card.className = "scard-item" + (selectedStudentIds.has(docItem.id) ? " selected" : "");
+					card.dataset.id = docItem.id;
+
+					card.innerHTML = `
+						<div class="scard-top">
+							<div class="scard-identity">
+								<button type="button" class="scard-avatar-btn" title="មើលកាតសិស្ស និងរូបថត">
+									<img src="${escapeCardHtml(avatarUrl)}" alt="${escapeCardHtml(fullName)}" />
+								</button>
+								<div class="scard-name-wrap">
+									<div class="scard-name" title="${escapeCardHtml(fullName)}">${escapeCardHtml(fullName)}</div>
+									<span class="scard-code-tag">@${escapeCardHtml(code)}</span>
+								</div>
+							</div>
+							<div class="scard-top-actions">
+								<input type="checkbox" class="scard-checkbox" ${selectedStudentIds.has(docItem.id) ? "checked" : ""} aria-label="ជ្រើសរើសសិស្ស" />
+								<div class="scard-menu-wrap">
+									<button type="button" class="scard-menu-btn" title="សកម្មភាពផ្សេងៗ">⋮</button>
+									<div class="scard-dropdown">
+										<button type="button" data-action="edit">✏️ កែប្រែព័ត៌មានពេញលេញ</button>
+										<button type="button" data-action="quick-edit">🏷️ កែថ្នាក់ទី & អត្តលេខ</button>
+										<button type="button" data-action="card">🪪 ប័ណ្ណសម្គាល់ខ្លួន</button>
+										<button type="button" data-action="telegram">✈️ ផ្ញើ Telegram</button>
+										<button type="button" data-action="delete" class="danger">🗑️ លុបសិស្ស</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="scard-info-grid-2">
+							<div class="scard-box">
+								<span class="scard-box-label">ថ្នាក់ទី</span>
+								<span class="scard-box-value">ថ្នាក់ទី ${escapeCardHtml(grade)}</span>
+							</div>
+							<div class="scard-box">
+								<span class="scard-box-label">ភេទ</span>
+								<span class="scard-box-value">${escapeCardHtml(gender)}</span>
+							</div>
+						</div>
+
+						<div class="scard-box-row">
+							<span class="scard-box-label" style="font-size: 0.8rem;">លទ្ធផល</span>
+							<div class="scard-study-status">
+								<span class="scard-study-badge">កំពុងសិក្សា</span>
+								<span class="scard-year-sub">${escapeCardHtml(academicYear)}</span>
+							</div>
+						</div>
+
+						<div class="scard-info-grid-2">
+							<div class="scard-box">
+								<span class="scard-box-label">ថ្ងៃបង្កើតសិស្ស</span>
+								<span class="scard-box-value">${escapeCardHtml(createdDate)}</span>
+							</div>
+							<div class="scard-box">
+								<span class="scard-box-label">ចូលប្រើចុងក្រោយ</span>
+								<span class="scard-box-value">${escapeCardHtml(updatedDate)}</span>
+							</div>
+						</div>
+
+						<div class="scard-tabs-strip">
+							${status.sections.map((sec, sIdx) => `
+								<button type="button" class="scard-tab-btn ${sIdx === activeTabIdx ? "active" : ""}" data-tab-idx="${sIdx}" title="${escapeCardHtml(sec.title)} (${sec.filled}/${sec.total})">
+									${sec.iconSvg}
+									<span class="scard-status-mark ${sec.complete ? "ok" : "miss"}">${sec.complete ? "✓" : "✕"}</span>
+								</button>
+							`).join("")}
+						</div>
+
+						<div class="scard-tab-detail">
+							<div class="scard-tab-detail-head">
+								<span>${escapeCardHtml(activeSection.title)} (${activeSection.filled}/${activeSection.total})</span>
+								<button type="button" class="scard-inline-edit-btn">✏️ កែព័ត៌មាន</button>
+							</div>
+							<div style="color: ${activeSection.missingLabels.length === 0 ? "#86efac" : "#fca5a5"}; line-height: 1.4;">
+								${activeSection.missingLabels.length === 0
+									? "✅ បានបញ្ចូលព័ត៌មានក្នុងផ្នែកនេះពេញលេញហើយ"
+									: "ខ្វះ៖ " + escapeCardHtml(activeSection.missingLabels.join(" · "))}
+							</div>
+						</div>
+
+						<div class="scard-progress-footer">
+							<div class="scard-progress-row">
+								<span class="scard-progress-label">អត្រាពេញលេញ</span>
+								<span class="scard-progress-pct" style="color: ${pctColor};">${status.pct}%</span>
+							</div>
+							<div class="scard-progress-track">
+								<div class="scard-progress-fill" style="width: ${status.pct}%; background: ${pctColor};"></div>
+							</div>
+						</div>
+					`;
+
+					// Wire Avatar click -> ID Card modal
+					card.querySelector(".scard-avatar-btn").addEventListener("click", () => openStudentIdCardModal(docItem));
+
+					// Wire Checkbox selection
+					card.querySelector(".scard-checkbox").addEventListener("change", (e) => {
+						if (e.target.checked) selectedStudentIds.add(docItem.id);
+						else selectedStudentIds.delete(docItem.id);
+						card.classList.toggle("selected", e.target.checked);
+						updateBatchBar();
+						renderSelectedState();
+						if (selectAllEl) {
+							selectAllEl.checked = filtered.length > 0 && filtered.every(x => selectedStudentIds.has(x.docItem.id));
+						}
+					});
+
+					// Wire 3-dot Menu
+					const menuBtn = card.querySelector(".scard-menu-btn");
+					const dropdown = card.querySelector(".scard-dropdown");
+					menuBtn.addEventListener("click", (e) => {
+						e.stopPropagation();
+						const wasOpen = dropdown.classList.contains("open");
+						document.querySelectorAll(".scard-dropdown.open").forEach(d => d.classList.remove("open"));
+						if (!wasOpen) dropdown.classList.add("open");
+					});
+					dropdown.querySelectorAll("button[data-action]").forEach(actBtn => {
+						actBtn.addEventListener("click", (e) => {
+							e.stopPropagation();
+							dropdown.classList.remove("open");
+							const act = actBtn.dataset.action;
+							if (act === "edit") openEditModal(docItem);
+							else if (act === "quick-edit") window.openQuickEditModal(docItem);
+							else if (act === "card") openStudentIdCardModal(docItem);
+							else if (act === "telegram") openTelegramModal(docItem);
+							else if (act === "delete") deleteStudent(docItem.id, fullName);
+						});
+					});
+
+					// Wire 5 Section Tabs
+					card.querySelectorAll(".scard-tab-btn").forEach(tabBtn => {
+						tabBtn.addEventListener("click", () => {
+							const tIdx = parseInt(tabBtn.dataset.tabIdx, 10) || 0;
+							cardActiveTabMap.set(docItem.id, tIdx);
+							renderStudentCardsPanel();
+						});
+					});
+
+					// Wire Inline Edit Button
+					card.querySelector(".scard-inline-edit-btn").addEventListener("click", () => openEditModal(docItem));
+
+					gridEl.appendChild(card);
+				}
+			}
+
+			function setMainViewMode(mode) {
+				mainViewMode = mode === "cards" ? "cards" : "table";
+				localStorage.setItem("newstudents_view_mode", mainViewMode);
+
+				const tableWrap = document.getElementById("main-table-wrapper");
+				const cardsPanel = document.getElementById("student-cards-panel");
+				const tableBtn = document.getElementById("view-mode-table-btn");
+				const cardsBtn = document.getElementById("view-mode-cards-btn");
+
+				if (tableWrap) tableWrap.classList.toggle("hidden", mainViewMode === "cards");
+				if (cardsPanel) cardsPanel.classList.toggle("hidden", mainViewMode !== "cards");
+				if (tableBtn) tableBtn.classList.toggle("active", mainViewMode !== "cards");
+				if (cardsBtn) cardsBtn.classList.toggle("active", mainViewMode === "cards");
+
+				if (mainViewMode === "cards") {
+					renderStudentCardsPanel();
+				}
+			}
+
+			document.getElementById("view-mode-table-btn")?.addEventListener("click", () => setMainViewMode("table"));
+			document.getElementById("view-mode-cards-btn")?.addEventListener("click", () => setMainViewMode("cards"));
+
+			document.querySelectorAll(".cards-filter-btn").forEach(btn => {
+				btn.addEventListener("click", () => {
+					document.querySelectorAll(".cards-filter-btn").forEach(b => b.classList.remove("active"));
+					btn.classList.add("active");
+					cardsCompletionFilter = btn.dataset.completionFilter || "all";
+					renderStudentCardsPanel();
+				});
+			});
+
+			document.getElementById("cards-select-all")?.addEventListener("change", (e) => {
+				const baseDocs = getFilteredSortedStudents();
+				baseDocs.forEach(d => {
+					const st = computeStudentCompletionStatus(d);
+					if (cardsCompletionFilter === "complete" && st.pct < 85) return;
+					if (cardsCompletionFilter === "partial" && (st.pct < 50 || st.pct >= 85)) return;
+					if (cardsCompletionFilter === "incomplete" && st.pct >= 50) return;
+					if (e.target.checked) selectedStudentIds.add(d.id);
+					else selectedStudentIds.delete(d.id);
+				});
+				updateBatchBar();
+				renderSelectedState();
+			});
+
+			document.addEventListener("click", () => {
+				document.querySelectorAll(".scard-dropdown.open").forEach(d => d.classList.remove("open"));
+			});
+
+			setMainViewMode(mainViewMode);
+
 			// Trigger official summary recalculation on search or grade filter
 			const originalFilterTable = filterTable;
 			filterTable = function() {
 				originalFilterTable();
 				updateMainTableOfficialSummary();
+				if (mainViewMode === "cards") renderStudentCardsPanel();
 			};
 
 			document.getElementById("table-search").addEventListener("input", filterTable);
@@ -3528,8 +4915,8 @@
 			// Helper: Detailed Orphan classification (MoEYS Standard)
 			function getStudentOrphanInfo(v) {
 				if (!v) return { isOrphan: false, type: "", label: "", tag: "" };
-				const specVal = String(v[28] || "").trim();
-				const guardVal = String(v[64] || "").trim();
+				const specVal = String(v[28] || "").replace(/[\u200B-\u200D\uFEFF]/g, "").trim();
+				const guardVal = String(v[64] || "").replace(/[\u200B-\u200D\uFEFF]/g, "").trim();
 				const fatherLast = String(v[48] || "").trim();
 				const fatherFirst = String(v[49] || "").trim();
 				const motherLast = String(v[56] || "").trim();
@@ -3537,44 +4924,59 @@
 				const hasFather = Boolean(fatherLast || fatherFirst);
 				const hasMother = Boolean(motherLast || motherFirst);
 
-				const text = (specVal + " " + guardVal).toLowerCase();
+				const cleanedSpec = specVal
+					.toLowerCase()
+					.replace(/មិនមែនកំព្រា|មិនកំព្រា|គ្មានកំព្រា/g, "")
+					.trim();
+				const guardLower = guardVal.toLowerCase();
 
-				// 1. Double orphan: កំព្រាឪពុកម្ដាយ / កំព្រាទាំងពីរ
+				const hasFatherWord = s => s.includes("ឪពុក");
+				const hasMotherWord = s => s.includes("ម្ដាយ") || s.includes("ម្តាយ");
+
+				// 1. Explicit Double orphan in specVal (check ONLY specVal so living guardian in v[64] doesn't pollute!)
 				if (
-					text.includes("ទាំងពីរ") ||
-					text.includes("ឪពុកម្តាយ") ||
-					text.includes("ឪពុកម្ដាយ") ||
-					(text.includes("ឪពុក") && text.includes("ម្ដាយ") && text.includes("កំព្រា")) ||
-					(text.includes("ឪពុក") && text.includes("ម្តាយ") && text.includes("កំព្រា")) ||
-					(!hasFather && !hasMother && (text.includes("កំព្រា") || guardVal.includes("ជីដូន") || guardVal.includes("ជីតា") || guardVal.includes("សាច់ញាតិ") || guardVal.includes("មណ្ឌល")))
+					cleanedSpec.includes("ទាំងពីរ") ||
+					cleanedSpec.includes("ឪពុកម្តាយ") ||
+					cleanedSpec.includes("ឪពុកម្ដាយ") ||
+					(cleanedSpec.includes("កំព្រា") && hasFatherWord(cleanedSpec) && hasMotherWord(cleanedSpec))
 				) {
-					if (text.includes("កំព្រា") || (!hasFather && !hasMother && (guardVal.includes("ជីដូន") || guardVal.includes("ជីតា") || guardVal.includes("សាច់ញាតិ") || guardVal.includes("មណ្ឌល")))) {
-						return { isOrphan: true, type: "both", label: "កំព្រាទាំងពីរ (ឪពុកម្ដាយ)", tag: "ទាំងពីរ" };
-					}
+					return { isOrphan: true, type: "both", label: "កំព្រាទាំងពីរ (ឪពុកម្ដាយ)", tag: "ទាំងពីរ" };
 				}
 
-				// 2. Orphan Mother: កំព្រាម្ដាយ / កំព្រាម្តាយ
-				if (text.includes("កំព្រាម្ដាយ") || text.includes("កំព្រាម្តាយ") || (text.includes("កំព្រា") && (text.includes("ម្ដាយ") || text.includes("ម្តាយ")))) {
-					return { isOrphan: true, type: "mother", label: "កំព្រាម្ដាយ", tag: "ម្ដាយ" };
-				}
-
-				// 3. Orphan Father: កំព្រាឪពុក
-				if (text.includes("កំព្រាឪពុក") || (text.includes("កំព្រា") && text.includes("ឪពុក"))) {
+				// 2. Explicit Orphan Father: កំព្រាឪពុក
+				if (
+					cleanedSpec.includes("កំព្រាឪពុក") ||
+					(cleanedSpec.includes("កំព្រា") && hasFatherWord(cleanedSpec) && !hasMotherWord(cleanedSpec))
+				) {
 					return { isOrphan: true, type: "father", label: "កំព្រាឪពុក", tag: "ឪពុក" };
 				}
 
-				// 4. Orphan specified in text without explicit parent: infer from parent presence
-				if (text.includes("កំព្រា")) {
-					if (!hasFather && hasMother) {
+				// 3. Explicit Orphan Mother: កំព្រាម្ដាយ / កំព្រាម្តាយ
+				if (
+					cleanedSpec.includes("កំព្រាម្ដាយ") ||
+					cleanedSpec.includes("កំព្រាម្តាយ") ||
+					(cleanedSpec.includes("កំព្រា") && hasMotherWord(cleanedSpec) && !hasFatherWord(cleanedSpec))
+				) {
+					return { isOrphan: true, type: "mother", label: "កំព្រាម្ដាយ", tag: "ម្ដាយ" };
+				}
+
+				// 4. Generic "កំព្រា" without specifying father/mother/both -> infer from surviving parent / guardian
+				if (cleanedSpec.includes("កំព្រា") || guardLower.includes("កំព្រា")) {
+					if ((!hasFather && hasMother) || (guardLower.includes("ម្ដាយ") || guardLower.includes("ម្តាយ"))) {
 						return { isOrphan: true, type: "father", label: "កំព្រាឪពុក", tag: "ឪពុក" };
 					}
-					if (!hasMother && hasFather) {
+					if ((!hasMother && hasFather) || guardLower.includes("ឪពុក")) {
 						return { isOrphan: true, type: "mother", label: "កំព្រាម្ដាយ", tag: "ម្ដាយ" };
 					}
 					if (!hasFather && !hasMother) {
 						return { isOrphan: true, type: "both", label: "កំព្រាទាំងពីរ (ឪពុកម្ដាយ)", tag: "ទាំងពីរ" };
 					}
 					return { isOrphan: true, type: "unspecified", label: "កំព្រា (ផ្សេងៗ)", tag: "កំព្រា" };
+				}
+
+				// 5. Institutional orphan guardian fallback (មណ្ឌល)
+				if (guardLower.includes("មណ្ឌល") && !hasFather && !hasMother) {
+					return { isOrphan: true, type: "both", label: "កំព្រាទាំងពីរ (ឪពុកម្ដាយ)", tag: "ទាំងពីរ" };
 				}
 
 				return { isOrphan: false, type: "", label: "", tag: "" };
@@ -3717,6 +5119,10 @@
 				document.getElementById("f-orphan-status").value = "មិនកំព្រា";
 				document.getElementById("f-disability").value = "មិនមាន";
 				document.getElementById("f-chronic-illness").value = "គ្មានជម្ងឺរ៉ាំរ៉ៃ";
+				document.getElementById("f-pkg-reading").value = "មិនមាន";
+				document.getElementById("f-pkg-math").value = "មិនមាន";
+				document.getElementById("f-pkg-khmer-book").value = "មិនមាន";
+				document.getElementById("f-pkg-math-book").value = "មិនមាន";
 				document.getElementById("form-student-photo-img").src = getDefaultSvgAvatar("ស្រី", "", "");
 				studentModal.classList.remove("hidden");
 			});
@@ -3800,15 +5206,42 @@
 				document.getElementById("f-prev-grade").value = v[18] || "";
 				document.getElementById("f-equity-card").value = v[26] || "មិនមាន";
 
+				const setSupportPackageSelect = (elId, rawVal) => {
+					const sel = document.getElementById(elId);
+					if (!sel) return;
+					const valStr = String(rawVal || "មិនមាន").trim() || "មិនមាន";
+					const exists = Array.from(sel.options).some(opt => opt.value === valStr);
+					if (!exists) {
+						const opt = document.createElement("option");
+						opt.value = valStr;
+						opt.textContent = valStr;
+						sel.appendChild(opt);
+					}
+					sel.value = valStr;
+				};
+				setSupportPackageSelect("f-pkg-reading", v[21]);
+				setSupportPackageSelect("f-pkg-math", v[22]);
+				setSupportPackageSelect("f-pkg-khmer-book", v[23]);
+				setSupportPackageSelect("f-pkg-math-book", v[24]);
+
+				const modalAge = v[6] || calculateAge(v[5] || "");
+				const modalGender = v[4] || docItem.gender || "ស្រី";
+
 				document.getElementById("f-s1-weight").value = v[29] || "";
 				document.getElementById("f-s1-height").value = v[30] || "";
-				document.getElementById("f-s1-bmi").value = v[31] || "";
-				document.getElementById("f-s1-bmi-display").textContent = v[31] || "-";
+				const s1EditBmi = computeBmi(v[29], v[30], modalAge, modalGender);
+				document.getElementById("f-s1-bmi").value = s1EditBmi.status || v[31] || "";
+				const s1DispEl = document.getElementById("f-s1-bmi-display");
+				s1DispEl.textContent = s1EditBmi.status ? s1EditBmi.label : (v[31] || "-");
+				s1DispEl.className = "computed-box " + (s1EditBmi.className || "");
 
 				document.getElementById("f-s2-weight").value = v[32] || "";
 				document.getElementById("f-s2-height").value = v[33] || "";
-				document.getElementById("f-s2-bmi").value = v[34] || "";
-				document.getElementById("f-s2-bmi-display").textContent = v[34] || "-";
+				const s2EditBmi = computeBmi(v[32], v[33], modalAge, modalGender);
+				document.getElementById("f-s2-bmi").value = s2EditBmi.status || v[34] || "";
+				const s2DispEl = document.getElementById("f-s2-bmi-display");
+				s2DispEl.textContent = s2EditBmi.status ? s2EditBmi.label : (v[34] || "-");
+				s2DispEl.className = "computed-box " + (s2EditBmi.className || "");
 
 				document.getElementById("f-eye-left").value = v[35] || "";
 				document.getElementById("f-eye-right").value = v[36] || "";
@@ -3898,15 +5331,19 @@
 				const orphanStatus = document.getElementById("f-orphan-status").value;
 				const disability = document.getElementById("f-disability").value;
 				const illnessStatus = document.getElementById("f-chronic-illness").value;
+				const pkgReading = document.getElementById("f-pkg-reading").value;
+				const pkgMath = document.getElementById("f-pkg-math").value;
+				const pkgKhmerBook = document.getElementById("f-pkg-khmer-book").value;
+				const pkgMathBook = document.getElementById("f-pkg-math-book").value;
 
 				const s1w = document.getElementById("f-s1-weight").value.trim();
 				const s1h = document.getElementById("f-s1-height").value.trim();
-				const s1bmiRes = computeBmi(s1w, s1h);
+				const s1bmiRes = computeBmi(s1w, s1h, age, gender);
 				const s1bmi = s1bmiRes.status || document.getElementById("f-s1-bmi").value.trim();
 
 				const s2w = document.getElementById("f-s2-weight").value.trim();
 				const s2h = document.getElementById("f-s2-height").value.trim();
-				const s2bmiRes = computeBmi(s2w, s2h);
+				const s2bmiRes = computeBmi(s2w, s2h, age, gender);
 				const s2bmi = s2bmiRes.status || document.getElementById("f-s2-bmi").value.trim();
 
 				const eyeL = document.getElementById("f-eye-left").value.trim();
@@ -3957,10 +5394,10 @@
 				rowValues[18] = prevGrade;
 				rowValues[19] = "2025-11-1";
 				rowValues[20] = disability !== "មិនមាន" ? disability : "មិនមាន";
-				rowValues[21] = "មិនមាន";
-				rowValues[22] = "មិនមាន";
-				rowValues[23] = "មិនមាន";
-				rowValues[24] = "មិនមាន";
+				rowValues[21] = pkgReading || "មិនមាន";
+				rowValues[22] = pkgMath || "មិនមាន";
+				rowValues[23] = pkgKhmerBook || "មិនមាន";
+				rowValues[24] = pkgMathBook || "មិនមាន";
 				rowValues[25] = equityCard !== "មិនមាន" ? "មាន" : "មិនមាន";
 				rowValues[26] = equityCard;
 				rowValues[27] = "មិនមាន";
@@ -4016,19 +5453,33 @@
 				rowValues[69] = "កសិករ";
 				rowValues[70] = gAddr;
 
+				if (!requireSignedInForWrite(isEdit ? "រក្សាទុកការកែប្រែ" : "បន្ថែមសិស្សថ្មី")) return;
+
 				const targetId = isEdit ? docId : ("student_" + Date.now());
-				const actor = currentUser?.displayName || currentUser?.email || "អ្នកប្រើប្រាស់";
-				const photoUrl = document.getElementById("f-photo-url").value.trim();
+				const actor = String(currentUser?.displayName || currentUser?.email || "អ្នកប្រើប្រាស់").slice(0, 140);
+				const rawPhotoUrl = document.getElementById("f-photo-url").value.trim();
+				const photoUrl = rawPhotoUrl.length <= 65536 ? rawPhotoUrl : "";
+				if (rawPhotoUrl && !photoUrl) {
+					showToast("⚠️ រូបថតមានទំហំធំពេក សូមថត ឬជ្រើសរូបភាពតូចជាង 64KB", true);
+					return;
+				}
+
+				const safeCode = String(studentCode || "S0001").slice(0, 58) || "S0001";
+				const safeLast = String(lastName || "សិស្ស").slice(0, 118) || "សិស្ស";
+				const safeFirst = String(firstName || "1").slice(0, 118) || "1";
+				const safeGender = (gender === "ប្រុស" || gender === "ស្រី") ? gender : "ស្រី";
+				const safeGrade = String(grade || "3A").slice(0, 58) || "3A";
+				const safeValues = rowValues.slice(0, 75).map(val => String(val ?? "").slice(0, 300));
 
 				try {
 					if (isEdit) {
 						const updatePayload = {
-							studentCode,
-							lastName,
-							firstName,
-							gender,
-							grade,
-							values: rowValues,
+							studentCode: safeCode,
+							lastName: safeLast,
+							firstName: safeFirst,
+							gender: safeGender,
+							grade: safeGrade,
+							values: safeValues,
 							lastModifiedBy: actor,
 							lastModifiedAt: serverTimestamp(),
 							updatedAt: serverTimestamp(),
@@ -4038,12 +5489,12 @@
 						showToast("✅ បានកែប្រែដោយជោគជ័យ");
 					} else {
 						const payload = {
-							studentCode,
-							lastName,
-							firstName,
-							gender,
-							grade,
-							values: rowValues,
+							studentCode: safeCode,
+							lastName: safeLast,
+							firstName: safeFirst,
+							gender: safeGender,
+							grade: safeGrade,
+							values: safeValues,
 							createdBy: actor,
 							lastModifiedBy: actor,
 							lastModifiedAt: serverTimestamp(),
@@ -4061,6 +5512,7 @@
 			});
 
 			async function deleteStudent(docId, studentName) {
+				if (!requireSignedInForWrite("លុបទិន្នន័យសិស្ស")) return;
 				if (!confirm(`តើអ្នកពិតជាចង់លុបទិន្នន័យ «${studentName}» មែនទេ?`)) return;
 				try {
 					await deleteDoc(doc(db, "students", docId));
@@ -4069,6 +5521,50 @@
 					handleFirestoreError(error, OperationType.DELETE, `students/${docId}`);
 				}
 			}
+
+			// Quick Edit Grade & Student Code Modal Logic
+			const quickEditModalEl = document.getElementById("quick-edit-modal");
+			const quickEditFormEl = document.getElementById("quick-edit-form");
+			window.openQuickEditModal = function(docItem) {
+				if (!docItem || !quickEditModalEl) return;
+				const vals = docItem.values || [];
+				const fullName = `${docItem.lastName || vals[2] || ""} ${docItem.firstName || vals[3] || ""}`.trim() || "-";
+				document.getElementById("qe-student-id").value = docItem.id;
+				document.getElementById("qe-student-name").textContent = fullName;
+				document.getElementById("qe-grade").value = docItem.grade || vals[0] || "";
+				document.getElementById("qe-code").value = docItem.studentCode || vals[1] || "";
+				quickEditModalEl.classList.remove("hidden");
+			};
+			document.getElementById("quick-edit-close")?.addEventListener("click", () => quickEditModalEl?.classList.add("hidden"));
+			document.getElementById("qe-cancel-btn")?.addEventListener("click", () => quickEditModalEl?.classList.add("hidden"));
+			quickEditFormEl?.addEventListener("submit", async (e) => {
+				e.preventDefault();
+				if (!requireSignedInForWrite("កែប្រែថ្នាក់ទី និងអត្តលេខ")) return;
+				const docId = document.getElementById("qe-student-id").value;
+				const newGrade = document.getElementById("qe-grade").value.trim().slice(0, 48);
+				const newCode = document.getElementById("qe-code").value.trim().slice(0, 48);
+				if (!docId || !newGrade || !newCode) return;
+				const docItem = studentDocs.find(d => d.id === docId);
+				if (!docItem) return;
+				const vals = Array.isArray(docItem.values) ? [...docItem.values] : new Array(71).fill("");
+				vals[0] = newGrade;
+				vals[1] = newCode;
+				const actor = String(currentUser?.displayName || currentUser?.email || "អ្នកប្រើប្រាស់").slice(0, 140);
+				try {
+					await updateDoc(doc(db, "students", docId), {
+						values: vals,
+						grade: newGrade,
+						studentCode: newCode,
+						lastModifiedBy: actor,
+						lastModifiedAt: serverTimestamp(),
+						updatedAt: serverTimestamp(),
+					});
+					quickEditModalEl.classList.add("hidden");
+					showToast("✅ បានកែប្រែថ្នាក់ទី និងអត្តលេខរួចរាល់");
+				} catch (err) {
+					handleFirestoreError(err, OperationType.UPDATE, `students/${docId}`);
+				}
+			});
 
 			// ==========================================
 			// 4.1 Student ID Card Logic
@@ -4174,6 +5670,10 @@
 			});
 
 			document.getElementById("card-print-btn").addEventListener("click", () => {
+				const dynStyle = document.getElementById("dynamic-print-page-style");
+				if (dynStyle) dynStyle.textContent = "@media print { @page { size: A4 portrait; margin: 0.8cm; } }";
+				document.body.classList.remove("printing-report");
+				document.body.classList.add("printing-card");
 				window.print();
 			});
 
@@ -4463,7 +5963,25 @@
 			// 5. Reports Generator Logic
 			const reportsModal = document.getElementById("reports-modal");
 			const reportContainer = document.getElementById("report-view-container");
+			const reportLayoutSelect = document.getElementById("report-print-layout-select");
 			let currentReportTab = "official-roster";
+			let reportPrintLayout = localStorage.getItem("newstudents_roster_print_layout") || "portrait-2col";
+			if (reportLayoutSelect) reportLayoutSelect.value = reportPrintLayout;
+
+			function updatePrintPageStyle() {
+				const dynStyle = document.getElementById("dynamic-print-page-style");
+				if (!dynStyle) return;
+				const isLandscape = reportPrintLayout === "landscape-1col";
+				dynStyle.textContent = isLandscape
+					? "@media print { @page { size: A4 landscape; margin: 0.65cm; } }"
+					: "@media print { @page { size: A4 portrait; margin: 0.45cm 0.45cm; } }";
+			}
+			updatePrintPageStyle();
+
+			window.addEventListener("afterprint", () => {
+				document.body.classList.remove("printing-report", "printing-card");
+				updatePrintPageStyle();
+			});
 
 			document.getElementById("report-modal-btn").addEventListener("click", () => {
 				document.getElementById("report-date-text").textContent = new Date().toLocaleDateString('km-KH');
@@ -4484,7 +6002,19 @@
 			document.getElementById("main-summary-print-btn")?.addEventListener("click", () => {
 				const curGrade = document.getElementById("grade-filter")?.value || "";
 				openOfficialRosterModal(curGrade);
-				setTimeout(() => window.print(), 300);
+				setTimeout(() => {
+					updatePrintPageStyle();
+					document.body.classList.remove("printing-card");
+					document.body.classList.add("printing-report");
+					window.print();
+				}, 300);
+			});
+
+			reportLayoutSelect?.addEventListener("change", (e) => {
+				reportPrintLayout = e.target.value || "portrait-2col";
+				localStorage.setItem("newstudents_roster_print_layout", reportPrintLayout);
+				updatePrintPageStyle();
+				generateReport();
 			});
 
 			document.getElementById("reports-modal-close").addEventListener("click", () => reportsModal.classList.add("hidden"));
@@ -4494,8 +6024,20 @@
 					document.querySelectorAll(".report-tab-btn").forEach(b => b.classList.remove("active"));
 					btn.classList.add("active");
 					currentReportTab = btn.dataset.tab;
+					updatePrintPageStyle();
 					generateReport();
 				});
+			});
+
+			const reportSignDateInput = document.getElementById("report-sign-date-input");
+			if (reportSignDateInput && !reportSignDateInput.value) {
+				const nowLocal = new Date();
+				const pad2 = n => String(n).padStart(2, "0");
+				reportSignDateInput.value = `${nowLocal.getFullYear()}-${pad2(nowLocal.getMonth() + 1)}-${pad2(nowLocal.getDate())}`;
+			}
+			reportSignDateInput?.addEventListener("change", () => {
+				generateReport();
+				updateMainTableOfficialSummary();
 			});
 
 			document.getElementById("report-grade-select").addEventListener("change", generateReport);
@@ -4521,8 +6063,135 @@
 					renderEyeEarReport(docs);
 				} else if (currentReportTab === "equity-summary") {
 					renderEquityReport(docs);
+				} else if (currentReportTab === "support-packages") {
+					renderSupportPackagesReport(docs);
 				} else if (currentReportTab === "contact-sheet") {
 					renderContactSheetReport(docs);
+				}
+			}
+
+			document.getElementById("open-support-packages-btn")?.addEventListener("click", () => {
+				const repGradeSelect = document.getElementById("report-grade-select");
+				const mainGradeFilter = document.getElementById("grade-filter")?.value || "";
+				if (repGradeSelect && mainGradeFilter) {
+					repGradeSelect.value = mainGradeFilter;
+				}
+				currentReportTab = "support-packages";
+				document.querySelectorAll(".report-tab-btn").forEach(b => {
+					b.classList.toggle("active", b.dataset.tab === "support-packages");
+				});
+				updatePrintPageStyle();
+				document.getElementById("report-date-text").textContent = new Date().toLocaleDateString('km-KH');
+				generateReport();
+				reportsModal.classList.remove("hidden");
+			});
+
+			// Official Khmer Chhankitek (Lunar) & Suryakati (Solar) Date Formatter
+			function getKhmerLunarSolarDates(dateInputStr) {
+				const KH_DIGITS = "០១២៣៤៥៦៧៨៩";
+				const toKhNum = n => String(n).replace(/\d/g, d => KH_DIGITS[d]);
+				const KH_DAYS = ["អាទិត្យ", "ចន្ទ", "អង្គារ", "ពុធ", "ព្រហស្បតិ៍", "សុក្រ", "សៅរ៍"];
+				const KH_SOLAR_MONTHS = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
+				const ANIMALS = ["ជូត", "ឆ្លូវ", "ខាល", "ថោះ", "រោង", "ម្សាញ់", "មមី", "មមែ", "វក", "រកា", "ច", "កុរ"];
+				const SAKS = ["សំរឹទ្ធិស័ក", "ឯកស័ក", "ទោស័ក", "ត្រីស័ក", "ចត្វាស័ក", "បញ្ចស័ក", "ឆស័ក", "សប្តស័ក", "អដ្ឋស័ក", "នព្វស័ក"];
+
+				let year, month, day;
+				const m = String(dateInputStr || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+				if (m) {
+					year = parseInt(m[1], 10);
+					month = parseInt(m[2], 10);
+					day = parseInt(m[3], 10);
+				} else {
+					const now = new Date();
+					year = now.getFullYear();
+					month = now.getMonth() + 1;
+					day = now.getDate();
+				}
+
+				const utcDay = (y, mo, da) => Math.floor(Date.UTC(y, mo - 1, da) / 86400000);
+				const getAharkun = beY => Math.floor((beY * 292207 + 499) / 800) + 4;
+				const getAharkunMod = beY => (beY * 292207 + 499) % 800;
+				const getAvoman = beY => (11 * getAharkun(beY) + 25) % 692;
+				const getBodithey = beY => {
+					const a = getAharkun(beY);
+					return (a + Math.floor((11 * a + 25) / 692)) % 30;
+				};
+				const isKhmerSolarLeap = beY => (800 - getAharkunMod(beY)) <= 207;
+				const isAdhikameas = beY => {
+					const b = getBodithey(beY);
+					const bNext = getBodithey(beY + 1);
+					if (b === 24 && bNext === 25) return true;
+					if (b === 25 && bNext === 5) return false;
+					return b > 24 || b < 6;
+				};
+				const isChantakateBase = beY => {
+					const av = getAvoman(beY);
+					return isKhmerSolarLeap(beY) ? av <= 137 : av <= 126;
+				};
+				const isChantakate = beY => {
+					const av = getAvoman(beY);
+					if (isKhmerSolarLeap(beY) && av === 137) return true;
+					if (isAdhikameas(beY)) return false;
+					if (isAdhikameas(beY - 1) && isChantakateBase(beY - 1)) return true;
+					return isChantakateBase(beY);
+				};
+				const getMonthsOfBeYear = beY => {
+					const months = [
+						{ idx: 0, name: "មិគសិរ", days: 29 },
+						{ idx: 1, name: "បុស្ស", days: 30 },
+						{ idx: 2, name: "មាឃ", days: 29 },
+						{ idx: 3, name: "ផល្គុន", days: 30 },
+						{ idx: 4, name: "ចេត្រ", days: 29 },
+						{ idx: 5, name: "ពិសាខ", days: 30 },
+						{ idx: 6, name: "ជេស្ឋ", days: isChantakate(beY) ? 30 : 29 },
+					];
+					if (isAdhikameas(beY)) {
+						months.push({ idx: 12, name: "បឋមាសាឍ", days: 30 });
+						months.push({ idx: 13, name: "ទុតិយាសាឍ", days: 30 });
+					} else {
+						months.push({ idx: 7, name: "អាសាឍ", days: 30 });
+					}
+					months.push(
+						{ idx: 8, name: "ស្រាពណ៍", days: 29 },
+						{ idx: 9, name: "ភទ្របទ", days: 30 },
+						{ idx: 10, name: "អស្សុជ", days: 29 },
+						{ idx: 11, name: "កត្តិក", days: 30 }
+					);
+					return months;
+				};
+
+				const targetUtc = utcDay(year, month, day);
+				let curBe = 2570;
+				let curStart = utcDay(2025, 11, 21); // 1 Kaet Migasir of cycle BE 2570
+				while (targetUtc < curStart) {
+					curBe--;
+					curStart -= getMonthsOfBeYear(curBe).reduce((s, item) => s + item.days, 0);
+				}
+				while (true) {
+					const months = getMonthsOfBeYear(curBe);
+					const totalDays = months.reduce((s, item) => s + item.days, 0);
+					if (targetUtc < curStart + totalDays) {
+						let offset = targetUtc - curStart;
+						for (const item of months) {
+							if (offset < item.days) {
+								const lunarDay = offset + 1;
+								const phase = lunarDay <= 15 ? `${toKhNum(lunarDay)}កើត` : `${toKhNum(lunarDay - 15)}រោច`;
+								const beDisplay = (item.idx < 5 || (item.idx === 5 && lunarDay <= 15)) ? curBe - 1 : curBe;
+								const nyCutoff = utcDay(year, 4, 14);
+								const sakYear = targetUtc >= nyCutoff ? (year + 544) : (year + 543);
+								const animalIdx = ((sakYear - 2564) % 12 + 12) % 12;
+								const sakIdx = ((sakYear - 2) % 10 + 10) % 10;
+								const dow = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+								return {
+									lunarStr: `ថ្ងៃ${KH_DAYS[dow]} ${phase} ខែ${item.name} ឆ្នាំ${ANIMALS[animalIdx]} ${SAKS[sakIdx]} ព.ស ${toKhNum(beDisplay)}`,
+									solarStr: `រោគ ថ្ងៃទី${toKhNum(day)} ខែ${KH_SOLAR_MONTHS[month - 1]} ឆ្នាំ${toKhNum(year)}`,
+								};
+							}
+							offset -= item.days;
+						}
+					}
+					curStart += totalDays;
+					curBe++;
 				}
 			}
 
@@ -4580,7 +6249,7 @@
 				let disOtherTotal = 0;
 				let disOtherFemale = 0;
 
-				let tableRowsHtml = "";
+				let tableRowItems = [];
 				sortedDocs.forEach((d, idx) => {
 					const v = d.values || [];
 					const rowNum = idx + 1;
@@ -4674,20 +6343,22 @@
 						if (isGirl) sickFemale++;
 					}
 
-					tableRowsHtml += `<tr>
-						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; background: #fafafa;">${rowNum}</td>
-						<td style="border: 1px solid #475569; padding: 4px; font-family: monospace; font-weight: 600;">${code}</td>
-						<td style="border: 1px solid #475569; padding: 4px; text-align: left; font-weight: 600;">${lastName}</td>
-						<td style="border: 1px solid #475569; padding: 4px; text-align: left; font-weight: 600;">${firstName}</td>
-						<td style="border: 1px solid #475569; padding: 4px; color: ${isGirl ? '#ec4899' : '#2563eb'}; font-weight: 600;">${gender}</td>
-						<td style="border: 1px solid #475569; padding: 4px;">${dob}</td>
-						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; color: #dc2626;">${isRepeat ? '✓' : ''}</td>
-						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; color: #16a34a;">${!isRepeat ? '✓' : ''}</td>
-						<td style="border: 1px solid #475569; padding: 4px; font-weight: 600; color: #b45309;" title="${disInfo.label || ''}">${disInfo.hasDisability ? (disInfo.tag || '✓') : ''}</td>
-						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; color: #7c3aed;" title="${orphanInfo.label || ''}">${orphanInfo.isOrphan ? (orphanInfo.tag || '✓') : ''}</td>
-						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; color: #c2410c;">${eq || ''}</td>
-						<td style="border: 1px solid #475569; padding: 4px; font-weight: 700; color: #e11d48;">${isSick ? '✓' : ''}</td>
-					</tr>`;
+					const isTwoCol = reportPrintLayout === "portrait-2col";
+					const cellPad = isTwoCol ? "" : 'border: 1px solid #475569; padding: 4px;';
+					tableRowItems.push(`<tr>
+						<td style="${cellPad} font-weight: 700; background: #fafafa;">${rowNum}</td>
+						<td style="${cellPad} font-family: monospace; font-weight: 600;">${code}</td>
+						<td class="name-cell" style="${cellPad} text-align: left; font-weight: 600;">${lastName}</td>
+						<td class="name-cell" style="${cellPad} text-align: left; font-weight: 600;">${firstName}</td>
+						<td style="${cellPad} color: ${isGirl ? '#ec4899' : '#2563eb'}; font-weight: 600;">${gender}</td>
+						<td style="${cellPad}">${dob}</td>
+						<td style="${cellPad} font-weight: 700; color: #dc2626;">${isRepeat ? '✓' : ''}</td>
+						<td style="${cellPad} font-weight: 700; color: #16a34a;">${!isRepeat ? '✓' : ''}</td>
+						<td style="${cellPad} font-weight: 600; color: #b45309;" title="${disInfo.label || ''}">${disInfo.hasDisability ? (disInfo.tag || '✓') : ''}</td>
+						<td style="${cellPad} font-weight: 700; color: #7c3aed;" title="${orphanInfo.label || ''}">${orphanInfo.isOrphan ? (orphanInfo.tag || '✓') : ''}</td>
+						<td style="${cellPad} font-weight: 700; color: #c2410c;">${eq || ''}</td>
+						<td style="${cellPad} font-weight: 700; color: #e11d48;">${isSick ? '✓' : ''}</td>
+					</tr>`);
 				});
 
 				// Age breakdown
@@ -4696,7 +6367,7 @@
 				let ageLinesHtml = "";
 				sortedAges.forEach(ag => {
 					const item = ageMap[ag];
-					ageLinesHtml += `<div style="display: inline-block; margin-right: 1.25rem;">- អាយុ <strong style="color: #0369a1;">${ag}</strong> ឆ្នាំ ចំនួន : <strong>${item.total}</strong> នាក់ (ស្រី ${item.girls} នាក់)</div>`;
+					ageLinesHtml += `<div style="display: inline-block; margin-right: 1rem;">- អាយុ <strong style="color: #0369a1;">${ag}</strong> ឆ្នាំ ចំនួន : <strong>${item.total}</strong> នាក់ (ស្រី ${item.girls} នាក់)</div>`;
 				});
 				if (!ageLinesHtml) ageLinesHtml = "<div>- មិនទាន់មានទិន្នន័យអាយុ</div>";
 
@@ -4708,160 +6379,246 @@
 				const lastStudentName = lastStudent ? `${lastStudent.lastName || ""} ${lastStudent.firstName || ""}`.trim() : "-";
 				const lastStudentGender = lastStudent ? (lastStudent.gender || "ស្រី") : "-";
 
+				const isTwoColLayout = reportPrintLayout === "portrait-2col";
+				const buildRosterTable = (rowsHtml, compact) => {
+					if (compact) {
+						return `
+							<table class="roster-half-table" border="1" cellpadding="0" cellspacing="0">
+								<colgroup>
+									<col style="width: 5.5%;" />
+									<col style="width: 11.5%;" />
+									<col style="width: 15.5%;" />
+									<col style="width: 14%;" />
+									<col style="width: 6.5%;" />
+									<col style="width: 15%;" />
+									<col style="width: 5%;" />
+									<col style="width: 4.5%;" />
+									<col style="width: 5.5%;" />
+									<col style="width: 5.5%;" />
+									<col style="width: 6%;" />
+									<col style="width: 5.5%;" />
+								</colgroup>
+								<thead>
+									<tr style="background: #f1f5f9; color: #0f172a;">
+										<th rowspan="2">ល.រ</th>
+										<th rowspan="2">អត្តលេខ</th>
+										<th rowspan="2">គោត្តនាម</th>
+										<th rowspan="2">នាម</th>
+										<th rowspan="2">ភេទ</th>
+										<th rowspan="2">ថ្ងៃខែឆ្នាំកំណើត</th>
+										<th colspan="2">ប្រភេទ</th>
+										<th colspan="4">ផ្សេងៗ</th>
+									</tr>
+									<tr style="background: #f8fafc; color: #334155;">
+										<th>ត្រួត</th>
+										<th>ថ្មី</th>
+										<th>ពិការ</th>
+										<th>កំព្រា</th>
+										<th>ក្រីក្រ</th>
+										<th>ជម្ងឺ</th>
+									</tr>
+								</thead>
+								<tbody>
+									${rowsHtml || '<tr><td colspan="12" style="padding: 1rem; color: #64748b;">មិនមានទិន្នន័យ</td></tr>'}
+								</tbody>
+							</table>
+						`;
+					}
+					return `
+						<div style="overflow-x: auto; margin-bottom: 1rem;">
+							<table border="1" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; font-size: 0.775rem; text-align: center; border: 1.5px solid #334155;">
+								<thead>
+									<tr style="background: #f1f5f9; color: #0f172a;">
+										<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 36px;">ល.រ</th>
+										<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 75px;">អត្តលេខ</th>
+										<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 105px;">គោត្តនាម</th>
+										<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 85px;">នាម</th>
+										<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 48px;">ភេទ</th>
+										<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 95px;">ថ្ងៃខែឆ្នាំកំណើត</th>
+										<th colspan="2" style="border: 1px solid #475569; padding: 4px;">ប្រភេទសិស្ស</th>
+										<th colspan="4" style="border: 1px solid #475569; padding: 4px;">ផ្សេងៗ</th>
+									</tr>
+									<tr style="background: #f8fafc; color: #334155;">
+										<th style="border: 1px solid #475569; padding: 3px; width: 44px;">ត្រួត</th>
+										<th style="border: 1px solid #475569; padding: 3px; width: 44px;">ថ្មី</th>
+										<th style="border: 1px solid #475569; padding: 3px; width: 50px;">ពិការ</th>
+										<th style="border: 1px solid #475569; padding: 3px; width: 50px;">កំព្រា</th>
+										<th style="border: 1px solid #475569; padding: 3px; width: 55px;">ក្រីក្រ</th>
+										<th style="border: 1px solid #475569; padding: 3px; width: 55px;">មានជម្ងឺ</th>
+									</tr>
+								</thead>
+								<tbody>
+									${rowsHtml || '<tr><td colspan="12" style="padding: 2rem; color: #64748b;">មិនមានទិន្នន័យសិស្សក្នុងថ្នាក់នេះទេ</td></tr>'}
+								</tbody>
+							</table>
+						</div>
+					`;
+				};
+
+				let tablesSectionHtml = "";
+				let dynamicRosterVarsStyle = "";
+				if (isTwoColLayout) {
+					const mid = Math.ceil(tableRowItems.length / 2);
+					const leftItems = tableRowItems.slice(0, mid);
+					const rightItems = tableRowItems.slice(mid);
+					if (leftItems.length > 0 && rightItems.length > 0 && rightItems.length < leftItems.length) {
+						const fillerCells = Array(12).fill("<td>&nbsp;</td>").join("");
+						while (rightItems.length < leftItems.length) {
+							rightItems.push(`<tr class="roster-filler-row">${fillerCells}</tr>`);
+						}
+					}
+					const rowsPerSide = Math.max(1, leftItems.length);
+					const computedRowH = rowsPerSide <= 32
+						? Math.max(18, Math.min(46, Math.floor(512 / rowsPerSide)))
+						: 20;
+					const screenRowH = Math.max(24, Math.min(38, computedRowH));
+					const printFontPx = computedRowH >= 32 ? 9.4 : (computedRowH >= 24 ? 8.6 : 7.9);
+					dynamicRosterVarsStyle = `--roster-print-row-h: ${computedRowH}px; --roster-screen-row-h: ${screenRowH}px; --roster-print-cell-font: ${printFontPx}px;`;
+
+					const leftRowsHtml = leftItems.join("");
+					const rightRowsHtml = rightItems.join("") || (
+						tableRowItems.length > 0
+							? '<tr><td colspan="12" style="padding: 0.75rem; color: #94a3b8;">- គ្មានសិស្សបន្ថែម -</td></tr>'
+							: '<tr><td colspan="12" style="padding: 1rem; color: #64748b;">មិនមានទិន្នន័យ</td></tr>'
+					);
+					tablesSectionHtml = `
+						<div class="roster-two-col-scroll">
+							<div class="roster-two-col-grid">
+								<div>${buildRosterTable(leftRowsHtml, true)}</div>
+								<div>${buildRosterTable(rightRowsHtml, true)}</div>
+							</div>
+						</div>
+					`;
+				} else {
+					tablesSectionHtml = buildRosterTable(tableRowItems.join(""), false);
+				}
+
+				const khDates = getKhmerLunarSolarDates(document.getElementById("report-sign-date-input")?.value);
+
 				reportContainer.innerHTML = `
-					<!-- Printable Official Ministry Header (MoEYS Administrative Standard) -->
-					<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.85rem; font-family: inherit;">
-						<!-- Left: Institutional Hierarchy -->
-						<div style="text-align: left; font-size: 0.85rem; line-height: 1.5; color: #1e293b;">
-							<div style="font-weight: 700; color: #1e3a8a;">មន្ទីរអប់រំ យុវជន និងកីឡាខេត្តបន្ទាយមានជ័យ</div>
-							<div style="font-weight: 600; color: #334155;">ការិយាល័យអប់រំ យុវជន និងកីឡាស្រុកភ្នំស្រុក</div>
-							<div style="font-weight: 700; color: #0f172a;">សាលាបឋមសិក្សា រោគ</div>
+					<div class="${isTwoColLayout ? 'roster-mode-portrait-2col' : ''}" style="${dynamicRosterVarsStyle}">
+						<div class="roster-top-tables-zone">
+							<!-- Top Center: Royal National Motto -->
+							<div class="roster-royal-motto" style="text-align: center; margin-bottom: ${isTwoColLayout ? '0.35rem' : '0.6rem'}; font-family: inherit;">
+								<div style="font-weight: 800; font-size: ${isTwoColLayout ? '0.95rem' : '1.08rem'}; color: #1e3a8a; letter-spacing: 0.5px;">ព្រះរាជាណាចក្រកម្ពុជា</div>
+								<div style="font-weight: 700; font-size: ${isTwoColLayout ? '0.82rem' : '0.92rem'}; color: #b45309; margin-top: 1px;">ជាតិ សាសនា ព្រះមហាក្សត្រ</div>
+								<div style="width: ${isTwoColLayout ? '78px' : '90px'}; height: 1.5px; background: #b45309; margin: 2px auto 0 auto;"></div>
+							</div>
+
+							<!-- Below Royal Motto on Left: Institutional Hierarchy -->
+							<div class="roster-ministry-left" style="text-align: left; font-size: ${isTwoColLayout ? '0.75rem' : '0.85rem'}; line-height: ${isTwoColLayout ? '1.36' : '1.5'}; color: #1e293b; margin-bottom: ${isTwoColLayout ? '0.25rem' : '0.5rem'}; font-family: inherit;">
+								<div style="font-weight: 700; color: #1e3a8a;">មន្ទីរអប់រំ យុវជន និងកីឡាខេត្តបន្ទាយមានជ័យ</div>
+								<div style="font-weight: 600; color: #334155;">ការិយាល័យអប់រំ យុវជន និងកីឡាស្រុកភ្នំស្រុក</div>
+								<div style="font-weight: 700; color: #0f172a;">សាលាបឋមសិក្សា រោគ</div>
+							</div>
+
+							<!-- Center Title & Academic Year -->
+							<div class="roster-official-title" style="text-align: center; margin-bottom: 0.75rem;">
+								<h3 style="margin: 0.15rem 0 0.15rem 0; font-size: 1.25rem; color: #1e40af; font-weight: 800;">
+									បញ្ជីរាយនាមសិស្ស ថ្នាក់${selectedGrade ? ' ' + selectedGrade : 'គ្រប់ថ្នាក់'}
+								</h3>
+								<div style="font-size: ${isTwoColLayout ? '0.78rem' : '0.9rem'}; font-weight: 600; color: #475569;">ឆ្នាំសិក្សា២០២៦-២០២៧</div>
+							</div>
+
+							${tablesSectionHtml}
 						</div>
 
-						<!-- Right / Top-Center: Royal National Motto -->
-						<div style="text-align: center; min-width: 230px;">
-							<div style="font-weight: 800; font-size: 1.05rem; color: #1e3a8a; letter-spacing: 0.5px;">ព្រះរាជាណាចក្រកម្ពុជា</div>
-							<div style="font-weight: 700; font-size: 0.9rem; color: #b45309; margin-top: 2px;">ជាតិ សាសនា ព្រះមហាក្សត្រ</div>
-							<div style="width: 85px; height: 1.5px; background: #b45309; margin: 4px auto 0 auto;"></div>
-						</div>
-					</div>
-
-					<!-- Center Title & Academic Year -->
-					<div style="text-align: center; margin-bottom: 1rem;">
-						<h3 style="margin: 0.25rem 0 0.2rem 0; font-size: 1.25rem; color: #1e40af; font-weight: 800;">
-							បញ្ជីរាយនាមសិស្ស ថ្នាក់${selectedGrade ? ' ' + selectedGrade : 'គ្រប់ថ្នាក់'}
-						</h3>
-						<div style="font-size: 0.9rem; font-weight: 600; color: #475569;">ឆ្នាំសិក្សា២០២៦-២០២៧</div>
-					</div>
-
-					<!-- Official 12-Column Table matching MoEYS template -->
-					<div style="overflow-x: auto; margin-bottom: 1rem;">
-						<table border="1" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; font-size: 0.775rem; text-align: center; border: 1.5px solid #334155;">
-							<thead>
-								<tr style="background: #f1f5f9; color: #0f172a;">
-									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 36px;">ល.រ</th>
-									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 75px;">អត្តលេខ</th>
-									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 105px;">គោត្តនាម</th>
-									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 85px;">នាម</th>
-									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 48px;">ភេទ</th>
-									<th rowspan="2" style="border: 1px solid #475569; padding: 5px; width: 95px;">ថ្ងៃខែឆ្នាំកំណើត</th>
-									<th colspan="2" style="border: 1px solid #475569; padding: 4px;">ប្រភេទសិស្ស</th>
-									<th colspan="4" style="border: 1px solid #475569; padding: 4px;">ផ្សេងៗ</th>
-								</tr>
-								<tr style="background: #f8fafc; color: #334155;">
-									<th style="border: 1px solid #475569; padding: 3px; width: 44px;">ត្រួត</th>
-									<th style="border: 1px solid #475569; padding: 3px; width: 44px;">ថ្មី</th>
-									<th style="border: 1px solid #475569; padding: 3px; width: 50px;">ពិការ</th>
-									<th style="border: 1px solid #475569; padding: 3px; width: 50px;">កំព្រា</th>
-									<th style="border: 1px solid #475569; padding: 3px; width: 55px;">ក្រីក្រ</th>
-									<th style="border: 1px solid #475569; padding: 3px; width: 55px;">មានជម្ងឺ</th>
-								</tr>
-							</thead>
-							<tbody>
-								${tableRowsHtml || '<tr><td colspan="12" style="padding: 2rem; color: #64748b;">មិនមានទិន្នន័យសិស្សក្នុងថ្នាក់នេះទេ</td></tr>'}
-							</tbody>
-						</table>
-					</div>
-
-					<!-- Official Closing Paragraph & Detailed Breakdown requested by user -->
-					<div class="roster-official-footer" style="background: #ffffff; border: 1.5px solid #0284c7; border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.825rem; line-height: 1.65; color: #0f172a;">
-						<div style="font-weight: 700; font-size: 0.925rem; color: #1e3a8a; margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1.5px dashed #bae6fd;">
-							📌 បញ្ឈប់បញ្ជីត្រឹមលេខរៀងទី <strong style="color: #dc2626; font-size: 1.05rem;">${lastIndex}</strong> ត្រង់ឈ្មោះ <strong style="color: #1e40af; font-size: 1.05rem;">${lastStudentName}</strong> (ភេទ ${lastStudentGender})
-						</div>
-
-						<div style="display: flex; flex-direction: column; gap: 0.5rem;">
-							<!-- General Enrollment Summary -->
-							<div style="display: flex; flex-wrap: wrap; gap: 1.5rem; background: #f0fdf4; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #bbf7d0;">
-								<div>- <strong>សិស្សសរុប ចំនួន :</strong> <strong style="color: #1e40af; font-size: 0.95rem;">${total}</strong> នាក់ (ស្រី <strong style="color: #ec4899;">${femaleCount}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${total - femaleCount}</strong> នាក់)</div>
-								<div>- <strong>សិស្សថ្មី ចំនួន :</strong> ${newCount} នាក់ (ស្រី ${newFemale} នាក់)</div>
-								<div>- <strong>សិស្សត្រួតថ្នាក់ ចំនួន :</strong> ${repeatCount} នាក់ (ស្រី ${repeatFemale} នាក់)</div>
+						<!-- Official Closing Paragraph & Detailed Breakdown requested by user -->
+						<div class="roster-official-footer" style="background: #ffffff; border: 1.5px solid #0284c7; border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.825rem; line-height: 1.65; color: #0f172a;">
+							<div class="roster-footer-stop" style="font-weight: 700; font-size: 0.925rem; color: #1e3a8a; margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1.5px dashed #bae6fd;">
+								📌 បញ្ឈប់បញ្ជីត្រឹមលេខរៀងទី <strong style="color: #dc2626;">${lastIndex}</strong> ត្រង់ឈ្មោះ <strong style="color: #1e40af;">${lastStudentName}</strong> (ភេទ ${lastStudentGender})
 							</div>
 
-							<!-- Age Breakdown -->
-							<div style="background: #f8fafc; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-								<div style="font-weight: 700; color: #0369a1; margin-bottom: 0.2rem;">🎂 បែងចែកតាមអាយុសិស្សក្នុងថ្នាក់៖</div>
-								<div style="display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem;">
-									${ageLinesHtml}
+							<div class="roster-footer-boxes" style="display: flex; flex-direction: column; gap: 0.5rem;">
+								<!-- General Enrollment Summary -->
+								<div style="display: flex; flex-wrap: wrap; gap: 0.35rem 1.2rem; background: #f0fdf4; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #bbf7d0;">
+									<div>- <strong>សិស្សសរុប ចំនួន :</strong> <strong style="color: #1e40af;">${total}</strong> នាក់ (ស្រី <strong style="color: #ec4899;">${femaleCount}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${total - femaleCount}</strong> នាក់)</div>
+									<div>- <strong>សិស្សថ្មី ចំនួន :</strong> ${newCount} នាក់ (ស្រី ${newFemale} នាក់)</div>
+									<div>- <strong>សិស្សត្រួតថ្នាក់ ចំនួន :</strong> ${repeatCount} នាក់ (ស្រី ${repeatFemale} នាក់)</div>
 								</div>
-							</div>
 
-							<!-- Poor & Equity Card Breakdown -->
-							<div style="display: flex; flex-wrap: wrap; gap: 1rem; background: #fffbeb; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #fef08a;">
-								<div>- <strong>សិស្សមកពីគ្រួសារក្រីក្រ សរុបចំនួន :</strong> <strong style="color: #dc2626;">${poorTotal}</strong> នាក់ (ស្រី ${poorFemale} នាក់)</div>
-								<div>• <strong>ក្រ១ សរុប :</strong> ${k1Total} នាក់ (ស្រី ${k1Female} នាក់)</div>
-								<div>• <strong>ក្រ២ សរុប :</strong> ${k2Total} នាក់ (ស្រី ${k2Female} នាក់)</div>
-								<div>• <strong>ផ្សេងៗ សរុប :</strong> ${otherPoorTotal} នាក់ (ស្រី ${otherPoorFemale} នាក់)</div>
-							</div>
-
-							<!-- Orphan Breakdown Box (Requested by User) -->
-							<div style="background: #fdf2f8; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #fbcfe8;">
-								<div style="font-weight: 700; color: #9d174d; margin-bottom: 0.25rem;">
-									🕊️ <strong>សិស្សកំព្រា សរុប ចំនួន :</strong> <strong style="color: #be185d; font-size: 0.95rem;">${orphanTotal}</strong> នាក់ (ស្រី <strong style="color: #db2777;">${orphanFemale}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${orphanTotal - orphanFemale}</strong> នាក់)
-								</div>
-								<div style="display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; font-size: 0.825rem; color: #831843;">
-									<div>• <strong>កំព្រាម្ដាយ :</strong> <strong>${orphanMotherTotal}</strong> នាក់ (ស្រី ${orphanMotherFemale} នាក់)</div>
-									<div>• <strong>កំព្រាឪពុក :</strong> <strong>${orphanFatherTotal}</strong> នាក់ (ស្រី ${orphanFatherFemale} នាក់)</div>
-									<div>• <strong>កំព្រាឪពុកម្ដាយ (ទាំងពីរ) :</strong> <strong>${orphanBothTotal}</strong> នាក់ (ស្រី ${orphanBothFemale} នាក់)</div>
-									${orphanUnspecifiedTotal > 0 ? `<div>• <strong>កំព្រាផ្សេងៗ :</strong> <strong>${orphanUnspecifiedTotal}</strong> នាក់ (ស្រី ${orphanUnspecifiedFemale} នាក់)</div>` : ''}
-								</div>
-							</div>
-
-							<!-- Disability Breakdown Box (Requested by User) -->
-							<div style="background: #faf5ff; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #e9d5ff;">
-								<div style="font-weight: 700; color: #6b21a8; margin-bottom: 0.25rem;">
-									♿ <strong>សិស្សមានពិការភាព សរុប ចំនួន :</strong> <strong style="color: #7e22ce; font-size: 0.95rem;">${disabledTotal}</strong> នាក់ (ស្រី <strong style="color: #9333ea;">${disabledFemale}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${disabledTotal - disabledFemale}</strong> នាក់)
-								</div>
-								<div style="display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; font-size: 0.825rem; color: #581c87;">
-									<div>• <strong>ពិបាកមើល (ភ្នែក/គំហើញ) :</strong> <strong>${disSeeTotal}</strong> នាក់ (ស្រី ${disSeeFemale} នាក់)</div>
-									<div>• <strong>ពិបាកស្តាប់ (ត្រចៀក/ការស្តាប់) :</strong> <strong>${disHearTotal}</strong> នាក់ (ស្រី ${disHearFemale} នាក់)</div>
-									<div>• <strong>ពិបាកនិយាយ (សំឡេង/ទំនាក់ទំនង) :</strong> <strong>${disSpeakTotal}</strong> នាក់ (ស្រី ${disSpeakFemale} នាក់)</div>
-									<div>• <strong>ពិបាកធ្វើចលនា (រាងកាយ/ដៃជើង) :</strong> <strong>${disMoveTotal}</strong> នាក់ (ស្រី ${disMoveFemale} នាក់)</div>
-									<div>• <strong>ពិបាកចងចាំ ឬផ្ចង់អារម្មណ៍ (បញ្ញា) :</strong> <strong>${disMindTotal}</strong> នាក់ (ស្រី ${disMindFemale} នាក់)</div>
-									${disCareTotal > 0 ? `<div>• <strong>ពិបាកថែទាំខ្លួនឯង :</strong> <strong>${disCareTotal}</strong> នាក់ (ស្រី ${disCareFemale} នាក់)</div>` : ''}
-									${disOtherTotal > 0 ? `<div>• <strong>ពិការភាពផ្សេងៗ :</strong> <strong>${disOtherTotal}</strong> នាក់ (ស្រី ${disOtherFemale} នាក់)</div>` : ''}
-								</div>
-							</div>
-
-							<!-- Chronic Illness Box -->
-							<div style="background: #fff1f2; padding: 0.4rem 0.65rem; border-radius: 6px; border: 1px solid #fecdd3; font-size: 0.825rem; color: #9f1239;">
-								<div>- 🩺 <strong>សិស្សមានជម្ងឺរ៉ាំរ៉ៃ សរុប :</strong> <strong>${sickTotal}</strong> នាក់ (ស្រី ${sickFemale} នាក់, ប្រុស ${sickTotal - sickFemale} នាក់)</div>
-							</div>
-						</div>
-
-						<!-- Official 3-Signatory Block & Dual Dates (សុរិយគតិ និង ច័ន្ទគតិ) -->
-						<div class="official-signature-hierarchy" style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 2rem; padding-top: 1rem; border-top: 1.5px dashed #cbd5e1; text-align: center; page-break-inside: avoid;">
-							<!-- Signatory 1: នាយកសាលា -->
-							<div style="flex: 1; min-width: 170px; padding: 0 0.5rem;">
-								<div style="font-size: 0.8rem; color: #475569; font-weight: 600;">បានឃើញ និងឯកភាព</div>
-								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.95rem; margin-top: 3px;">នាយកសាលា</div>
-								<div style="font-size: 0.725rem; color: #94a3b8; margin-top: 2px;">(ហត្ថលេខា និងត្រា)</div>
-								<div style="height: 60px;"></div>
-								<div style="border-top: 1px dotted #94a3b8; width: 140px; margin: 0 auto;"></div>
-							</div>
-
-							<!-- Signatory 2: នាយកសាលានុក្រម -->
-							<div style="flex: 1; min-width: 170px; padding: 0 0.5rem;">
-								<div style="font-size: 0.8rem; color: #475569; font-weight: 600;">បានពិនិត្យត្រឹមត្រូវ</div>
-								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.95rem; margin-top: 3px;">នាយកសាលានុក្រម</div>
-								<div style="font-size: 0.725rem; color: #94a3b8; margin-top: 2px;">(ហត្ថលេខា)</div>
-								<div style="height: 60px;"></div>
-								<div style="border-top: 1px dotted #94a3b8; width: 140px; margin: 0 auto;"></div>
-							</div>
-
-							<!-- Signatory 3: គ្រូបន្ទុកថ្នាក់ (With Dual Dates: ច័ន្ទគតិ & សុរិយគតិ) -->
-							<div style="flex: 1.25; min-width: 240px; padding: 0 0.5rem;">
-								<div style="font-size: 0.775rem; color: #334155; line-height: 1.5; margin-bottom: 4px;">
-									<div style="font-weight: 500;">
-										<span style="font-weight: 700; color: #b45309;">ច័ន្ទគតិ ៖</span> ថ្ងៃ...................... .........កើត/រោច ខែ........... ឆ្នាំ........... ព.ស. ២៥៦...
-									</div>
-									<div style="font-weight: 600; color: #0f172a;">
-										<span style="font-weight: 700; color: #0284c7;">សុរិយគតិ ៖</span> រោគ, ថ្ងៃទី......... ខែ.................. ឆ្នាំ២០២...
+								<!-- Age Breakdown -->
+								<div style="background: #f8fafc; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+									<div style="font-weight: 700; color: #0369a1; margin-bottom: 0.15rem;">🎂 បែងចែកតាមអាយុសិស្សក្នុងថ្នាក់៖</div>
+									<div style="display: flex; flex-wrap: wrap; gap: 0.2rem 1rem;">
+										${ageLinesHtml}
 									</div>
 								</div>
-								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.95rem; margin-top: 3px;">គ្រូបន្ទុកថ្នាក់</div>
-								<div style="font-size: 0.725rem; color: #94a3b8; margin-top: 2px;">(ហត្ថលេខា)</div>
-								<div style="height: 48px;"></div>
-								<div style="border-top: 1px dotted #94a3b8; width: 140px; margin: 0 auto;"></div>
+
+								<!-- Poor & Equity Card Breakdown -->
+								<div style="display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; background: #fffbeb; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #fef08a;">
+									<div>- <strong>សិស្សមកពីគ្រួសារក្រីក្រ សរុបចំនួន :</strong> <strong style="color: #dc2626;">${poorTotal}</strong> នាក់ (ស្រី ${poorFemale} នាក់)</div>
+									<div>• <strong>ក្រ១ សរុប :</strong> ${k1Total} នាក់ (ស្រី ${k1Female} នាក់)</div>
+									<div>• <strong>ក្រ២ សរុប :</strong> ${k2Total} នាក់ (ស្រី ${k2Female} នាក់)</div>
+									<div>• <strong>ផ្សេងៗ សរុប :</strong> ${otherPoorTotal} នាក់ (ស្រី ${otherPoorFemale} នាក់)</div>
+								</div>
+
+								<!-- Orphan Breakdown Box (Requested by User) -->
+								<div style="background: #fdf2f8; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #fbcfe8;">
+									<div style="font-weight: 700; color: #9d174d; margin-bottom: 0.15rem;">
+										🕊️ <strong>សិស្សកំព្រា សរុប ចំនួន :</strong> <strong style="color: #be185d;">${orphanTotal}</strong> នាក់ (ស្រី <strong style="color: #db2777;">${orphanFemale}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${orphanTotal - orphanFemale}</strong> នាក់)
+									</div>
+									<div style="display: flex; flex-wrap: wrap; gap: 0.2rem 1.15rem; color: #831843;">
+										<div>• <strong>កំព្រាម្ដាយ :</strong> <strong>${orphanMotherTotal}</strong> នាក់ (ស្រី ${orphanMotherFemale} នាក់)</div>
+										<div>• <strong>កំព្រាឪពុក :</strong> <strong>${orphanFatherTotal}</strong> នាក់ (ស្រី ${orphanFatherFemale} នាក់)</div>
+										<div>• <strong>កំព្រាឪពុកម្ដាយ (ទាំងពីរ) :</strong> <strong>${orphanBothTotal}</strong> នាក់ (ស្រី ${orphanBothFemale} នាក់)</div>
+										${orphanUnspecifiedTotal > 0 ? `<div>• <strong>កំព្រាផ្សេងៗ :</strong> <strong>${orphanUnspecifiedTotal}</strong> នាក់ (ស្រី ${orphanUnspecifiedFemale} នាក់)</div>` : ''}
+									</div>
+								</div>
+
+								<!-- Disability Breakdown Box (Requested by User) -->
+								<div style="background: #faf5ff; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #e9d5ff;">
+									<div style="font-weight: 700; color: #6b21a8; margin-bottom: 0.15rem;">
+										♿ <strong>សិស្សមានពិការភាព សរុប ចំនួន :</strong> <strong style="color: #7e22ce;">${disabledTotal}</strong> នាក់ (ស្រី <strong style="color: #9333ea;">${disabledFemale}</strong> នាក់, ប្រុស <strong style="color: #2563eb;">${disabledTotal - disabledFemale}</strong> នាក់)
+									</div>
+									<div style="display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; color: #581c87;">
+										<div>• <strong>ពិបាកមើល (ភ្នែក/គំហើញ) :</strong> <strong>${disSeeTotal}</strong> នាក់ (ស្រី ${disSeeFemale} នាក់)</div>
+										<div>• <strong>ពិបាកស្តាប់ (ត្រចៀក/ការស្តាប់) :</strong> <strong>${disHearTotal}</strong> នាក់ (ស្រី ${disHearFemale} នាក់)</div>
+										<div>• <strong>ពិបាកនិយាយ (សំឡេង/ទំនាក់ទំនង) :</strong> <strong>${disSpeakTotal}</strong> នាក់ (ស្រី ${disSpeakFemale} នាក់)</div>
+										<div>• <strong>ពិបាកធ្វើចលនា (រាងកាយ/ដៃជើង) :</strong> <strong>${disMoveTotal}</strong> នាក់ (ស្រី ${disMoveFemale} នាក់)</div>
+										<div>• <strong>ពិបាកចងចាំ ឬផ្ចង់អារម្មណ៍ (បញ្ញា) :</strong> <strong>${disMindTotal}</strong> នាក់ (ស្រី ${disMindFemale} នាក់)</div>
+										${disCareTotal > 0 ? `<div>• <strong>ពិបាកថែទាំខ្លួនឯង :</strong> <strong>${disCareTotal}</strong> នាក់ (ស្រី ${disCareFemale} នាក់)</div>` : ''}
+										${disOtherTotal > 0 ? `<div>• <strong>ពិការភាពផ្សេងៗ :</strong> <strong>${disOtherTotal}</strong> នាក់ (ស្រី ${disOtherFemale} នាក់)</div>` : ''}
+									</div>
+								</div>
+
+								<!-- Chronic Illness Box -->
+								<div style="background: #fff1f2; padding: 0.35rem 0.65rem; border-radius: 6px; border: 1px solid #fecdd3; color: #9f1239;">
+									<div>- 🩺 <strong>សិស្សមានជម្ងឺរ៉ាំរ៉ៃ សរុប :</strong> <strong>${sickTotal}</strong> នាក់ (ស្រី ${sickFemale} នាក់, ប្រុស ${sickTotal - sickFemale} នាក់)</div>
+								</div>
+							</div>
+
+							<!-- Official 3-Signatory Block & Dual Dates (ច័ន្ទគតិ និង សុរិយគតិ) -->
+							<div class="official-signature-hierarchy" style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 1.5rem; padding-top: 0.85rem; border-top: 1.5px dashed #cbd5e1; text-align: center; page-break-inside: avoid;">
+								<!-- Signatory 1: នាយកសាលា -->
+								<div style="flex: 0.85; min-width: 120px; padding: 0 0.25rem;">
+									<div style="font-size: ${isTwoColLayout ? '0.68rem' : '0.8rem'}; color: #475569; font-weight: 600;">បានឃើញ និងឯកភាព</div>
+									<div style="font-weight: 800; color: #1e3a8a; font-size: ${isTwoColLayout ? '0.78rem' : '0.95rem'}; margin-top: 2px;">នាយកសាលា</div>
+									<div style="font-size: 0.66rem; color: #94a3b8; margin-top: 1px;">(ហត្ថលេខា និងត្រា)</div>
+									<div class="roster-sig-spacer" style="height: 55px;"></div>
+									<div style="border-top: 1px dotted #94a3b8; width: 115px; margin: 0 auto;"></div>
+								</div>
+
+								<!-- Signatory 2: ប្រធានគ.គ.ស. -->
+								<div style="flex: 0.85; min-width: 120px; padding: 0 0.25rem;">
+									<div style="font-size: ${isTwoColLayout ? '0.68rem' : '0.8rem'}; color: #475569; font-weight: 600;">បានពិនិត្យត្រឹមត្រូវ</div>
+									<div style="font-weight: 800; color: #1e3a8a; font-size: ${isTwoColLayout ? '0.78rem' : '0.95rem'}; margin-top: 2px;">ប្រធានគ.គ.ស.</div>
+									<div style="font-size: 0.66rem; color: #94a3b8; margin-top: 1px;">(ហត្ថលេខា)</div>
+									<div class="roster-sig-spacer" style="height: 55px;"></div>
+									<div style="border-top: 1px dotted #94a3b8; width: 115px; margin: 0 auto;"></div>
+								</div>
+
+								<!-- Signatory 3: គ្រូប្រចាំថ្នាក់ (Left-aligned Lunar & Solar Dates) -->
+								<div style="flex: 1.75; min-width: 265px; padding: 0 0.2rem;">
+									<div style="display: inline-block; text-align: left; font-size: ${isTwoColLayout ? '0.63rem' : '0.76rem'}; color: #1e293b; line-height: 1.42; margin-bottom: 3px;">
+										<div style="font-weight: 500; white-space: nowrap;">${khDates.lunarStr}</div>
+										<div style="font-weight: 600; color: #0f172a; white-space: nowrap;">${khDates.solarStr}</div>
+									</div>
+									<div style="font-weight: 800; color: #1e3a8a; font-size: ${isTwoColLayout ? '0.8rem' : '0.95rem'}; margin-top: 2px;">គ្រូប្រចាំថ្នាក់</div>
+									<div style="font-size: 0.66rem; color: #94a3b8; margin-top: 1px;">(ហត្ថលេខា)</div>
+									<div class="roster-sig-spacer" style="height: 44px;"></div>
+									<div style="border-top: 1px dotted #94a3b8; width: 120px; margin: 0 auto;"></div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -5114,26 +6871,27 @@
 								<div style="border-top: 1px dotted #94a3b8; width: 120px; margin: 0 auto;"></div>
 							</div>
 
-							<!-- Signatory 2: នាយកសាលានុក្រម -->
+							<!-- Signatory 2: ប្រធានគ.គ.ស. -->
 							<div style="flex: 1; min-width: 150px; padding: 0 0.5rem;">
 								<div style="font-size: 0.775rem; color: #475569; font-weight: 600;">បានពិនិត្យត្រឹមត្រូវ</div>
-								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.875rem; margin-top: 2px;">នាយកសាលានុក្រម</div>
+								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.875rem; margin-top: 2px;">ប្រធានគ.គ.ស.</div>
 								<div style="font-size: 0.7rem; color: #94a3b8;">(ហត្ថលេខា)</div>
 								<div style="height: 48px;"></div>
 								<div style="border-top: 1px dotted #94a3b8; width: 120px; margin: 0 auto;"></div>
 							</div>
 
-							<!-- Signatory 3: គ្រូបន្ទុកថ្នាក់ (With Dual Dates: ច័ន្ទគតិ & សុរិយគតិ) -->
-							<div style="flex: 1.2; min-width: 220px; padding: 0 0.5rem;">
-								<div style="font-size: 0.75rem; color: #334155; line-height: 1.45; margin-bottom: 3px;">
-									<div style="font-weight: 500;">
-										<span style="font-weight: 700; color: #b45309;">ច័ន្ទគតិ ៖</span> ថ្ងៃ...................... .........កើត/រោច ខែ........... ឆ្នាំ........... ព.ស. ២៥៦...
-									</div>
-									<div style="font-weight: 600; color: #0f172a;">
-										<span style="font-weight: 700; color: #0284c7;">សុរិយគតិ ៖</span> រោគ, ថ្ងៃទី......... ខែ.................. ឆ្នាំ២០២...
-									</div>
-								</div>
-								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.875rem; margin-top: 2px;">គ្រូបន្ទុកថ្នាក់</div>
+							<!-- Signatory 3: គ្រូប្រចាំថ្នាក់ (Left-aligned Lunar & Solar Dates) -->
+							<div style="flex: 1.65; min-width: 260px; padding: 0 0.4rem;">
+								${(() => {
+									const d = getKhmerLunarSolarDates(document.getElementById("report-sign-date-input")?.value);
+									return `
+										<div style="display: inline-block; text-align: left; font-size: 0.74rem; color: #1e293b; line-height: 1.45; margin-bottom: 3px;">
+											<div style="font-weight: 500;">${d.lunarStr}</div>
+											<div style="font-weight: 600; color: #0f172a;">${d.solarStr}</div>
+										</div>
+									`;
+								})()}
+								<div style="font-weight: 800; color: #1e3a8a; font-size: 0.875rem; margin-top: 2px;">គ្រូប្រចាំថ្នាក់</div>
 								<div style="font-size: 0.7rem; color: #94a3b8;">(ហត្ថលេខា)</div>
 								<div style="height: 42px;"></div>
 								<div style="border-top: 1px dotted #94a3b8; width: 120px; margin: 0 auto;"></div>
@@ -5261,6 +7019,7 @@
 				document.querySelectorAll(".report-tab-btn").forEach(b => {
 					b.classList.toggle("active", b.dataset.tab === "official-roster");
 				});
+				updatePrintPageStyle();
 				document.getElementById("report-date-text").textContent = new Date().toLocaleDateString('km-KH');
 				generateReport();
 				reportsModal.classList.remove("hidden");
@@ -5334,34 +7093,157 @@
 				`;
 			}
 
-			function renderBmiReport(docs) {
-				let normal = 0, under = 0, over = 0, obese = 0, unk = 0;
-				for (const d of docs) {
-					const bmi = d.values?.[31] || "";
-					if (bmi.includes("សុខភាពល្អ")) normal++;
-					else if (bmi.includes("ស្គម")) under++;
-					else if (bmi.includes("លើសទម្ងន់")) over++;
-					else if (bmi.includes("ធាត់")) obese++;
-					else unk++;
+			async function recalculateAndSaveAllBmi(targetDocs) {
+				const sourceDocs = Array.isArray(targetDocs) && targetDocs.length > 0 ? targetDocs : studentDocs;
+				if (!sourceDocs || sourceDocs.length === 0) {
+					showToast("⚠️ មិនមានទិន្នន័យសិស្សសម្រាប់គណនាទេ", true);
+					return;
+				}
+				if (!requireSignedInForWrite("គណនា និងរក្សាទុក BMI")) return;
+
+				const pendingUpdates = [];
+				for (const d of sourceDocs) {
+					if (!d || !d.id) continue;
+					const vals = [...(Array.isArray(d.values) ? d.values : new Array(71).fill(""))];
+					while (vals.length < 71) vals.push("");
+
+					let changed = false;
+					if (!String(vals[6] || "").trim() && String(vals[5] || "").trim()) {
+						const computedAge = calculateAge(vals[5]);
+						if (computedAge !== "") {
+							vals[6] = String(computedAge);
+							changed = true;
+						}
+					}
+
+					const effAge = getStudentEffectiveAge(vals, vals[6], vals[5]);
+					const gender = d.gender || vals[4] || "ស្រី";
+
+					const s1Res = computeBmi(vals[29], vals[30], effAge, gender);
+					if (s1Res.status && String(vals[31] || "").trim() !== s1Res.status) {
+						vals[31] = s1Res.status;
+						changed = true;
+					}
+
+					const s2Res = computeBmi(vals[32], vals[33], effAge, gender);
+					if (s2Res.status && String(vals[34] || "").trim() !== s2Res.status) {
+						vals[34] = s2Res.status;
+						changed = true;
+					}
+
+					if (changed) {
+						pendingUpdates.push({ docItem: d, vals });
+					}
 				}
 
+				if (pendingUpdates.length === 0) {
+					showToast("✅ ស្ថានភាព BMI របស់សិស្សទាំងអស់ត្រូវបានគណនា និងរក្សាទុកត្រឹមត្រូវរួចហើយ!");
+					return;
+				}
+
+				const actor = String(currentUser?.displayName || currentUser?.email || "អ្នកប្រើប្រាស់").slice(0, 140);
+				const chunkSize = 50;
+				let updatedCount = 0;
+
+				try {
+					for (let i = 0; i < pendingUpdates.length; i += chunkSize) {
+						const chunk = pendingUpdates.slice(i, i + chunkSize);
+						const batch = writeBatch(db);
+						chunk.forEach(({ docItem, vals }) => {
+							const cleanValues = vals.slice(0, 75).map(v => String(v ?? "").slice(0, 300));
+							docItem.values = cleanValues;
+							batch.update(doc(db, "students", docItem.id), {
+								values: cleanValues,
+								lastModifiedBy: actor,
+								lastModifiedAt: serverTimestamp(),
+								updatedAt: serverTimestamp(),
+							});
+						});
+						await batch.commit();
+						updatedCount += chunk.length;
+					}
+
+					renderTable(studentDocs);
+					if (!reportsModal.classList.contains("hidden") && currentReportTab === "bmi-summary") {
+						generateReport();
+					}
+					showToast(`🩺 បានគណនា និងរក្សាទុកស្ថានភាព BMI ចំនួន ${updatedCount} នាក់ដោយជោគជ័យ!`);
+				} catch (err) {
+					handleFirestoreError(err, OperationType.UPDATE, "students");
+				}
+			}
+
+			document.getElementById("recalc-bmi-toolbar-btn")?.addEventListener("click", () => {
+				recalculateAndSaveAllBmi(studentDocs);
+			});
+
+			document.getElementById("batch-bmi-btn")?.addEventListener("click", async () => {
+				if (selectedStudentIds.size === 0) return;
+				const selected = studentDocs.filter(d => selectedStudentIds.has(d.id));
+				await recalculateAndSaveAllBmi(selected);
+			});
+
+			function renderBmiReport(docs) {
+				let normal = 0, under = 0, over = 0, obese = 0, unk = 0;
+				let unsavedCount = 0;
 				let listRows = "";
 				let idx = 1;
+
 				for (const d of docs) {
 					const v = d.values || [];
+					const s1Info = computeStudentBmiForSemester(d, 1);
+					const s2Info = computeStudentBmiForSemester(d, 2);
+					const statusText = s1Info.status || v[31] || "";
+
+					if (s1Info.status && s1Info.status !== s1Info.savedStatus) unsavedCount++;
+					if (s2Info.status && s2Info.status !== s2Info.savedStatus) unsavedCount++;
+
+					if (statusText.includes("សុខភាពល្អ")) normal++;
+					else if (statusText.includes("ស្គម")) under++;
+					else if (statusText.includes("លើសទម្ងន់")) over++;
+					else if (statusText.includes("ធាត់")) obese++;
+					else unk++;
+
+					const tagClass = statusText.includes("សុខភាពល្អ")
+						? "health-normal"
+						: (statusText.includes("ស្គម")
+							? "health-under"
+							: (statusText.includes("លើសទម្ងន់")
+								? "health-over"
+								: (statusText.includes("ធាត់") ? "health-obese" : "")));
+
+					const ageDisplay = s1Info.age !== null ? `${s1Info.age} ឆ្នាំ` : "-";
+					const bmiValueDisplay = s1Info.bmi || "-";
+					const s2Suffix = s2Info.bmi ? `<div style="font-size:0.7rem;color:#64748b;margin-top:2px;">ឆ២: ${s2Info.bmi} (${s2Info.status})</div>` : "";
+
 					listRows += `<tr>
 						<td>${idx++}</td>
-						<td>${v[1] || "-"}</td>
-						<td style="font-weight: 600;">${v[2]} ${v[3]}</td>
-						<td>${v[4]}</td>
-						<td>${v[0]}</td>
-						<td>${v[29] || "-"} kg</td>
-						<td>${v[30] || "-"} cm</td>
-						<td><span class="health-tag ${v[31]?.includes('សុខភាពល្អ') ? 'health-normal' : (v[31]?.includes('ស្គម') ? 'health-under' : 'health-over')}">${v[31] || 'មិនទាន់គណនា'}</span></td>
+						<td>${d.studentCode || v[1] || "-"}</td>
+						<td style="font-weight: 600; text-align: left;">${d.lastName || v[2] || ""} ${d.firstName || v[3] || ""}</td>
+						<td>${d.gender || v[4] || "-"}</td>
+						<td>${d.grade || v[0] || "-"}</td>
+						<td>${ageDisplay}</td>
+						<td>${v[29] ? v[29] + " kg" : "-"}</td>
+						<td>${v[30] ? v[30] + " cm" : "-"}</td>
+						<td style="font-family: monospace; font-weight: 700;">${bmiValueDisplay}</td>
+						<td>
+							${statusText
+								? `<span class="health-tag ${tagClass}">${statusText}</span>${s2Suffix}`
+								: `<span style="color:#94a3b8;">មិនទាន់មានទិន្នន័យ</span>`}
+						</td>
 					</tr>`;
 				}
 
 				reportContainer.innerHTML = `
+					<div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.75rem; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 0.55rem 0.75rem; border-radius: 8px;">
+						<div style="font-size: 0.8rem; color: #166534;">
+							<strong>📏 ស្ដង់ដារ WHO BMI-for-Age៖</strong> គណនាដោយប្រើ <strong>អាយុ + ភេទ + ទម្ងន់ + កម្ពស់</strong> (២–១៨ឆ្នាំ និងមនុស្សពេញវ័យ ≥១៩ឆ្នាំ)
+							${unsavedCount > 0 ? `<span style="margin-left: 0.4rem; color: #b45309; font-weight: 700;">(មាន ${unsavedCount} ទិន្នន័យត្រូវរក្សាទុកក្នុងតារាង)</span>` : ""}
+						</div>
+						<button type="button" id="report-recalc-bmi-btn" class="btn-text" style="background: #16a34a; color: white; font-size: 0.78rem; padding: 0.35rem 0.75rem; border-radius: 6px; font-weight: 700;">
+							🧮 គណនា និងរក្សាទុក BMI ទាំងអស់
+						</button>
+					</div>
 					<div class="report-summary-cards">
 						<div class="summary-card">
 							<div class="summary-num" style="color: #15803d;">${normal}</div>
@@ -5379,6 +7261,10 @@
 							<div class="summary-num" style="color: #991b1b;">${obese}</div>
 							<div class="summary-label">ធាត់ (Obese)</div>
 						</div>
+						<div class="summary-card">
+							<div class="summary-num" style="color: #64748b;">${unk}</div>
+							<div class="summary-label">មិនទាន់មានទិន្នន័យ</div>
+						</div>
 					</div>
 					<table style="width: 100%;">
 						<thead>
@@ -5388,14 +7274,20 @@
 								<th>ឈ្មោះសិស្ស</th>
 								<th>ភេទ</th>
 								<th>ថ្នាក់</th>
-								<th>ទម្ងន់ (ឆមាស១)</th>
-								<th>កម្ពស់ (ឆមាស១)</th>
+								<th>អាយុ</th>
+								<th>ទម្ងន់ (ឆ១)</th>
+								<th>កម្ពស់ (ឆ១)</th>
+								<th>BMI</th>
 								<th>ស្ថានភាព BMI</th>
 							</tr>
 						</thead>
-						<tbody>${listRows || '<tr><td colspan="8">មិនមានទិន្នន័យ</td></tr>'}</tbody>
+						<tbody>${listRows || '<tr><td colspan="10">មិនមានទិន្នន័យ</td></tr>'}</tbody>
 					</table>
 				`;
+
+				document.getElementById("report-recalc-bmi-btn")?.addEventListener("click", () => {
+					recalculateAndSaveAllBmi(docs);
+				});
 			}
 
 			function renderEyeEarReport(docs) {
@@ -5493,6 +7385,253 @@
 				`;
 			}
 
+			let supportPackageFilterMode = "all"; // 'all' | 'received' | 'none'
+
+			function hasSupportPackageValue(val) {
+				const s = String(val ?? "").trim().toLowerCase();
+				if (!s) return false;
+				return s !== "មិនមាន" && s !== "-" && s !== "គ្មាន" && s !== "no" && s !== "none" && s !== "0";
+			}
+
+			async function toggleSingleSupportPackage(docId, colIdx) {
+				if (!requireSignedInForWrite("កែប្រែកញ្ចប់សម្ភារជំនួយ")) return;
+				const docItem = studentDocs.find(d => d.id === docId);
+				if (!docItem) return;
+
+				const vals = [...(Array.isArray(docItem.values) ? docItem.values : new Array(71).fill(""))];
+				while (vals.length < 71) vals.push("");
+
+				const nextVal = hasSupportPackageValue(vals[colIdx]) ? "មិនមាន" : "មាន";
+				vals[colIdx] = nextVal;
+				const cleanValues = vals.slice(0, 75).map(v => String(v ?? "").slice(0, 300));
+				docItem.values = cleanValues;
+
+				const actor = String(currentUser?.displayName || currentUser?.email || "អ្នកប្រើប្រាស់").slice(0, 140);
+				try {
+					await updateDoc(doc(db, "students", docId), {
+						values: cleanValues,
+						lastModifiedBy: actor,
+						lastModifiedAt: serverTimestamp(),
+						updatedAt: serverTimestamp(),
+					});
+					renderTable(studentDocs);
+					if (!reportsModal.classList.contains("hidden") && currentReportTab === "support-packages") {
+						generateReport();
+					}
+					showToast(`📚 បានកែប្រែស្ថានភាពសម្ភារជំនួយទៅជា «${nextVal}»`);
+				} catch (err) {
+					handleFirestoreError(err, OperationType.UPDATE, `students/${docId}`);
+				}
+			}
+
+			async function batchSetSupportPackage(targetDocs, colIdx, newValue) {
+				if (!targetDocs || targetDocs.length === 0) return;
+				if (!requireSignedInForWrite("កំណត់កញ្ចប់សម្ភារជំនួយទាំងអស់")) return;
+
+				const pending = [];
+				for (const d of targetDocs) {
+					if (!d || !d.id) continue;
+					const vals = [...(Array.isArray(d.values) ? d.values : new Array(71).fill(""))];
+					while (vals.length < 71) vals.push("");
+					if (String(vals[colIdx] || "").trim() !== newValue) {
+						vals[colIdx] = newValue;
+						pending.push({ docItem: d, vals });
+					}
+				}
+
+				if (pending.length === 0) {
+					showToast("✅ ទិន្នន័យសិស្សទាំងអស់ក្នុងបញ្ជីនេះមានស្ថានភាពដូចគ្នារួចហើយ");
+					return;
+				}
+
+				const actor = String(currentUser?.displayName || currentUser?.email || "អ្នកប្រើប្រាស់").slice(0, 140);
+				const chunkSize = 50;
+				let updated = 0;
+
+				try {
+					for (let i = 0; i < pending.length; i += chunkSize) {
+						const chunk = pending.slice(i, i + chunkSize);
+						const batch = writeBatch(db);
+						chunk.forEach(({ docItem, vals }) => {
+							const cleanValues = vals.slice(0, 75).map(v => String(v ?? "").slice(0, 300));
+							docItem.values = cleanValues;
+							batch.update(doc(db, "students", docItem.id), {
+								values: cleanValues,
+								lastModifiedBy: actor,
+								lastModifiedAt: serverTimestamp(),
+								updatedAt: serverTimestamp(),
+							});
+						});
+						await batch.commit();
+						updated += chunk.length;
+					}
+					renderTable(studentDocs);
+					if (!reportsModal.classList.contains("hidden") && currentReportTab === "support-packages") {
+						generateReport();
+					}
+					showToast(`📚 បានកំណត់កញ្ចប់សម្ភារជំនួយសម្រាប់សិស្ស ${updated} នាក់ទៅជា «${newValue}»!`);
+				} catch (err) {
+					handleFirestoreError(err, OperationType.UPDATE, "students");
+				}
+			}
+
+			function renderSupportPackagesReport(docs) {
+				const sortedDocs = sortStudentDocs(docs);
+				let readTotal = 0, readGirl = 0;
+				let mathTotal = 0, mathGirl = 0;
+				let khBookTotal = 0, khBookGirl = 0;
+				let mathBookTotal = 0, mathBookGirl = 0;
+				let anySupportTotal = 0, anySupportGirl = 0;
+
+				const enriched = sortedDocs.map(d => {
+					const v = d.values || [];
+					const gender = d.gender || v[4] || "ស្រី";
+					const isGirl = gender.includes("ស្រី");
+					const hasRead = hasSupportPackageValue(v[21]);
+					const hasMath = hasSupportPackageValue(v[22]);
+					const hasKhBook = hasSupportPackageValue(v[23]);
+					const hasMathBook = hasSupportPackageValue(v[24]);
+					const itemCount = (hasRead ? 1 : 0) + (hasMath ? 1 : 0) + (hasKhBook ? 1 : 0) + (hasMathBook ? 1 : 0);
+
+					if (hasRead) { readTotal++; if (isGirl) readGirl++; }
+					if (hasMath) { mathTotal++; if (isGirl) mathGirl++; }
+					if (hasKhBook) { khBookTotal++; if (isGirl) khBookGirl++; }
+					if (hasMathBook) { mathBookTotal++; if (isGirl) mathBookGirl++; }
+					if (itemCount > 0) { anySupportTotal++; if (isGirl) anySupportGirl++; }
+
+					return { d, v, gender, isGirl, hasRead, hasMath, hasKhBook, hasMathBook, itemCount };
+				});
+
+				const displayList = enriched.filter(item => {
+					if (supportPackageFilterMode === "received") return item.itemCount > 0;
+					if (supportPackageFilterMode === "none") return item.itemCount === 0;
+					return true;
+				});
+
+				const renderPkgBadge = (docId, colIdx, rawVal, isYes) => {
+					const label = isYes ? (String(rawVal || "").trim() || "មាន") : "មិនមាន";
+					return `<button type="button" class="pkg-toggle-btn health-tag ${isYes ? 'health-normal' : ''}" data-doc-id="${escapeCardHtml(docId)}" data-col-idx="${colIdx}" title="ចុចដើម្បីប្ដូរស្ថានភាព មាន / មិនមាន" style="cursor:pointer; border:${isYes ? '1px solid #86efac' : '1px solid #e2e8f0'}; background:${isYes ? '#dcfce7' : '#f8fafc'}; color:${isYes ? '#166534' : '#64748b'}; font-family:inherit;">${escapeCardHtml(label)}</button>`;
+				};
+
+				let listRows = "";
+				let idx = 1;
+				for (const item of displayList) {
+					const { d, v, gender, hasRead, hasMath, hasKhBook, hasMathBook, itemCount } = item;
+					listRows += `<tr>
+						<td>${idx++}</td>
+						<td style="font-family: monospace;">${escapeCardHtml(d.studentCode || v[1] || "-")}</td>
+						<td style="font-weight: 600; text-align: left;">${escapeCardHtml(d.lastName || v[2] || "")} ${escapeCardHtml(d.firstName || v[3] || "")}</td>
+						<td>${escapeCardHtml(gender)}</td>
+						<td>${escapeCardHtml(d.grade || v[0] || "-")}</td>
+						<td>${renderPkgBadge(d.id, 21, v[21], hasRead)}</td>
+						<td>${renderPkgBadge(d.id, 22, v[22], hasMath)}</td>
+						<td>${renderPkgBadge(d.id, 23, v[23], hasKhBook)}</td>
+						<td>${renderPkgBadge(d.id, 24, v[24], hasMathBook)}</td>
+						<td><span class="health-tag ${itemCount > 0 ? 'health-normal' : 'health-under'}">${itemCount}/4 មុខ</span></td>
+					</tr>`;
+				}
+
+				const selectedGrade = document.getElementById("report-grade-select")?.value.trim() || "";
+
+				reportContainer.innerHTML = `
+					<div style="display: flex; align-items: center; justify-content: space-between; gap: 0.65rem; flex-wrap: wrap; margin-bottom: 0.75rem; background: #f5f3ff; border: 1px solid #ddd6fe; padding: 0.55rem 0.75rem; border-radius: 8px;">
+						<div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; font-size: 0.8rem; color: #4c1d95;">
+							<strong>📚 បញ្ជីកញ្ចប់សម្ភារជំនួយ ${selectedGrade ? '(ថ្នាក់ ' + selectedGrade + ')' : '(គ្រប់ថ្នាក់)'}</strong>
+							<select id="pkg-filter-mode-select" class="select-compact" style="font-size: 0.78rem;">
+								<option value="all" ${supportPackageFilterMode === "all" ? "selected" : ""}>បង្ហាញសិស្សទាំងអស់ (${enriched.length})</option>
+								<option value="received" ${supportPackageFilterMode === "received" ? "selected" : ""}>បានទទួលសម្ភារជំនួយ (${anySupportTotal})</option>
+								<option value="none" ${supportPackageFilterMode === "none" ? "selected" : ""}>មិនទាន់ទទួល (${enriched.length - anySupportTotal})</option>
+							</select>
+						</div>
+						<div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+							<select id="pkg-batch-col-select" class="select-compact" style="font-size: 0.78rem;">
+								<option value="21">កញ្ចប់អំណាន</option>
+								<option value="22">កញ្ចប់គណិត</option>
+								<option value="23">សៀវភៅជំនួយភាសាខ្មែរ</option>
+								<option value="24">សៀវភៅជំនួយគណិតវិទ្យា</option>
+							</select>
+							<button type="button" id="pkg-batch-give-btn" class="btn-text" style="background: #16a34a; color: white; font-size: 0.76rem; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 700;">✅ ផ្ដល់ «មាន» ទាំងអស់</button>
+							<button type="button" id="pkg-batch-clear-btn" class="btn-text" style="background: #e2e8f0; color: #334155; font-size: 0.76rem; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600;">✖ កំណត់ «មិនមាន»</button>
+						</div>
+					</div>
+
+					<div class="report-summary-cards">
+						<div class="summary-card" style="border-left: 4px solid #7c3aed;">
+							<div class="summary-num" style="color: #6d28d9;">${anySupportTotal}</div>
+							<div class="summary-label">ទទួលបានសម្ភារជំនួយ (ស្រី ${anySupportGirl})</div>
+						</div>
+						<div class="summary-card" style="border-left: 4px solid #2563eb;">
+							<div class="summary-num" style="color: #1d4ed8;">${readTotal}</div>
+							<div class="summary-label">កញ្ចប់អំណាន (ស្រី ${readGirl})</div>
+						</div>
+						<div class="summary-card" style="border-left: 4px solid #059669;">
+							<div class="summary-num" style="color: #047857;">${mathTotal}</div>
+							<div class="summary-label">កញ្ចប់គណិត (ស្រី ${mathGirl})</div>
+						</div>
+						<div class="summary-card" style="border-left: 4px solid #d97706;">
+							<div class="summary-num" style="color: #b45309;">${khBookTotal}</div>
+							<div class="summary-label">សៀវភៅជំនួយភាសាខ្មែរ (ស្រី ${khBookGirl})</div>
+						</div>
+						<div class="summary-card" style="border-left: 4px solid #db2777;">
+							<div class="summary-num" style="color: #be185d;">${mathBookTotal}</div>
+							<div class="summary-label">សៀវភៅជំនួយគណិតវិទ្យា (ស្រី ${mathBookGirl})</div>
+						</div>
+					</div>
+
+					<div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.4rem;">
+						💡 គន្លឹះ៖ ចុចលើប៊ូតុង <span class="health-tag" style="background:#f8fafc;border:1px solid #cbd5e1;color:#64748b;">មិនមាន</span> ឬ <span class="health-tag health-normal">មាន</span> ក្នុងតារាងខាងក្រោម ដើម្បីផ្លាស់ប្ដូរ និងរក្សាទុកភ្លាមៗ។
+					</div>
+
+					<table style="width: 100%;">
+						<thead>
+							<tr>
+								<th>ល.រ</th>
+								<th>អត្តលេខ</th>
+								<th>ឈ្មោះសិស្ស</th>
+								<th>ភេទ</th>
+								<th>ថ្នាក់</th>
+								<th>កញ្ចប់អំណាន</th>
+								<th>កញ្ចប់គណិត</th>
+								<th>សៀវភៅជំនួយភាសាខ្មែរ</th>
+								<th>សៀវភៅជំនួយគណិតវិទ្យា</th>
+								<th>សរុប</th>
+							</tr>
+						</thead>
+						<tbody>${listRows || '<tr><td colspan="10" style="padding: 1.5rem; color: #64748b;">មិនមានទិន្នន័យសិស្សត្រូវនឹងការចម្រាញ់នេះទេ</td></tr>'}</tbody>
+						<tfoot>
+							<tr style="background: #f8fafc; font-weight: 700;">
+								<td colspan="5" style="text-align: right;">សរុបសិស្សទទួលបានសម្ភារជំនួយ (${sortedDocs.length} នាក់)៖</td>
+								<td>${readTotal} នាក់</td>
+								<td>${mathTotal} នាក់</td>
+								<td>${khBookTotal} នាក់</td>
+								<td>${mathBookTotal} នាក់</td>
+								<td>${anySupportTotal} នាក់</td>
+							</tr>
+						</tfoot>
+					</table>
+				`;
+
+				document.getElementById("pkg-filter-mode-select")?.addEventListener("change", (e) => {
+					supportPackageFilterMode = e.target.value || "all";
+					renderSupportPackagesReport(docs);
+				});
+				document.getElementById("pkg-batch-give-btn")?.addEventListener("click", () => {
+					const colIdx = parseInt(document.getElementById("pkg-batch-col-select")?.value || "21", 10);
+					batchSetSupportPackage(displayList.map(x => x.d), colIdx, "មាន");
+				});
+				document.getElementById("pkg-batch-clear-btn")?.addEventListener("click", () => {
+					const colIdx = parseInt(document.getElementById("pkg-batch-col-select")?.value || "21", 10);
+					batchSetSupportPackage(displayList.map(x => x.d), colIdx, "មិនមាន");
+				});
+				reportContainer.querySelectorAll(".pkg-toggle-btn").forEach(btn => {
+					btn.addEventListener("click", () => {
+						const docId = btn.dataset.docId;
+						const colIdx = parseInt(btn.dataset.colIdx, 10);
+						if (docId && !isNaN(colIdx)) toggleSingleSupportPackage(docId, colIdx);
+					});
+				});
+			}
+
 			function renderContactSheetReport(docs) {
 				let listRows = "";
 				let idx = 1;
@@ -5530,12 +7669,35 @@
 			}
 
 			document.getElementById("print-report-btn").addEventListener("click", () => {
+				updatePrintPageStyle();
+				document.body.classList.remove("printing-card");
+				document.body.classList.add("printing-report");
 				window.print();
 			});
 
 			document.getElementById("export-report-btn").addEventListener("click", () => {
+				if (!window.XLSX) return;
+				const halfTables = reportContainer.querySelectorAll(".roster-half-table");
+				if (halfTables.length === 2) {
+					const header = ["ល.រ", "អត្តលេខ", "គោត្តនាម", "នាម", "ភេទ", "ថ្ងៃខែឆ្នាំកំណើត", "ត្រួត", "ថ្មី", "ពិការ", "កំព្រា", "ក្រីក្រ", "មានជម្ងឺ"];
+					const rows = [header];
+					halfTables.forEach(tbl => {
+						tbl.querySelectorAll("tbody tr:not(.roster-filler-row)").forEach(tr => {
+							const tds = tr.querySelectorAll("td");
+							if (tds.length === 12) {
+								rows.push(Array.from(tds).map(td => td.textContent.trim()));
+							}
+						});
+					});
+					const ws = XLSX.utils.aoa_to_sheet(rows);
+					const wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, ws, "របាយការណ៍");
+					XLSX.writeFile(wb, `Report_${currentReportTab}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+					showToast("📊 បានទាញយករបាយការណ៍ Excel រួចរាល់!");
+					return;
+				}
 				const tbl = reportContainer.querySelector("table");
-				if (!tbl || !window.XLSX) return;
+				if (!tbl) return;
 				const wb = XLSX.utils.table_to_book(tbl, { sheet: "របាយការណ៍" });
 				XLSX.writeFile(wb, `Report_${currentReportTab}_${new Date().toISOString().slice(0, 10)}.xlsx`);
 				showToast("📊 បានទាញយករបាយការណ៍ Excel រួចរាល់!");
@@ -5562,7 +7724,13 @@
 				for (const docItem of studentDocs) {
 					const row = [idx++];
 					const v = docItem.values || [];
-					for (let i = 0; i < 71; i++) row.push(v[i] ?? "");
+					const s1Live = computeStudentBmiForSemester(docItem, 1);
+					const s2Live = computeStudentBmiForSemester(docItem, 2);
+					for (let i = 0; i < 71; i++) {
+						if (i === 31) row.push(s1Live.status || v[31] || "");
+						else if (i === 34) row.push(s2Live.status || v[34] || "");
+						else row.push(v[i] ?? "");
+					}
 					exportData.push(row);
 				}
 
@@ -5573,17 +7741,200 @@
 				showToast("📊 បានទាញយក Excel រួចរាល់!");
 			});
 
-			// Intelligent Excel Parser & Import Engine
+			// Intelligent Excel Parser & Import Engine (with Duplicate Check: គោត្តនាម + នាម + ថ្ងៃខែឆ្នាំកំណើត)
 			let pendingImportStudents = [];
+			let currentImportFileName = "";
 			const importModal = document.getElementById("import-preview-modal");
 			const importSummary = document.getElementById("import-file-summary");
 			const importTbody = document.getElementById("import-preview-tbody");
 			const importBtnCount = document.getElementById("import-btn-count");
+			const importConfirmLabel = document.getElementById("import-confirm-label");
+			const importDuplicateModeSelect = document.getElementById("import-duplicate-mode");
+			const importPreviewCaption = document.getElementById("import-preview-caption");
 			const importProgressWrap = document.getElementById("import-progress-wrap");
 			const importProgressBar = document.getElementById("import-progress-bar");
 			const importProgressLabel = document.getElementById("import-progress-label");
 			const importProgressPercent = document.getElementById("import-progress-percent");
 			const importConfirmBtn = document.getElementById("import-preview-confirm");
+
+			function escapeImportHtml(str) {
+				return String(str ?? "")
+					.replace(/&/g, "&amp;")
+					.replace(/</g, "&lt;")
+					.replace(/>/g, "&gt;")
+					.replace(/"/g, "&quot;");
+			}
+
+			function khmerDigitsToAscii(str) {
+				const khDigits = "០១២៣៤៥៦៧៨៩";
+				return String(str ?? "").replace(/[០-៩]/g, ch => String(khDigits.indexOf(ch)));
+			}
+
+			function normalizeImportNameKey(name) {
+				return String(name ?? "")
+					.normalize("NFC")
+					.replace(/[\u200B-\u200D\uFEFF]/g, "")
+					.replace(/\s+/g, " ")
+					.trim()
+					.toLowerCase();
+			}
+
+			function normalizeImportDobKey(dobString) {
+				const raw = khmerDigitsToAscii(String(dobString ?? ""))
+					.replace(/[\u200B-\u200D\uFEFF]/g, "")
+					.trim();
+				if (!raw) return "";
+
+				// Handle YYYY-MM-DD or YYYY/MM/DD
+				let m = raw.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:\b|T|\s)/);
+				if (m) {
+					const year = parseInt(m[1], 10);
+					const month = parseInt(m[2], 10);
+					const day = parseInt(m[3], 10);
+					if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+						return `${year}-${month}-${day}`;
+					}
+				}
+
+				// Handle M/D/YYYY, M-D-YYYY, or D/M/YYYY (when first part > 12)
+				m = raw.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{2,4})$/);
+				if (m) {
+					let p1 = parseInt(m[1], 10);
+					let p2 = parseInt(m[2], 10);
+					let year = parseInt(m[3], 10);
+					if (year < 100) year += year < 50 ? 2000 : 1900;
+
+					let month = p1;
+					let day = p2;
+					if (p1 > 12 && p2 >= 1 && p2 <= 12) {
+						day = p1;
+						month = p2;
+					}
+					if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+						return `${year}-${month}-${day}`;
+					}
+				}
+
+				return raw.replace(/\s+/g, "").toLowerCase();
+			}
+
+			function buildStudentDuplicateKey(lastName, firstName, dob) {
+				return `${normalizeImportNameKey(lastName)}||${normalizeImportNameKey(firstName)}||${normalizeImportDobKey(dob)}`;
+			}
+
+			function evaluateImportDuplicates(rowsList) {
+				const existingMap = new Map();
+				studentDocs.forEach(d => {
+					const ln = d.lastName || d.values?.[2] || "";
+					const fn = d.firstName || d.values?.[3] || "";
+					const dob = d.values?.[5] || "";
+					const key = buildStudentDuplicateKey(ln, fn, dob);
+					if (key !== "||||" && !existingMap.has(key)) {
+						existingMap.set(key, d);
+					}
+				});
+
+				const seenInFileMap = new Map();
+				return rowsList.map((st, idx) => {
+					const dob = st.values?.[5] || "";
+					const dupKey = buildStudentDuplicateKey(st.lastName, st.firstName, dob);
+					const matchedDbDoc = dupKey !== "||||" ? existingMap.get(dupKey) || null : null;
+					const firstFileIdx = dupKey !== "||||" ? seenInFileMap.get(dupKey) : undefined;
+					if (dupKey !== "||||" && firstFileIdx === undefined) {
+						seenInFileMap.set(dupKey, idx + 1);
+					}
+					const isDuplicateInDb = Boolean(matchedDbDoc);
+					const isDuplicateInFile = firstFileIdx !== undefined;
+					return {
+						...st,
+						importRowNum: idx + 1,
+						dupKey,
+						matchedDbDoc,
+						duplicateFileRowNum: firstFileIdx || null,
+						isDuplicateInDb,
+						isDuplicateInFile,
+						isDuplicate: isDuplicateInDb || isDuplicateInFile,
+					};
+				});
+			}
+
+			function renderImportPreviewModalContent() {
+				const evaluated = evaluateImportDuplicates(pendingImportStudents);
+				pendingImportStudents = evaluated;
+
+				const totalCount = evaluated.length;
+				const dupDbCount = evaluated.filter(s => s.isDuplicateInDb && !s.isDuplicateInFile).length;
+				const dupFileCount = evaluated.filter(s => s.isDuplicateInFile).length;
+				const totalDupCount = evaluated.filter(s => s.isDuplicate).length;
+				const newCount = totalCount - totalDupCount;
+
+				const mode = importDuplicateModeSelect ? importDuplicateModeSelect.value : "skip";
+				const actionCount = mode === "update" ? (newCount + dupDbCount) : newCount;
+
+				importSummary.innerHTML = `
+					<div>📁 ឯកសារ៖ <strong>${escapeImportHtml(currentImportFileName)}</strong> | ទិន្នន័យសរុប៖ <strong>${totalCount}</strong> នាក់</div>
+					<div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.35rem; font-size: 0.8rem;">
+						<span style="color: #15803d;">✅ សិស្សថ្មីមិនស្ទួន៖ <strong>${newCount}</strong> នាក់</span>
+						<span style="color: ${totalDupCount > 0 ? '#dc2626' : '#64748b'};">⚠️ ស្ទួនសរុប (គោត្តនាម+នាម+ថ្ងៃកំណើត)៖ <strong>${totalDupCount}</strong> នាក់
+							${totalDupCount > 0 ? `(ស្ទួនក្នុងប្រព័ន្ធ ${dupDbCount} នាក់${dupFileCount > 0 ? `, ស្ទួនក្នុង Excel ${dupFileCount} នាក់` : ""})` : ""}
+						</span>
+					</div>
+				`;
+
+				if (mode === "update") {
+					if (importConfirmLabel) importConfirmLabel.textContent = "🔄 នាំចូលថ្មី និងធ្វើបច្ចុប្បន្នភាពស្ទួន";
+					importBtnCount.textContent = String(actionCount);
+				} else {
+					if (importConfirmLabel) importConfirmLabel.textContent = totalDupCount > 0 ? "🚀 នាំចូលតែសិស្សថ្មី (រំលងស្ទួន)" : "🚀 នាំចូលទាំងអស់";
+					importBtnCount.textContent = String(actionCount);
+				}
+				importConfirmBtn.disabled = actionCount === 0;
+
+				// Show duplicate rows first so the user sees every duplicate clearly, then sample new rows
+				const duplicatesList = evaluated.filter(s => s.isDuplicate);
+				const newList = evaluated.filter(s => !s.isDuplicate);
+				const displayList = [...duplicatesList, ...newList].slice(0, 80);
+
+				if (importPreviewCaption) {
+					importPreviewCaption.textContent = totalDupCount > 0
+						? `បង្ហាញទិន្នន័យស្ទួនទាំង ${totalDupCount} នាក់ និងគំរូសិស្សថ្មី (សរុបបង្ហាញ ${displayList.length} / ${totalCount} ជួរ)៖`
+						: `គំរូទិន្នន័យដែលបានផ្ទៀងផ្ទាត់ (${displayList.length} / ${totalCount} ជួរ — មិនមានទិន្នន័យស្ទួនទេ)៖`;
+				}
+
+				importTbody.innerHTML = "";
+				for (const st of displayList) {
+					const v = st.values || [];
+					const tr = document.createElement("tr");
+					let statusBadge = `<span style="display:inline-block;padding:2px 6px;border-radius:4px;background:#dcfce7;color:#166534;font-weight:700;font-size:0.7rem;">✅ ថ្មី</span>`;
+					if (st.isDuplicateInFile) {
+						tr.style.background = "#fef9c3";
+						statusBadge = `<span style="display:inline-block;padding:2px 6px;border-radius:4px;background:#fef08a;color:#854d0e;font-weight:700;font-size:0.7rem;">⚠️ ស្ទួនក្នុង Excel (ជួរ #${st.duplicateFileRowNum})</span>`;
+					} else if (st.isDuplicateInDb) {
+						tr.style.background = "#fee2e2";
+						const existingCode = st.matchedDbDoc?.studentCode || st.matchedDbDoc?.values?.[1] || "-";
+						const existingGrade = st.matchedDbDoc?.grade || st.matchedDbDoc?.values?.[0] || "-";
+						statusBadge = `<span style="display:inline-block;padding:2px 6px;border-radius:4px;background:#fecaca;color:#991b1b;font-weight:700;font-size:0.7rem;" title="មានក្នុងប្រព័ន្ធរួចហើយ (អត្តលេខ ${escapeImportHtml(existingCode)}, ថ្នាក់ ${escapeImportHtml(existingGrade)})">⚠️ ស្ទួនក្នុងប្រព័ន្ធ (${escapeImportHtml(existingGrade)})</span>`;
+					}
+					tr.innerHTML = `
+						<td>${st.importRowNum}</td>
+						<td>${statusBadge}</td>
+						<td>${escapeImportHtml(st.studentCode)}</td>
+						<td style="font-weight: 600;">${escapeImportHtml(st.lastName)}</td>
+						<td style="font-weight: 600;">${escapeImportHtml(st.firstName)}</td>
+						<td>${escapeImportHtml(st.gender)}</td>
+						<td>${escapeImportHtml(st.grade)}</td>
+						<td>${escapeImportHtml(v[5] || "-")}</td>
+						<td>${escapeImportHtml(v[7] || "-")}</td>
+					`;
+					importTbody.appendChild(tr);
+				}
+			}
+
+			if (importDuplicateModeSelect) {
+				importDuplicateModeSelect.addEventListener("change", () => {
+					if (pendingImportStudents.length > 0) renderImportPreviewModalContent();
+				});
+			}
 
 			document.getElementById("import-preview-close").addEventListener("click", () => {
 				importModal.classList.add("hidden");
@@ -5741,10 +8092,14 @@
 						if (computedAge !== "") rowValues[6] = String(computedAge);
 					}
 
-					// Compute BMI if weight and height are available
+					// Compute BMI for S1 & S2 using Age, Gender, Weight, Height
 					if (rowValues[29] && rowValues[30] && !rowValues[31]) {
-						const bmiRes = computeBmi(rowValues[29], rowValues[30]);
+						const bmiRes = computeBmi(rowValues[29], rowValues[30], rowValues[6], gender);
 						if (bmiRes.status) rowValues[31] = bmiRes.status;
+					}
+					if (rowValues[32] && rowValues[33] && !rowValues[34]) {
+						const bmiRes2 = computeBmi(rowValues[32], rowValues[33], rowValues[6], gender);
+						if (bmiRes2.status) rowValues[34] = bmiRes2.status;
 					}
 
 					parsed.push({
@@ -5774,39 +8129,17 @@
 						const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false, defval: "" });
 
 						pendingImportStudents = parseExcelWorkbook(rows);
+						currentImportFileName = file.name;
 
 						if (pendingImportStudents.length === 0) {
 							showToast("⚠️ មិនអាចស្វែងរកទិន្នន័យសិស្សក្នុងឯកសារនេះទេ", true);
 							return;
 						}
 
-						// Show Preview Modal
-						importSummary.textContent = `📁 ឯកសារ៖ ${file.name} | រកឃើញទិន្នន័យសិស្សត្រឹមត្រូវចំនួន៖ ${pendingImportStudents.length} នាក់`;
-						importBtnCount.textContent = pendingImportStudents.length;
-
-						// Render Preview Table (First 5 students)
-						importTbody.innerHTML = "";
-						const previewList = pendingImportStudents.slice(0, 5);
-						let pIdx = 1;
-						for (const st of previewList) {
-							const v = st.values;
-							const tr = document.createElement("tr");
-							tr.innerHTML = `
-								<td>${pIdx++}</td>
-								<td>${st.studentCode}</td>
-								<td style="font-weight: 600;">${st.lastName}</td>
-								<td style="font-weight: 600;">${st.firstName}</td>
-								<td>${st.gender}</td>
-								<td>${st.grade}</td>
-								<td>${v[5] || "-"}</td>
-								<td>${v[7] || "-"}</td>
-							`;
-							importTbody.appendChild(tr);
-						}
-
+						if (importDuplicateModeSelect) importDuplicateModeSelect.value = "skip";
 						importProgressWrap.style.display = "none";
 						importProgressBar.style.width = "0%";
-						importConfirmBtn.disabled = false;
+						renderImportPreviewModalContent();
 						importModal.classList.remove("hidden");
 					} catch (err) {
 						console.error("XLSX parsing failed:", err);
@@ -5817,7 +8150,7 @@
 				e.target.value = "";
 			});
 
-			// Execute Batch Import on Confirm
+			// Execute Batch Import on Confirm (Skipping or Updating duplicates verified by គោត្តនាម + នាម + ថ្ងៃខែឆ្នាំកំណើត)
 			importConfirmBtn.addEventListener("click", async () => {
 				if (!pendingImportStudents || pendingImportStudents.length === 0) return;
 
@@ -5826,67 +8159,82 @@
 					return;
 				}
 
+				// Re-evaluate against live studentDocs right before committing
+				const evaluated = evaluateImportDuplicates(pendingImportStudents);
+				const mode = importDuplicateModeSelect ? importDuplicateModeSelect.value : "skip";
+
+				const tasks = [];
+				let skippedCount = 0;
+
+				evaluated.forEach((st) => {
+					if (st.isDuplicateInFile) {
+						skippedCount++;
+						return;
+					}
+					if (st.isDuplicateInDb) {
+						if (mode === "update" && st.matchedDbDoc?.id) {
+							tasks.push({ action: "update", targetId: st.matchedDbDoc.id, st });
+						} else {
+							skippedCount++;
+						}
+						return;
+					}
+					tasks.push({ action: "create", st });
+				});
+
+				if (tasks.length === 0) {
+					showToast(`⚠️ ទិន្នន័យទាំងអស់ (${skippedCount} នាក់) ស្ទួនគោត្តនាម នាម និងថ្ងៃកំណើត ត្រូវបានរំលង!`, true);
+					return;
+				}
+
 				importConfirmBtn.disabled = true;
 				importProgressWrap.style.display = "block";
 
 				const actor = currentUser.displayName || currentUser.email || "អ្នកប្រើប្រាស់";
-				const total = pendingImportStudents.length;
-				let successCount = 0;
+				const total = tasks.length;
+				let createdCount = 0;
+				let updatedCount = 0;
 				let failCount = 0;
 				const chunkSize = 50;
 
+				const buildSanitizedFields = (st, fallbackNum) => {
+					const cleanStudentCode = String(st.studentCode || `S${fallbackNum}`).trim().slice(0, 50) || `S${fallbackNum}`;
+					const cleanLastName = String(st.lastName || "សិស្ស").trim().slice(0, 100) || "សិស្ស";
+					const cleanFirstName = String(st.firstName || fallbackNum).trim().slice(0, 100) || String(fallbackNum);
+					const cleanGender = (st.gender === "ប្រុស" || st.gender === "ស្រី") ? st.gender : "ស្រី";
+					const cleanGrade = String(st.grade || "3A").trim().slice(0, 50) || "3A";
+					const cleanActor = String(actor || "អ្នកប្រើប្រាស់").slice(0, 140);
+					const cleanValues = (Array.isArray(st.values) && st.values.length > 0)
+						? st.values.slice(0, 75).map(v => String(v ?? "").slice(0, 300))
+						: new Array(71).fill("");
+					return { cleanStudentCode, cleanLastName, cleanFirstName, cleanGender, cleanGrade, cleanActor, cleanValues };
+				};
+
 				for (let i = 0; i < total; i += chunkSize) {
-					const chunk = pendingImportStudents.slice(i, i + chunkSize);
+					const chunk = tasks.slice(i, i + chunkSize);
 					const batch = writeBatch(db);
+					let batchCreated = 0;
+					let batchUpdated = 0;
 
-					chunk.forEach((st, idx) => {
-						const docId = `import_${Date.now().toString(36)}_${i + idx}_${Math.random().toString(36).slice(2, 6)}`;
-						const cleanStudentCode = String(st.studentCode || `S${i + idx + 1}`).trim().slice(0, 50) || `S${i + idx + 1}`;
-						const cleanLastName = String(st.lastName || "សិស្ស").trim().slice(0, 100) || "សិស្ស";
-						const cleanFirstName = String(st.firstName || (i + idx + 1)).trim().slice(0, 100) || String(i + idx + 1);
-						const cleanGender = (st.gender === "ប្រុស" || st.gender === "ស្រី") ? st.gender : "ស្រី";
-						const cleanGrade = String(st.grade || "3A").trim().slice(0, 50) || "3A";
-						const cleanActor = String(actor || "អ្នកប្រើប្រាស់").slice(0, 140);
-						const cleanValues = (Array.isArray(st.values) && st.values.length > 0)
-							? st.values.slice(0, 75).map(v => String(v ?? "").slice(0, 300))
-							: new Array(71).fill("");
+					chunk.forEach((task, idx) => {
+						const { cleanStudentCode, cleanLastName, cleanFirstName, cleanGender, cleanGrade, cleanActor, cleanValues } = buildSanitizedFields(task.st, i + idx + 1);
 
-						const payload = {
-							studentCode: cleanStudentCode,
-							lastName: cleanLastName,
-							firstName: cleanFirstName,
-							gender: cleanGender,
-							grade: cleanGrade,
-							values: cleanValues,
-							createdBy: cleanActor,
-							lastModifiedBy: cleanActor,
-							lastModifiedAt: serverTimestamp(),
-							createdAt: serverTimestamp(),
-							updatedAt: serverTimestamp(),
-						};
-						batch.set(doc(db, "students", docId), payload);
-					});
-
-					try {
-						await batch.commit();
-						successCount += chunk.length;
-					} catch (batchErr) {
-						console.warn("Batch failed, trying row-by-row fallback:", batchErr);
-						// Fallback to row-by-row with individual try-catch
-						for (let sIdx = 0; sIdx < chunk.length; sIdx++) {
-							const st = chunk[sIdx];
-							const docId = `import_${Date.now().toString(36)}_${i + sIdx}_${Math.random().toString(36).slice(2, 6)}`;
-							const cleanStudentCode = String(st.studentCode || `S${i + sIdx + 1}`).trim().slice(0, 50) || `S${i + sIdx + 1}`;
-							const cleanLastName = String(st.lastName || "សិស្ស").trim().slice(0, 100) || "សិស្ស";
-							const cleanFirstName = String(st.firstName || (i + sIdx + 1)).trim().slice(0, 100) || String(i + sIdx + 1);
-							const cleanGender = (st.gender === "ប្រុស" || st.gender === "ស្រី") ? st.gender : "ស្រី";
-							const cleanGrade = String(st.grade || "3A").trim().slice(0, 50) || "3A";
-							const cleanActor = String(actor || "អ្នកប្រើប្រាស់").slice(0, 140);
-							const cleanValues = (Array.isArray(st.values) && st.values.length > 0)
-								? st.values.slice(0, 75).map(v => String(v ?? "").slice(0, 300))
-								: new Array(71).fill("");
-
-							const payload = {
+						if (task.action === "update" && task.targetId) {
+							batch.update(doc(db, "students", task.targetId), {
+								studentCode: cleanStudentCode,
+								lastName: cleanLastName,
+								firstName: cleanFirstName,
+								gender: cleanGender,
+								grade: cleanGrade,
+								values: cleanValues,
+								lastModifiedBy: cleanActor,
+								lastModifiedAt: serverTimestamp(),
+								updatedAt: serverTimestamp(),
+							});
+							batchUpdated++;
+						} else {
+							const docId = `import_${Date.now().toString(36)}_${i + idx}_${Math.random().toString(36).slice(2, 6)}`;
+							batch.set(doc(db, "students", docId), {
 								studentCode: cleanStudentCode,
 								lastName: cleanLastName,
 								firstName: cleanFirstName,
@@ -5898,15 +8246,65 @@
 								lastModifiedAt: serverTimestamp(),
 								createdAt: serverTimestamp(),
 								updatedAt: serverTimestamp(),
-							};
-							try {
-								await setDoc(doc(db, "students", docId), payload);
-								successCount++;
-							} catch (singleErr) {
-								console.error("Single row save failed:", singleErr);
-								failCount++;
-								if (singleErr?.message?.includes("insufficient permissions")) {
-									handleFirestoreError(singleErr, OperationType.CREATE, `students/${docId}`);
+							});
+							batchCreated++;
+						}
+					});
+
+					try {
+						await batch.commit();
+						createdCount += batchCreated;
+						updatedCount += batchUpdated;
+					} catch (batchErr) {
+						console.warn("Batch failed, trying row-by-row fallback:", batchErr);
+						for (let sIdx = 0; sIdx < chunk.length; sIdx++) {
+							const task = chunk[sIdx];
+							const { cleanStudentCode, cleanLastName, cleanFirstName, cleanGender, cleanGrade, cleanActor, cleanValues } = buildSanitizedFields(task.st, i + sIdx + 1);
+
+							if (task.action === "update" && task.targetId) {
+								try {
+									await updateDoc(doc(db, "students", task.targetId), {
+										studentCode: cleanStudentCode,
+										lastName: cleanLastName,
+										firstName: cleanFirstName,
+										gender: cleanGender,
+										grade: cleanGrade,
+										values: cleanValues,
+										lastModifiedBy: cleanActor,
+										lastModifiedAt: serverTimestamp(),
+										updatedAt: serverTimestamp(),
+									});
+									updatedCount++;
+								} catch (singleErr) {
+									console.error("Single row update failed:", singleErr);
+									failCount++;
+									if (singleErr?.message?.includes("insufficient permissions")) {
+										handleFirestoreError(singleErr, OperationType.UPDATE, `students/${task.targetId}`);
+									}
+								}
+							} else {
+								const docId = `import_${Date.now().toString(36)}_${i + sIdx}_${Math.random().toString(36).slice(2, 6)}`;
+								try {
+									await setDoc(doc(db, "students", docId), {
+										studentCode: cleanStudentCode,
+										lastName: cleanLastName,
+										firstName: cleanFirstName,
+										gender: cleanGender,
+										grade: cleanGrade,
+										values: cleanValues,
+										createdBy: cleanActor,
+										lastModifiedBy: cleanActor,
+										lastModifiedAt: serverTimestamp(),
+										createdAt: serverTimestamp(),
+										updatedAt: serverTimestamp(),
+									});
+									createdCount++;
+								} catch (singleErr) {
+									console.error("Single row save failed:", singleErr);
+									failCount++;
+									if (singleErr?.message?.includes("insufficient permissions")) {
+										handleFirestoreError(singleErr, OperationType.CREATE, `students/${docId}`);
+									}
 								}
 							}
 						}
@@ -5921,11 +8319,13 @@
 
 				importModal.classList.add("hidden");
 				pendingImportStudents = [];
-				if (failCount > 0) {
-					showToast(`🎉 បាននាំចូលជោគជ័យចំនួន ${successCount} នាក់ (បរាជ័យ ${failCount} នាក់)`);
-				} else {
-					showToast(`🎉 បាននាំចូលទិន្នន័យសិស្សទាំងអស់ចំនួន ${successCount} នាក់ដោយជោគជ័យ!`);
-				}
+
+				const summaryParts = [];
+				if (createdCount > 0) summaryParts.push(`នាំចូលថ្មី ${createdCount} នាក់`);
+				if (updatedCount > 0) summaryParts.push(`ធ្វើបច្ចុប្បន្នភាព ${updatedCount} នាក់`);
+				if (skippedCount > 0) summaryParts.push(`រំលងស្ទួន ${skippedCount} នាក់`);
+				if (failCount > 0) summaryParts.push(`បរាជ័យ ${failCount} នាក់`);
+				showToast(`🎉 បានបញ្ចប់ការនាំចូល៖ ${summaryParts.join(" | ")}`);
 			});
 
 			// 7. Backup & Restore JSON
@@ -5947,23 +8347,24 @@
 
 				const reader = new FileReader();
 				reader.onload = async (evt) => {
+					if (!requireSignedInForWrite("ស្ដារទិន្នន័យ JSON")) return;
 					try {
 						const items = JSON.parse(evt.target.result);
 						if (!Array.isArray(items)) throw new Error("ទម្រង់ JSON មិនត្រឹមត្រូវ");
 
 						let restored = 0;
-						const actor = currentUser?.displayName || currentUser?.email || "អ្នកប្រើប្រាស់";
+						const actor = String(currentUser?.displayName || currentUser?.email || "អ្នកប្រើប្រាស់").slice(0, 140);
 
 						for (const item of items) {
-							const docId = item.id || ("restored_" + Date.now() + "_" + restored);
+							const docId = String(item.id || ("restored_" + Date.now() + "_" + restored)).replace(/[^a-zA-Z0-9_\-]/g, "_").slice(0, 120);
 							const payload = {
-								studentCode: item.studentCode || item.values?.[1] || "27000",
-								lastName: item.lastName || item.values?.[2] || "សិស្ស",
-								firstName: item.firstName || item.values?.[3] || "ថ្មី",
-								gender: item.gender || item.values?.[4] || "ស្រី",
-								grade: item.grade || item.values?.[0] || "3A",
-								values: item.values || new Array(71).fill(""),
-								createdBy: item.createdBy || actor,
+								studentCode: String(item.studentCode || item.values?.[1] || "27000").slice(0, 58),
+								lastName: String(item.lastName || item.values?.[2] || "សិស្ស").slice(0, 118),
+								firstName: String(item.firstName || item.values?.[3] || "ថ្មី").slice(0, 118),
+								gender: (item.gender === "ប្រុស" || item.gender === "ស្រី") ? item.gender : (item.values?.[4] === "ប្រុស" ? "ប្រុស" : "ស្រី"),
+								grade: String(item.grade || item.values?.[0] || "3A").slice(0, 58),
+								values: (Array.isArray(item.values) && item.values.length > 0) ? item.values.slice(0, 75).map(v => String(v ?? "").slice(0, 300)) : new Array(71).fill(""),
+								createdBy: String(item.createdBy || actor).slice(0, 140),
 								lastModifiedBy: actor,
 								lastModifiedAt: serverTimestamp(),
 								createdAt: serverTimestamp(),
@@ -6001,7 +8402,7 @@
 📍 អាសយដ្ឋាន៖ ${v[13] || ""} ${v[14] || ""} ${v[15] || ""} ${v[16] || ""}
 
 🏥 សុខភាព៖
-• BMI ឆមាស១៖ ${v[31] || "មិនទាន់គណនា"} (ទម្ងន់៖ ${v[29] || "-"}kg, កម្ពស់៖ ${v[30] || "-"}cm)
+• BMI ឆមាស១៖ ${computeStudentBmiForSemester(docItem, 1).status || v[31] || "មិនទាន់គណនា"} (ទម្ងន់៖ ${v[29] || "-"}kg, កម្ពស់៖ ${v[30] || "-"}cm)
 • ភ្នែក៖ ${v[38] || "មិនទាន់ពិនិត្យ"} (${v[35] || "-"}/${v[36] || "-"})
 • ត្រចៀក៖ ${v[44] || "មិនទាន់ពិនិត្យ"} (${v[41] || "-"}/${v[42] || "-"})
 
@@ -6233,6 +8634,14 @@
 							if (!healthVisible.has(i)) hiddenCols.add(i);
 						}
 						showToast("🏥 បានកំណត់ទម្រង់ «សុខភាព & BMI» រួចរាល់!");
+					} else if (preset === "support-packages") {
+						// Support Material Packages: Keep 0, 1, 2, 3, 4, 21..24 (កញ្ចប់សម្ភារជំនួយ), 25, 26
+						const pkgVisible = new Set([0, 1, 2, 3, 4, 21, 22, 23, 24, 25, 26]);
+						hiddenCols.clear();
+						for (let i = 0; i < 71; i++) {
+							if (!pkgVisible.has(i)) hiddenCols.add(i);
+						}
+						showToast("📚 បានកំណត់ទម្រង់ «កញ្ចប់សម្ភារជំនួយ» រួចរាល់!");
 					} else if (preset === "parents") {
 						// Parents: Keep 0, 1, 2, 3, 4, 7, 13..16 (អាសយដ្ឋាន), 48..51 (ឪពុក), 56..59 (ម្ដាយ), 64..70 (អាណាព្យាបាល)
 						const parentsVisible = new Set([0, 1, 2, 3, 4, 7, 13, 14, 15, 16, 48, 49, 50, 51, 56, 57, 58, 59, 64, 65, 66, 68, 70]);
@@ -6350,14 +8759,108 @@
 					db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 					auth = getAuth(app);
 
+					// Validate connection to Firestore on boot
+					(async function testConnection() {
+						try {
+							await getDocFromServer(doc(db, "test", "connection"));
+						} catch (error) {
+							if (error instanceof Error && error.message.includes("the client is offline")) {
+								console.error("Please check your Firebase configuration.");
+							}
+						}
+					})();
+
 					badge.className = "badge badge-online";
 					statusText.textContent = "Firebase";
 
-					// Auth State
+					// Auth State & Protected Real-time Listener
 					const signInBtn = document.getElementById("sign-in-btn");
+					const bannerSignInBtn = document.getElementById("banner-sign-in-btn");
+					const authBanner = document.getElementById("auth-required-banner");
 					const signOutBtn = document.getElementById("sign-out-btn");
 					const userInfo = document.getElementById("user-info-area");
 					const userAvatar = document.getElementById("user-avatar");
+					let studentsUnsubscribe = null;
+
+					function attachStudentsListener() {
+						if (studentsUnsubscribe) {
+							studentsUnsubscribe();
+							studentsUnsubscribe = null;
+						}
+						studentsUnsubscribe = onSnapshot(
+							collection(db, "students"),
+							async (snapshot) => {
+								badge.className = "badge badge-online";
+								statusText.textContent = "Firebase";
+								studentDocs = [];
+								snapshot.forEach((d) => {
+									studentDocs.push({ id: d.id, ...d.data() });
+								});
+
+								if (auth?.currentUser && studentDocs.length === 0 && !snapshot.metadata.hasPendingWrites) {
+									try {
+										const initialValues = [
+											"3A", "27001", "កើន", "វីរះនិច្ច", "ស្រី", "3/19/2019", "7", "0978806018", "ខ្មែរ",
+											"បន្ទាយមានជ័យ", "ភ្នំស្រុក", "ស្ពានស្រែង", "មុខឈ្នាង",
+											"បន្ទាយមានជ័យ", "ភ្នំស្រុក", "ស្ពានស្រែង", "មុខឈ្នាង",
+											"2025-2026", "2B", "2025-11-1", "មិនមាន",
+											"មិនមាន", "មិនមាន", "មិនមាន", "មិនមាន",
+											"មាន", "ក្រ២", "មិនមាន", "មិនមាន",
+											"20.00", "119.0", "សុខភាពល្អ",
+											"", "", "",
+											"6/6", "6/6", "", "មិនទាន់បានពិនិត្យ", "មិនមាន", "មិនមាន",
+											"71dB", "71dB", "មិនទាន់ពិនិត្យ", "ត្រចៀកល្អប្រសើរ", "", "",
+											"COVID-19",
+											"អ៊ុន", "ប៊ុនទុង", "092272005", "គ្រូបង្រៀន",
+											"បន្ទាយមានជ័យ", "ភ្នំស្រុក", "ស្ពានស្រែង", "គោកចារ",
+											"រ៉ម", "សុផាត់", "", "កសិករ",
+											"បន្ទាយមានជ័យ", "ភ្នំស្រុក", "ស្ពានស្រែង", "មុខឈ្នាង",
+											"សាច់ញាតិ", "ហួក", "តាក់", "ស្រី", "", "កសិករ",
+											"ខេត្តបន្ទាយមានជ័យ ស្រុកភ្នំស្រុក ឃុំស្ពានស្រែង ភូមិមុខឈ្នាង"
+										];
+										await setDoc(doc(db, "students", "student_27001"), {
+											studentCode: "27001",
+											lastName: "កើន",
+											firstName: "វីរះនិច្ច",
+											gender: "ស្រី",
+											grade: "3A",
+											values: initialValues,
+											createdBy: String(auth.currentUser.displayName || auth.currentUser.email || "ប្រព័ន្ធ").slice(0, 140),
+											lastModifiedBy: String(auth.currentUser.displayName || auth.currentUser.email || "ប្រព័ន្ធ").slice(0, 140),
+											lastModifiedAt: serverTimestamp(),
+											createdAt: serverTimestamp(),
+											updatedAt: serverTimestamp(),
+										});
+									} catch (e) {
+										console.warn("Initial seed skipped:", e?.message || e);
+									}
+								}
+
+								renderTable(studentDocs);
+							},
+							(error) => {
+								console.warn("Firestore onSnapshot error:", error?.message || error);
+								if (error?.code === "permission-denied") {
+									badge.className = "badge badge-offline";
+									statusText.textContent = "Sign-In";
+									if (authBanner) authBanner.classList.remove("hidden");
+									showToast("🔒 គណនីរបស់អ្នកមិនទាន់មានសិទ្ធិអានទិន្នន័យពី Firestore ទេ", true);
+								} else {
+									badge.className = "badge badge-offline";
+									statusText.textContent = "Offline";
+								}
+							}
+						);
+					}
+
+					async function triggerGoogleSignIn() {
+						try {
+							await signInWithPopup(auth, new GoogleAuthProvider());
+							showToast("✅ បានចូលគណនីជោគជ័យ!");
+						} catch (e) {
+							showToast("បរាជ័យ៖ " + e.message, true);
+						}
+					}
 
 					onAuthStateChanged(auth, (user) => {
 						currentUser = user;
@@ -6366,20 +8869,26 @@
 							userInfo.style.display = "flex";
 							userAvatar.src = user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(user.displayName || "U")}`;
 							userAvatar.title = user.displayName || user.email || "អ្នកប្រើប្រាស់";
+							if (authBanner) authBanner.classList.add("hidden");
+							attachStudentsListener();
 						} else {
 							signInBtn.style.display = "inline-flex";
 							userInfo.style.display = "none";
+							if (studentsUnsubscribe) {
+								studentsUnsubscribe();
+								studentsUnsubscribe = null;
+							}
+							studentDocs = [];
+							selectedStudentIds.clear();
+							if (authBanner) authBanner.classList.remove("hidden");
+							badge.className = "badge badge-offline";
+							statusText.textContent = "Sign-In";
+							renderTable(studentDocs);
 						}
 					});
 
-					signInBtn.addEventListener("click", async () => {
-						try {
-							await signInWithPopup(auth, new GoogleAuthProvider());
-							showToast("✅ បានចូលគណនីជោគជ័យ!");
-						} catch (e) {
-							showToast("បរាជ័យ៖ " + e.message, true);
-						}
-					});
+					signInBtn.addEventListener("click", triggerGoogleSignIn);
+					bannerSignInBtn?.addEventListener("click", triggerGoogleSignIn);
 
 					signOutBtn.addEventListener("click", async () => {
 						try {
@@ -6389,67 +8898,6 @@
 							showToast("កំហុស៖ " + e.message, true);
 						}
 					});
-
-					// Real-time listener
-					onSnapshot(
-						collection(db, "students"),
-						async (snapshot) => {
-							studentDocs = [];
-							snapshot.forEach((d) => {
-								studentDocs.push({ id: d.id, ...d.data() });
-							});
-
-							if (studentDocs.length === 0 && !snapshot.metadata.hasPendingWrites) {
-								try {
-									const initialValues = [
-										"3A", "27001", "កើន", "វីរះនិច្ច", "ស្រី", "3/19/2019", "7", "0978806018", "ខ្មែរ",
-										"បន្ទាយមានជ័យ", "ភ្នំស្រុក", "ស្ពានស្រែង", "មុខឈ្នាង",
-										"បន្ទាយមានជ័យ", "ភ្នំស្រុក", "ស្ពានស្រែង", "មុខឈ្នាង",
-										"2025-2026", "2B", "2025-11-1", "មិនមាន",
-										"មិនមាន", "មិនមាន", "មិនមាន", "មិនមាន",
-										"មាន", "ក្រ២", "មិនមាន", "មិនមាន",
-										"20.00", "119.0", "សុខភាពល្អ",
-										"", "", "",
-										"6/6", "6/6", "", "មិនទាន់បានពិនិត្យ", "មិនមាន", "មិនមាន",
-										"71dB", "71dB", "មិនទាន់ពិនិត្យ", "ត្រចៀកល្អប្រសើរ", "", "",
-										"COVID-19",
-										"អ៊ុន", "ប៊ុនទុង", "092272005", "គ្រូបង្រៀន",
-										"បន្ទាយមានជ័យ", "ភ្នំស្រុក", "ស្ពានស្រែង", "គោកចារ",
-										"រ៉ម", "សុផាត់", "", "កសិករ",
-										"បន្ទាយមានជ័យ", "ភ្នំស្រុក", "ស្ពានស្រែង", "មុខឈ្នាង",
-										"សាច់ញាតិ", "ហួក", "តាក់", "ស្រី", "", "កសិករ",
-										"ខេត្តបន្ទាយមានជ័យ ស្រុកភ្នំស្រុក ឃុំស្ពានស្រែង ភូមិមុខឈ្នាង"
-									];
-									await setDoc(doc(db, "students", "student_27001"), {
-										studentCode: "27001",
-										lastName: "កើន",
-										firstName: "វីរះនិច្ច",
-										gender: "ស្រី",
-										grade: "3A",
-										values: initialValues,
-										createdBy: "ប្រព័ន្ធ (Initial Seed)",
-										lastModifiedBy: "ប្រព័ន្ធ",
-										lastModifiedAt: serverTimestamp(),
-										createdAt: serverTimestamp(),
-										updatedAt: serverTimestamp(),
-									});
-								} catch (e) {
-									console.warn(e);
-								}
-							}
-
-							renderTable(studentDocs);
-						},
-						(error) => {
-							console.warn("Firestore onSnapshot state:", error?.message || error);
-							const badge = document.getElementById("firebase-badge");
-							const statusText = document.getElementById("firebase-status");
-							if (badge && statusText) {
-								badge.className = "badge badge-offline";
-								statusText.textContent = "Offline";
-							}
-						}
-					);
 
 				} catch (err) {
 					console.error(err);
