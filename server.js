@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI } from '@google/genai';
+import QRCode from 'qrcode';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -186,6 +187,43 @@ DO NOT wrap in markdown, no backticks, only pure SVG code starting with <svg and
 });
 
 // Default entry point
+
+// Serve local jsQR library for in-app QR code scanning (live camera + image upload)
+app.get('/vendor/jsqr.js', (req, res) => {
+  res.type('application/javascript');
+  res.sendFile(path.join(__dirname, 'node_modules', 'jsqr', 'dist', 'jsQR.js'));
+});
+
+// Endpoint to generate QR code PNG DataURL and SVG for class deep links
+app.get('/api/qr', async (req, res) => {
+  try {
+    const text = String(req.query.text || '').trim();
+    if (!text) {
+      return res.status(400).json({ success: false, error: 'Missing text query parameter' });
+    }
+    if (text.length > 1024) {
+      return res.status(400).json({ success: false, error: 'QR text exceeds 1024 characters' });
+    }
+    const [dataUrl, svg] = await Promise.all([
+      QRCode.toDataURL(text, {
+        width: 512,
+        margin: 2,
+        errorCorrectionLevel: 'M',
+        color: { dark: '#0f172a', light: '#ffffff' },
+      }),
+      QRCode.toString(text, {
+        type: 'svg',
+        margin: 2,
+        errorCorrectionLevel: 'M',
+        color: { dark: '#0f172a', light: '#ffffff' },
+      }),
+    ]);
+    return res.json({ success: true, dataUrl, svg });
+  } catch (err) {
+    console.error('Generate QR error:', err);
+    return res.status(500).json({ success: false, error: err.message || 'Failed to generate QR code' });
+  }
+});
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

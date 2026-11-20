@@ -34,9 +34,14 @@
           "description": "Student class grade (e.g. 3A)",
           "maxLength": 60
         },
+        "teacherEmail": {
+          "type": "string",
+          "description": "Assigned homeroom teacher Google email (lowercase) for class-scoped access",
+          "maxLength": 150
+        },
         "values": {
           "type": "array",
-          "description": "Complete row array of values across all 67 student profile columns"
+          "description": "Complete row array of values across all student profile columns"
         },
         "photoUrl": {
           "type": "string",
@@ -81,6 +86,184 @@
           "description": "Connection status indicator"
         }
       }
+    },
+    "SchoolClass": {
+      "title": "SchoolClass",
+      "description": "School class / homeroom metadata managed by school admins and accessed via QR by assigned teachers",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Class name or code (e.g. 3A, 4B)",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "gradeLevel": {
+          "type": "string",
+          "description": "Grade level label (e.g. ថ្នាក់ទី៣)",
+          "maxLength": 60
+        },
+        "academicYear": {
+          "type": "string",
+          "description": "Academic year (e.g. 2026-2027)",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "teacherName": {
+          "type": "string",
+          "description": "Homeroom teacher name",
+          "maxLength": 120
+        },
+        "teacherEmail": {
+          "type": "string",
+          "description": "Assigned homeroom teacher Google email (lowercase) permitted to access this class via QR or login",
+          "maxLength": 150
+        },
+        "qrToken": {
+          "type": "string",
+          "description": "Unique revocable token embedded in the class QR access link",
+          "maxLength": 64
+        },
+        "room": {
+          "type": "string",
+          "description": "Classroom number or building",
+          "maxLength": 60
+        },
+        "note": {
+          "type": "string",
+          "description": "Optional notes for the class",
+          "maxLength": 300
+        },
+        "createdBy": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "lastModifiedBy": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifiedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["name", "academicYear", "createdAt"]
+    },
+    "StudentScore": {
+      "title": "StudentScore",
+      "description": "Monthly/semester primary school gradebook score record for a student",
+      "type": "object",
+      "properties": {
+        "studentId": {
+          "type": "string",
+          "description": "Referenced student document ID",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "studentCode": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "lastName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "firstName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "gender": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "className": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "teacherEmail": {
+          "type": "string",
+          "description": "Assigned homeroom teacher Google email (lowercase) for class-scoped score access",
+          "maxLength": 150
+        },
+        "academicYear": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "monthKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "monthLabel": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "maxScore": {
+          "type": "number"
+        },
+        "subjectScores": {
+          "type": "array",
+          "description": "16 subject score values matching the MoEYS Primary gradebook columns"
+        },
+        "totalScore": {
+          "type": "number"
+        },
+        "averageScore": {
+          "type": "number"
+        },
+        "gradeLetter": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "absExcused": {
+          "type": "number"
+        },
+        "absUnexcused": {
+          "type": "number"
+        },
+        "absTotal": {
+          "type": "number"
+        },
+        "remark": {
+          "type": "string",
+          "description": "Optional teacher remark for the semester/month (ផ្សេងៗ)",
+          "maxLength": 200
+        },
+        "createdBy": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "lastModifiedBy": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifiedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["studentId", "className", "academicYear", "monthKey", "subjectScores", "createdAt"]
     }
   },
   "firestore": {
@@ -88,7 +271,19 @@
       "schema": {
         "$ref": "#/entities/Student"
       },
-      "description": "All enrolled student records"
+      "description": "All enrolled student records, scoped by teacherEmail for homeroom teachers"
+    },
+    "/classes/{classId}": {
+      "schema": {
+        "$ref": "#/entities/SchoolClass"
+      },
+      "description": "School class definitions, teacherEmail access assignments, and qrToken"
+    },
+    "/scores/{scoreId}": {
+      "schema": {
+        "$ref": "#/entities/StudentScore"
+      },
+      "description": "Monthly and semester score sheets per student, scoped by teacherEmail"
     },
     "/test/{testId}": {
       "schema": {

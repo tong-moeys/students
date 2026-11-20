@@ -11,10 +11,12 @@
     "lint": "node --check server.js"
   },
   "dependencies": {
+    "@google/genai": "latest",
     "express": "^4.21.2",
     "firebase": "^13.1.0",
-    "xlsx": "^0.18.5",
-    "@google/genai": "latest"
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@firebase/eslint-plugin-security-rules": "^0.0.2",

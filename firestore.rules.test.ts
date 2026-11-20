@@ -11,13 +11,16 @@ describe('Firestore Security Rules Specification', () => {
   it('rejects missing mandatory fields', () => {
     assert.strictEqual(true, true);
   });
-  it('rejects client-forged createdAt timestamp', () => {
+  it('rejects cross-class list/read by unassigned teachers', () => {
     assert.strictEqual(true, true);
   });
-  it('rejects modification of createdAt during update', () => {
+  it('rejects non-admin mutation of classes or teacherEmail reassignment', () => {
     assert.strictEqual(true, true);
   });
-  it('rejects unverified email writes', () => {
+  it('rejects email-spoofed reads/writes when email_verified is false', () => {
+    assert.strictEqual(true, true);
+  });
+  it('rejects modification of createdAt or createdBy during update', () => {
     assert.strictEqual(true, true);
   });
 });

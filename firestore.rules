@@ -23,23 +23,30 @@ service cloud.firestore {
     }
 
     function isVerifiedUser() {
-      return isSignedIn() && (
-        request.auth.token.email_verified == true ||
-        request.auth.token.firebase.sign_in_provider == 'google.com' ||
-        request.auth.token.email == 'bmc21ict@gmail.com' ||
-        (request.auth.token.email != null && request.auth.token.email.size() > 0)
-      );
+      return isSignedIn()
+        && request.auth.token.email != null
+        && request.auth.token.email.size() > 0
+        && request.auth.token.email_verified == true;
+    }
+
+    function authEmail() {
+      return request.auth.token.email.lower();
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && authEmail() in ['moeystong@gmail.com', 'bmc21ict@gmail.com'];
     }
 
     function isValidStudent(data) {
       return data.keys().hasAll(['studentCode', 'lastName', 'firstName', 'gender', 'values'])
-        && data.keys().hasOnly(['studentCode', 'lastName', 'firstName', 'gender', 'grade', 'photoUrl', 'values', 'createdAt', 'updatedAt', 'lastModifiedBy', 'lastModifiedAt', 'createdBy'])
+        && data.keys().hasOnly(['studentCode', 'lastName', 'firstName', 'gender', 'grade', 'photoUrl', 'teacherEmail', 'values', 'createdAt', 'updatedAt', 'lastModifiedBy', 'lastModifiedAt', 'createdBy'])
         && data.studentCode is string && data.studentCode.size() > 0 && data.studentCode.size() <= 60
         && data.lastName is string && data.lastName.size() > 0 && data.lastName.size() <= 120
         && data.firstName is string && data.firstName.size() > 0 && data.firstName.size() <= 120
         && data.gender is string && data.gender.size() > 0 && data.gender.size() <= 30
         && (!('grade' in data) || (data.grade is string && data.grade.size() <= 60))
         && (!('photoUrl' in data) || (data.photoUrl is string && data.photoUrl.size() <= 65536))
+        && (!('teacherEmail' in data) || (data.teacherEmail is string && data.teacherEmail.size() <= 150))
         && (!('createdBy' in data) || (data.createdBy is string && data.createdBy.size() <= 150))
         && (!('lastModifiedBy' in data) || (data.lastModifiedBy is string && data.lastModifiedBy.size() <= 150))
         && (!('lastModifiedAt' in data) || data.lastModifiedAt is timestamp)
@@ -48,24 +55,150 @@ service cloud.firestore {
         && (!('updatedAt' in data) || data.updatedAt is timestamp);
     }
 
+    function isValidSchoolClass(data) {
+      return data.keys().hasAll(['name', 'academicYear'])
+        && data.keys().hasOnly(['name', 'gradeLevel', 'academicYear', 'teacherName', 'teacherEmail', 'qrToken', 'room', 'note', 'createdAt', 'updatedAt', 'lastModifiedBy', 'lastModifiedAt', 'createdBy'])
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 60
+        && data.academicYear is string && data.academicYear.size() > 0 && data.academicYear.size() <= 40
+        && (!('gradeLevel' in data) || (data.gradeLevel is string && data.gradeLevel.size() <= 60))
+        && (!('teacherName' in data) || (data.teacherName is string && data.teacherName.size() <= 120))
+        && (!('teacherEmail' in data) || (data.teacherEmail is string && data.teacherEmail.size() <= 150))
+        && (!('qrToken' in data) || (data.qrToken is string && data.qrToken.size() <= 64))
+        && (!('room' in data) || (data.room is string && data.room.size() <= 60))
+        && (!('note' in data) || (data.note is string && data.note.size() <= 300))
+        && (!('createdBy' in data) || (data.createdBy is string && data.createdBy.size() <= 150))
+        && (!('lastModifiedBy' in data) || (data.lastModifiedBy is string && data.lastModifiedBy.size() <= 150))
+        && (!('lastModifiedAt' in data) || data.lastModifiedAt is timestamp)
+        && (!('createdAt' in data) || data.createdAt is timestamp)
+        && (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
+    function isValidStudentScore(data) {
+      return data.keys().hasAll(['studentId', 'className', 'academicYear', 'monthKey', 'subjectScores'])
+        && data.keys().hasOnly([
+          'studentId', 'studentCode', 'lastName', 'firstName', 'gender',
+          'className', 'teacherEmail', 'academicYear', 'monthKey', 'monthLabel', 'maxScore',
+          'subjectScores', 'totalScore', 'averageScore', 'gradeLetter',
+          'absExcused', 'absUnexcused', 'absTotal', 'remark',
+          'createdAt', 'updatedAt', 'lastModifiedBy', 'lastModifiedAt', 'createdBy'
+        ])
+        && data.studentId is string && data.studentId.size() > 0 && data.studentId.size() <= 128
+        && (!('studentCode' in data) || (data.studentCode is string && data.studentCode.size() <= 60))
+        && (!('lastName' in data) || (data.lastName is string && data.lastName.size() <= 120))
+        && (!('firstName' in data) || (data.firstName is string && data.firstName.size() <= 120))
+        && (!('gender' in data) || (data.gender is string && data.gender.size() <= 30))
+        && data.className is string && data.className.size() > 0 && data.className.size() <= 60
+        && (!('teacherEmail' in data) || (data.teacherEmail is string && data.teacherEmail.size() <= 150))
+        && data.academicYear is string && data.academicYear.size() > 0 && data.academicYear.size() <= 40
+        && data.monthKey is string && data.monthKey.size() > 0 && data.monthKey.size() <= 40
+        && (!('monthLabel' in data) || (data.monthLabel is string && data.monthLabel.size() <= 60))
+        && (!('maxScore' in data) || (data.maxScore is number && data.maxScore > 0 && data.maxScore <= 1000))
+        && data.subjectScores is list && data.subjectScores.size() == 16
+        && (!('totalScore' in data) || (data.totalScore is number && data.totalScore >= 0 && data.totalScore <= 100000))
+        && (!('averageScore' in data) || (data.averageScore is number && data.averageScore >= 0 && data.averageScore <= 10000))
+        && (!('gradeLetter' in data) || (data.gradeLetter is string && data.gradeLetter.size() <= 30))
+        && (!('absExcused' in data) || (data.absExcused is number && data.absExcused >= 0 && data.absExcused <= 500))
+        && (!('absUnexcused' in data) || (data.absUnexcused is number && data.absUnexcused >= 0 && data.absUnexcused <= 500))
+        && (!('absTotal' in data) || (data.absTotal is number && data.absTotal >= 0 && data.absTotal <= 1000))
+        && (!('remark' in data) || (data.remark is string && data.remark.size() <= 200))
+        && (!('createdBy' in data) || (data.createdBy is string && data.createdBy.size() <= 150))
+        && (!('lastModifiedBy' in data) || (data.lastModifiedBy is string && data.lastModifiedBy.size() <= 150))
+        && (!('lastModifiedAt' in data) || data.lastModifiedAt is timestamp)
+        && (!('createdAt' in data) || data.createdAt is timestamp)
+        && (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
     match /students/{studentId} {
-      allow get, list: if isVerifiedUser();
+      allow get: if isAdmin() || (isVerifiedUser() && ('teacherEmail' in existing()) && existing().teacherEmail == authEmail());
+      allow list: if isAdmin() || (isVerifiedUser() && resource.data.teacherEmail == authEmail());
       allow create: if isVerifiedUser()
         && isValidId(studentId)
         && isValidStudent(incoming())
-        && (incoming().createdAt == request.time || incoming().createdAt is timestamp);
+        && (incoming().createdAt == request.time || incoming().createdAt is timestamp)
+        && (isAdmin() || (('teacherEmail' in incoming()) && incoming().teacherEmail == authEmail()));
       allow update: if isVerifiedUser()
         && isValidId(studentId)
         && isValidStudent(incoming())
         && (!('createdAt' in existing()) || !('createdAt' in incoming()) || incoming().createdAt == existing().createdAt)
         && (!('createdBy' in existing()) || !('createdBy' in incoming()) || incoming().createdBy == existing().createdBy)
-        && incoming().diff(existing()).affectedKeys().hasOnly(['studentCode', 'lastName', 'firstName', 'gender', 'grade', 'photoUrl', 'values', 'updatedAt', 'lastModifiedBy', 'lastModifiedAt'])
+        && (
+          (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['studentCode', 'lastName', 'firstName', 'gender', 'grade', 'photoUrl', 'teacherEmail', 'values', 'updatedAt', 'lastModifiedBy', 'lastModifiedAt']))
+          || (
+            ('teacherEmail' in existing())
+            && existing().teacherEmail == authEmail()
+            && (!('teacherEmail' in incoming()) || incoming().teacherEmail == authEmail())
+            && incoming().diff(existing()).affectedKeys().hasOnly(['studentCode', 'lastName', 'firstName', 'gender', 'grade', 'photoUrl', 'values', 'updatedAt', 'lastModifiedBy', 'lastModifiedAt'])
+          )
+        )
         && (
           (('updatedAt' in incoming()) && (incoming().updatedAt == request.time || incoming().updatedAt is timestamp)) ||
           (('lastModifiedAt' in incoming()) && (incoming().lastModifiedAt == request.time || incoming().lastModifiedAt is timestamp))
         );
-      allow delete: if isVerifiedUser()
-        && isValidId(studentId);
+      allow delete: if isValidId(studentId)
+        && (isAdmin() || (isVerifiedUser() && ('teacherEmail' in existing()) && existing().teacherEmail == authEmail()));
+    }
+
+    match /classes/{classId} {
+      allow get: if isAdmin() || (isVerifiedUser() && ('teacherEmail' in existing()) && existing().teacherEmail == authEmail());
+      allow list: if isAdmin() || (isVerifiedUser() && resource.data.teacherEmail == authEmail());
+      allow create: if isAdmin()
+        && isValidId(classId)
+        && isValidSchoolClass(incoming())
+        && (incoming().createdAt == request.time || incoming().createdAt is timestamp);
+      allow update: if isAdmin()
+        && isValidId(classId)
+        && isValidSchoolClass(incoming())
+        && (!('createdAt' in existing()) || !('createdAt' in incoming()) || incoming().createdAt == existing().createdAt)
+        && (!('createdBy' in existing()) || !('createdBy' in incoming()) || incoming().createdBy == existing().createdBy)
+        && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'gradeLevel', 'academicYear', 'teacherName', 'teacherEmail', 'qrToken', 'room', 'note', 'updatedAt', 'lastModifiedBy', 'lastModifiedAt'])
+        && (
+          (('updatedAt' in incoming()) && (incoming().updatedAt == request.time || incoming().updatedAt is timestamp)) ||
+          (('lastModifiedAt' in incoming()) && (incoming().lastModifiedAt == request.time || incoming().lastModifiedAt is timestamp))
+        );
+      allow delete: if isAdmin()
+        && isValidId(classId);
+    }
+
+    match /scores/{scoreId} {
+      allow get: if isAdmin() || (isVerifiedUser() && ('teacherEmail' in existing()) && existing().teacherEmail == authEmail());
+      allow list: if isAdmin() || (isVerifiedUser() && resource.data.teacherEmail == authEmail());
+      allow create: if isVerifiedUser()
+        && isValidId(scoreId)
+        && isValidStudentScore(incoming())
+        && (incoming().createdAt == request.time || incoming().createdAt is timestamp)
+        && (isAdmin() || (('teacherEmail' in incoming()) && incoming().teacherEmail == authEmail()));
+      allow update: if isVerifiedUser()
+        && isValidId(scoreId)
+        && isValidStudentScore(incoming())
+        && (!('createdAt' in existing()) || !('createdAt' in incoming()) || incoming().createdAt == existing().createdAt)
+        && (!('createdBy' in existing()) || !('createdBy' in incoming()) || incoming().createdBy == existing().createdBy)
+        && (
+          (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly([
+            'studentId', 'studentCode', 'lastName', 'firstName', 'gender',
+            'className', 'teacherEmail', 'academicYear', 'monthKey', 'monthLabel', 'maxScore',
+            'subjectScores', 'totalScore', 'averageScore', 'gradeLetter',
+            'absExcused', 'absUnexcused', 'absTotal', 'remark',
+            'updatedAt', 'lastModifiedBy', 'lastModifiedAt'
+          ]))
+          || (
+            ('teacherEmail' in existing())
+            && existing().teacherEmail == authEmail()
+            && (!('teacherEmail' in incoming()) || incoming().teacherEmail == authEmail())
+            && incoming().diff(existing()).affectedKeys().hasOnly([
+              'studentId', 'studentCode', 'lastName', 'firstName', 'gender',
+              'className', 'academicYear', 'monthKey', 'monthLabel', 'maxScore',
+              'subjectScores', 'totalScore', 'averageScore', 'gradeLetter',
+              'absExcused', 'absUnexcused', 'absTotal', 'remark',
+              'updatedAt', 'lastModifiedBy', 'lastModifiedAt'
+            ])
+          )
+        )
+        && (
+          (('updatedAt' in incoming()) && (incoming().updatedAt == request.time || incoming().updatedAt is timestamp)) ||
+          (('lastModifiedAt' in incoming()) && (incoming().lastModifiedAt == request.time || incoming().lastModifiedAt is timestamp))
+        );
+      allow delete: if isValidId(scoreId)
+        && (isAdmin() || (isVerifiedUser() && ('teacherEmail' in existing()) && existing().teacherEmail == authEmail()));
     }
 
     match /test/{testId} {
